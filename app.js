@@ -3183,7 +3183,7 @@ const THEME_KEY = 'pdf_editor_theme';
 function getCurrentTheme() {
   const saved = localStorage.getItem(THEME_KEY);
   if (saved === 'light' || saved === 'dark') return saved;
-  return (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+  return 'light'; // Default is Light mode
 }
 
 function applyTheme(theme) {
@@ -3228,14 +3228,6 @@ function initTheme() {
 
   $btnThemeLanding?.addEventListener('click', toggleTheme);
   $btnThemeEditor?.addEventListener('click', toggleTheme);
-
-  if (window.matchMedia) {
-    window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', (e) => {
-      if (!localStorage.getItem(THEME_KEY)) {
-        applyTheme(e.matches ? 'light' : 'dark');
-      }
-    });
-  }
 }
 
 
