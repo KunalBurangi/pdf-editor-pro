@@ -18,11 +18,21 @@ const state = {
   selectedBlock: null,    // Currently selected .text-block element
   selectedWidget: null,   // Currently selected .pdf-widget element
   editMode: false,        // true = edit mode, false = select mode
-  currentTool: 'select',  // 'select' | 'edit' | 'draw' | 'highlight' | 'sticky'
+  currentTool: 'select',  // 'select' | 'edit' | 'draw' | 'highlight' | 'sticky' | 'shape'
   drawConfig: {
     color: '#000000',
     size: 2,
     isHighlighter: false,
+  },
+  shapeConfig: {
+    type: 'rectangle',    // 'rectangle' | 'rounded-rect' | 'circle' | 'line' | 'arrow' | 'star'
+    strokeColor: '#ef4444',
+    strokeWidth: 2,
+    strokeStyle: 'solid', // 'solid' | 'dashed' | 'dotted'
+    fillColor: '#3b82f6',
+    hasFill: false,
+    opacity: 1.0,
+    radius: 8,
   },
   undoStack: [],
   redoStack: [],
@@ -68,6 +78,8 @@ const $btnImage        = $('btn-image');
 const $btnDraw         = $('btn-draw');
 const $btnHighlight    = $('btn-highlight');
 const $btnSticky       = $('btn-sticky');
+const $btnShape        = $('btn-shape');
+const $shapePopover    = $('shape-popover');
 const $imageFileInput  = $('image-file-input');
 
 // Annotation Sub-Toolbar
@@ -153,6 +165,21 @@ const $propX           = $('prop-x');
 const $propY           = $('prop-y');
 const $btnApply        = $('btn-apply');
 const $btnDeleteItem   = $('btn-delete-item');
+
+// Shape Properties DOM refs
+const $propsShapeForm    = $('props-shape-form');
+const $propShapeType     = $('prop-shape-type');
+const $propShapeStroke   = $('prop-shape-stroke');
+const $propShapeWidth    = $('prop-shape-width');
+const $propShapeStyle    = $('prop-shape-style');
+const $propShapeFill     = $('prop-shape-fill');
+const $propShapeNoFill   = $('prop-shape-nofill');
+const $propShapeOpacity  = $('prop-shape-opacity');
+const $shapeOpacityVal   = $('shape-opacity-val');
+const $propShapeRadius   = $('prop-shape-radius');
+const $groupShapeRadius  = $('group-shape-radius');
+const $btnShapeDuplicate = $('btn-shape-duplicate');
+const $btnShapeDelete    = $('btn-shape-delete');
 
 // Find & Replace DOM refs
 const $findReplaceBar  = $('find-replace-bar');
@@ -483,6 +510,7 @@ async function renderPage(pageIdx, insertBeforeEl = null, replaceEl = null) {
 
   // Setup drawing listeners on annotCanvas
   setupDrawingForPage(annotCanvas, pageIdx, dpr);
+  setupShapeDrawingForPage(wrapper, pageIdx);
 
   // Click on wrapper for sticky note placement
   wrapper.addEventListener('click', (e) => {
@@ -495,10 +523,12 @@ async function renderPage(pageIdx, insertBeforeEl = null, replaceEl = null) {
     }
   });
 
-  // Mount any existing widgets (signatures, images, sticky notes)
+  // Mount any existing widgets (signatures, images, sticky notes, shapes)
   (pageData.widgets || []).forEach(w => {
     if (w.type === 'sticky') {
       mountStickyNoteElement(w, wrapper, pageIdx);
+    } else if (w.type === 'shape') {
+      mountShapeWidgetElement(w, wrapper, pageIdx);
     } else {
       mountWidgetElement(w, wrapper, pageIdx);
     }
@@ -506,6 +536,7 @@ async function renderPage(pageIdx, insertBeforeEl = null, replaceEl = null) {
 
   const isDraw = (state.currentTool === 'draw' || state.currentTool === 'highlight');
   if (isDraw) wrapper.classList.add('draw-mode-active');
+  if (state.currentTool === 'shape') wrapper.classList.add('shape-mode-active');
 
   if (replaceEl && replaceEl.parentNode) {
     replaceEl.parentNode.replaceChild(wrapper, replaceEl);
@@ -663,8 +694,11 @@ function deselectAll() {
     state.selectedBlock.el.classList.remove('selected');
     state.selectedBlock = null;
   }
-  $propsEmpty.classList.remove('hidden');
-  $propsForm.classList.add('hidden');
+  $propsEmpty?.classList.remove('hidden');
+  $propsForm?.classList.add('hidden');
+  $propsShapeForm?.classList.add('hidden');
+  const header = $('props-header');
+  if (header) header.textContent = 'Properties';
 }
 
 // Click on page background = deselect
@@ -677,8 +711,11 @@ $pagesContainer.addEventListener('click', (e) => {
 
 // ─── PROPERTIES PANEL ─────────────────────────────────────────────────────────
 function showPropsForm(item) {
-  $propsEmpty.classList.add('hidden');
-  $propsForm.classList.remove('hidden');
+  $propsEmpty?.classList.add('hidden');
+  $propsShapeForm?.classList.add('hidden');
+  $propsForm?.classList.remove('hidden');
+  const header = $('props-header');
+  if (header) header.textContent = 'Text Properties';
 
   $propContent.value = item.text;
   $propFont.value    = item.fontName;
@@ -999,6 +1036,10 @@ function setTool(tool) {
   $btnDraw?.classList.toggle('active', tool === 'draw');
   $btnHighlight?.classList.toggle('active', tool === 'highlight');
   $btnSticky?.classList.toggle('active', tool === 'sticky');
+  $btnShape?.classList.toggle('active', tool === 'shape');
+  if (tool !== 'shape') {
+    closeShapePopover();
+  }
 
   state.editMode = (tool === 'edit');
 
@@ -1009,6 +1050,7 @@ function setTool(tool) {
   const isDraw = (tool === 'draw' || tool === 'highlight');
   document.querySelectorAll('.page-wrapper').forEach(pw => {
     pw.classList.toggle('draw-mode-active', isDraw);
+    pw.classList.toggle('shape-mode-active', tool === 'shape');
   });
 
   if (isDraw) {
@@ -1021,7 +1063,7 @@ function setTool(tool) {
     $annotToolbar?.classList.add('hidden');
   }
 
-  if (isDraw || tool === 'sticky') {
+  if (isDraw || tool === 'sticky' || tool === 'shape') {
     deselectAll();
     deselectWidget();
   }
@@ -1032,6 +1074,8 @@ function setTool(tool) {
     showToast('Pen active — draw freehand anywhere on the page', 'info', 2000);
   } else if (tool === 'highlight') {
     showToast('Highlighter active — highlight text and areas', 'info', 2000);
+  } else if (tool === 'shape') {
+    showToast(`Shape mode: ${state.shapeConfig.type} — click & drag on page to draw`, 'info', 2500);
   } else if (tool === 'select') {
     showToast('Select mode — click text or items to select', 'info', 1500);
   } else if (tool === 'edit') {
@@ -1493,6 +1537,16 @@ function selectWidget(el, widget) {
   deselectWidget();
   el.classList.add('selected');
   state.selectedWidget = { el, widget };
+
+  if (widget.type === 'shape') {
+    showShapePropsForm(widget);
+  } else {
+    $propsShapeForm?.classList.add('hidden');
+    $propsForm?.classList.add('hidden');
+    $propsEmpty?.classList.remove('hidden');
+    const header = $('props-header');
+    if (header) header.textContent = `${widget.type ? widget.type.charAt(0).toUpperCase() + widget.type.slice(1) : 'Item'} Properties`;
+  }
 }
 
 function deselectWidget() {
@@ -1500,6 +1554,10 @@ function deselectWidget() {
     state.selectedWidget.el.classList.remove('selected');
     state.selectedWidget = null;
   }
+  $propsShapeForm?.classList.add('hidden');
+  $propsEmpty?.classList.remove('hidden');
+  const header = $('props-header');
+  if (header) header.textContent = 'Properties';
 }
 
 function deleteWidget(el, widget) {
@@ -1510,11 +1568,32 @@ function deleteWidget(el, widget) {
   }
   if (state.selectedWidget?.widget.id === widget.id) {
     state.selectedWidget = null;
+    $propsShapeForm?.classList.add('hidden');
+    $propsEmpty?.classList.remove('hidden');
   }
-  showToast(`✓ Removed ${widget.type || 'item'}`, 'info', 1500);
+  showToast(`✓ Removed ${widget.shapeType || widget.type || 'item'}`, 'info', 1500);
 }
 
 function duplicateWidget(widget, pageIdx) {
+  if (widget.type === 'shape') {
+    addShapeWidget({
+      pageIdx,
+      shapeType: widget.shapeType,
+      width: widget.width,
+      height: widget.height,
+      x: widget.x + 20,
+      y: widget.y + 20,
+      strokeColor: widget.strokeColor,
+      strokeWidth: widget.strokeWidth,
+      strokeStyle: widget.strokeStyle,
+      fillColor: widget.fillColor,
+      hasFill: widget.hasFill,
+      opacity: widget.opacity,
+      radius: widget.radius,
+    });
+    showToast(`✓ Duplicated ${widget.shapeType}`, 'success', 1500);
+    return;
+  }
   createWidget({
     type: widget.type,
     pageIdx,
@@ -1621,6 +1700,10 @@ function setupWidgetInteractions(el, widget, pageIdx) {
         el.style.top  = `${widget.y}px`;
         el.style.width  = `${widget.width}px`;
         el.style.height = `${widget.height}px`;
+
+        if (widget.type === 'shape') {
+          updateShapeWidgetSvg(el, widget);
+        }
       };
 
       const onResizeUp = () => {
@@ -1631,6 +1714,439 @@ function setupWidgetInteractions(el, widget, pageIdx) {
       window.addEventListener('pointermove', onResizeMove);
       window.addEventListener('pointerup', onResizeUp);
     });
+  });
+}
+
+// ─── SHAPES & VECTOR DRAWING ──────────────────────────────────────────────────
+function generateShapeSvgHtml(shape) {
+  const w = Math.max(8, shape.width || 100);
+  const h = Math.max(8, shape.height || 60);
+  const sw = Math.min(Math.min(w, h) / 2, Math.max(1, shape.strokeWidth || 2));
+  const stroke = shape.strokeColor || '#ef4444';
+  const fill = shape.hasFill ? (shape.fillColor || '#3b82f6') : 'none';
+  const op = shape.opacity !== undefined ? shape.opacity : 1.0;
+
+  let dash = 'none';
+  if (shape.strokeStyle === 'dashed') dash = `${sw * 3.5},${sw * 2.5}`;
+  if (shape.strokeStyle === 'dotted') dash = `${sw},${sw * 1.5}`;
+
+  let innerSvg = '';
+  switch (shape.shapeType) {
+    case 'circle': {
+      const rx = Math.max(0.5, (w - sw) / 2);
+      const ry = Math.max(0.5, (h - sw) / 2);
+      innerSvg = `<ellipse cx="${w / 2}" cy="${h / 2}" rx="${rx}" ry="${ry}" fill="${fill}" stroke="${stroke}" stroke-width="${sw}" stroke-dasharray="${dash}" opacity="${op}" />`;
+      break;
+    }
+    case 'rounded-rect': {
+      const r = Math.min(shape.radius !== undefined ? shape.radius : 8, Math.min(w, h) / 2);
+      innerSvg = `<rect x="${sw / 2}" y="${sw / 2}" width="${Math.max(1, w - sw)}" height="${Math.max(1, h - sw)}" rx="${r}" fill="${fill}" stroke="${stroke}" stroke-width="${sw}" stroke-dasharray="${dash}" opacity="${op}" />`;
+      break;
+    }
+    case 'line': {
+      innerSvg = `<line x1="${sw / 2}" y1="${h / 2}" x2="${w - sw / 2}" y2="${h / 2}" stroke="${stroke}" stroke-width="${sw}" stroke-dasharray="${dash}" stroke-linecap="round" opacity="${op}" />`;
+      break;
+    }
+    case 'arrow': {
+      const headW = Math.max(12, Math.min(26, sw * 4));
+      const headH = Math.max(8, Math.min(18, sw * 2.5));
+      const lineEndX = Math.max(0, w - headW);
+      innerSvg = `
+        <line x1="${sw / 2}" y1="${h / 2}" x2="${lineEndX}" y2="${h / 2}" stroke="${stroke}" stroke-width="${sw}" stroke-dasharray="${dash}" stroke-linecap="round" opacity="${op}" />
+        <polygon points="${w},${h / 2} ${lineEndX},${h / 2 - headH / 2} ${lineEndX},${h / 2 + headH / 2}" fill="${stroke}" opacity="${op}" />
+      `;
+      break;
+    }
+    case 'star': {
+      const cx = w / 2;
+      const cy = h / 2;
+      const spikes = 5;
+      const outerR = Math.max(4, Math.min(w, h) / 2 - sw);
+      const innerR = outerR * 0.45;
+      let rot = (Math.PI / 2) * 3;
+      const step = Math.PI / spikes;
+      const points = [];
+      for (let i = 0; i < spikes; i++) {
+        points.push(`${cx + Math.cos(rot) * outerR},${cy + Math.sin(rot) * outerR}`);
+        rot += step;
+        points.push(`${cx + Math.cos(rot) * innerR},${cy + Math.sin(rot) * innerR}`);
+        rot += step;
+      }
+      innerSvg = `<polygon points="${points.join(' ')}" fill="${fill}" stroke="${stroke}" stroke-width="${sw}" stroke-dasharray="${dash}" stroke-linejoin="round" opacity="${op}" />`;
+      break;
+    }
+    case 'rectangle':
+    default: {
+      innerSvg = `<rect x="${sw / 2}" y="${sw / 2}" width="${Math.max(1, w - sw)}" height="${Math.max(1, h - sw)}" fill="${fill}" stroke="${stroke}" stroke-width="${sw}" stroke-dasharray="${dash}" opacity="${op}" />`;
+      break;
+    }
+  }
+
+  return `<svg class="shape-svg" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">${innerSvg}</svg>`;
+}
+
+function updateShapeWidgetSvg(el, widget) {
+  const content = el.querySelector('.shape-widget-content');
+  if (content) {
+    content.innerHTML = generateShapeSvgHtml(widget);
+  }
+}
+
+function shapeToPngDataUrl(shape) {
+  return new Promise((resolve) => {
+    const scale = 3;
+    const w = Math.max(20, Math.round(shape.width * scale));
+    const h = Math.max(20, Math.round(shape.height * scale));
+    const canvas = document.createElement('canvas');
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext('2d');
+
+    const svgString = generateShapeSvgHtml({
+      ...shape,
+      width: w,
+      height: h,
+      strokeWidth: (shape.strokeWidth || 2) * scale,
+      radius: (shape.radius || 8) * scale,
+    });
+
+    const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const img = new Image();
+    img.onload = () => {
+      ctx.drawImage(img, 0, 0);
+      URL.revokeObjectURL(url);
+      resolve(canvas.toDataURL('image/png'));
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      resolve(null);
+    };
+    img.src = url;
+  });
+}
+
+function showShapePropsForm(widget) {
+  $propsEmpty?.classList.add('hidden');
+  $propsForm?.classList.add('hidden');
+  $propsShapeForm?.classList.remove('hidden');
+  const header = $('props-header');
+  if (header) header.textContent = 'Shape Properties';
+
+  if ($propShapeType) $propShapeType.value = widget.shapeType || 'rectangle';
+  if ($propShapeStroke) $propShapeStroke.value = widget.strokeColor || '#ef4444';
+  if ($propShapeWidth) $propShapeWidth.value = widget.strokeWidth || 2;
+  if ($propShapeStyle) $propShapeStyle.value = widget.strokeStyle || 'solid';
+  if ($propShapeFill) {
+    $propShapeFill.value = widget.fillColor || '#3b82f6';
+    $propShapeFill.classList.toggle('disabled', !widget.hasFill);
+    $propShapeFill.disabled = !widget.hasFill;
+  }
+  if ($propShapeNoFill) $propShapeNoFill.checked = !widget.hasFill;
+  if ($propShapeOpacity) $propShapeOpacity.value = Math.round((widget.opacity ?? 1) * 100);
+  if ($shapeOpacityVal) $shapeOpacityVal.textContent = `${Math.round((widget.opacity ?? 1) * 100)}%`;
+  if ($propShapeRadius) $propShapeRadius.value = widget.radius || 8;
+  if ($groupShapeRadius) {
+    $groupShapeRadius.style.display = (widget.shapeType === 'rounded-rect' || widget.shapeType === 'rectangle') ? 'flex' : 'none';
+  }
+}
+
+function mountShapeWidgetElement(widget, wrapper, pageIdx) {
+  const el = document.createElement('div');
+  el.className = 'pdf-widget shape-widget';
+  el.dataset.widgetId = widget.id;
+  el.style.left = `${widget.x}px`;
+  el.style.top  = `${widget.y}px`;
+  el.style.width = `${widget.width}px`;
+  el.style.height = `${widget.height}px`;
+
+  // Actions overlay
+  const actions = document.createElement('div');
+  actions.className = 'widget-actions';
+  actions.innerHTML = `
+    <button class="widget-act-btn duplicate" title="Duplicate shape" type="button">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+    </button>
+    <button class="widget-act-btn danger" title="Delete shape" type="button">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+    </button>
+  `;
+  actions.querySelector('.duplicate').addEventListener('click', (e) => {
+    e.stopPropagation();
+    duplicateWidget(widget, pageIdx);
+  });
+  actions.querySelector('.danger').addEventListener('click', (e) => {
+    e.stopPropagation();
+    deleteWidget(el, widget);
+  });
+  el.appendChild(actions);
+
+  // SVG Content
+  const content = document.createElement('div');
+  content.className = 'shape-widget-content';
+  content.innerHTML = generateShapeSvgHtml(widget);
+  el.appendChild(content);
+
+  // 8 Resize handles
+  const handles = ['nw', 'ne', 'se', 'sw', 'n', 's', 'e', 'w'];
+  handles.forEach(h => {
+    const handleEl = document.createElement('div');
+    handleEl.className = `widget-handle ${h}`;
+    handleEl.dataset.handle = h;
+    el.appendChild(handleEl);
+  });
+
+  wrapper.appendChild(el);
+  setupWidgetInteractions(el, widget, pageIdx);
+  selectWidget(el, widget);
+}
+
+function addShapeWidget(shapeData) {
+  const shape = {
+    id: `shape-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+    type: 'shape',
+    ...shapeData,
+  };
+
+  const pageData = state.pages[shape.pageIdx];
+  if (!pageData) return;
+  if (!pageData.widgets) pageData.widgets = [];
+  pageData.widgets.push(shape);
+
+  mountShapeWidgetElement(shape, pageData.wrapper, shape.pageIdx);
+  showToast(`✓ Added ${shape.shapeType}`, 'success', 1500);
+}
+
+function setupShapeDrawingForPage(wrapper, pageIdx) {
+  let isDraggingShape = false;
+  let startX = 0;
+  let startY = 0;
+  let ghostEl = null;
+
+  wrapper.addEventListener('pointerdown', (e) => {
+    if (state.currentTool !== 'shape') return;
+    if (e.target.closest('.pdf-widget') || e.target.closest('.sticky-note')) return;
+
+    isDraggingShape = true;
+    wrapper.setPointerCapture(e.pointerId);
+
+    const rect = wrapper.getBoundingClientRect();
+    startX = e.clientX - rect.left;
+    startY = e.clientY - rect.top;
+
+    ghostEl = document.createElement('div');
+    ghostEl.className = 'shape-drawing-ghost';
+    ghostEl.style.left = `${startX}px`;
+    ghostEl.style.top = `${startY}px`;
+    ghostEl.style.width = '0px';
+    ghostEl.style.height = '0px';
+    if (state.shapeConfig.type === 'circle') {
+      ghostEl.style.borderRadius = '50%';
+    } else if (state.shapeConfig.type === 'rounded-rect') {
+      ghostEl.style.borderRadius = `${state.shapeConfig.radius || 8}px`;
+    }
+    wrapper.appendChild(ghostEl);
+  });
+
+  wrapper.addEventListener('pointermove', (e) => {
+    if (!isDraggingShape || !ghostEl) return;
+    const rect = wrapper.getBoundingClientRect();
+    const curX = Math.max(0, Math.min(rect.width, e.clientX - rect.left));
+    const curY = Math.max(0, Math.min(rect.height, e.clientY - rect.top));
+
+    const left = Math.min(startX, curX);
+    const top = Math.min(startY, curY);
+    const width = Math.abs(curX - startX);
+    const height = Math.abs(curY - startY);
+
+    ghostEl.style.left = `${left}px`;
+    ghostEl.style.top = `${top}px`;
+    ghostEl.style.width = `${width}px`;
+    ghostEl.style.height = `${height}px`;
+  });
+
+  const finishShapeDraw = () => {
+    if (!isDraggingShape) return;
+    isDraggingShape = false;
+
+    let width = 0;
+    let height = 0;
+    let left = startX;
+    let top = startY;
+
+    if (ghostEl) {
+      const rect = wrapper.getBoundingClientRect();
+      const curX = Math.max(0, Math.min(rect.width, curX_bound(rect, left, startX)));
+      left = parseFloat(ghostEl.style.left) || startX;
+      top = parseFloat(ghostEl.style.top) || startY;
+      width = parseFloat(ghostEl.style.width) || 0;
+      height = parseFloat(ghostEl.style.height) || 0;
+      ghostEl.remove();
+      ghostEl = null;
+    }
+
+    if (width < 12 || height < 12) {
+      if (state.shapeConfig.type === 'line') {
+        width = 160;
+        height = 20;
+      } else if (state.shapeConfig.type === 'arrow') {
+        width = 160;
+        height = 36;
+      } else if (state.shapeConfig.type === 'circle') {
+        width = 120;
+        height = 120;
+      } else {
+        width = 160;
+        height = 100;
+      }
+      left = Math.max(10, startX - width / 2);
+      top = Math.max(10, startY - height / 2);
+    }
+
+    addShapeWidget({
+      pageIdx,
+      shapeType: state.shapeConfig.type,
+      x: left,
+      y: top,
+      width: Math.max(width, 24),
+      height: Math.max(height, 16),
+      strokeColor: state.shapeConfig.strokeColor,
+      strokeWidth: state.shapeConfig.strokeWidth,
+      strokeStyle: state.shapeConfig.strokeStyle,
+      fillColor: state.shapeConfig.fillColor,
+      hasFill: state.shapeConfig.hasFill,
+      opacity: state.shapeConfig.opacity,
+      radius: state.shapeConfig.radius,
+    });
+
+    setTool('select');
+  };
+
+  function curX_bound(rect, l, sx) {
+    return Math.max(0, Math.min(rect.width, l + sx));
+  }
+
+  wrapper.addEventListener('pointerup', finishShapeDraw);
+  wrapper.addEventListener('pointercancel', finishShapeDraw);
+}
+
+function openShapePopover() {
+  $shapePopover?.classList.remove('hidden');
+  document.querySelector('.shape-btn-wrapper')?.classList.add('open');
+}
+
+function closeShapePopover() {
+  $shapePopover?.classList.add('hidden');
+  document.querySelector('.shape-btn-wrapper')?.classList.remove('open');
+}
+
+function initShapeTools() {
+  $btnShape?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if ($shapePopover?.classList.contains('hidden')) {
+      openShapePopover();
+    } else {
+      closeShapePopover();
+    }
+  });
+
+  document.querySelectorAll('.shape-opt-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const shapeType = btn.dataset.shape;
+      state.shapeConfig.type = shapeType;
+      document.querySelectorAll('.shape-opt-btn').forEach(b => b.classList.toggle('active', b === btn));
+      closeShapePopover();
+      setTool('shape');
+    });
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.shape-btn-wrapper')) {
+      closeShapePopover();
+    }
+  });
+
+  // Shape properties bindings
+  $propShapeType?.addEventListener('change', () => {
+    if (!state.selectedWidget || state.selectedWidget.widget.type !== 'shape') return;
+    const w = state.selectedWidget.widget;
+    w.shapeType = $propShapeType.value;
+    state.shapeConfig.type = w.shapeType;
+    if ($groupShapeRadius) {
+      $groupShapeRadius.style.display = (w.shapeType === 'rounded-rect' || w.shapeType === 'rectangle') ? 'flex' : 'none';
+    }
+    updateShapeWidgetSvg(state.selectedWidget.el, w);
+  });
+
+  $propShapeStroke?.addEventListener('input', () => {
+    if (!state.selectedWidget || state.selectedWidget.widget.type !== 'shape') return;
+    const w = state.selectedWidget.widget;
+    w.strokeColor = $propShapeStroke.value;
+    state.shapeConfig.strokeColor = w.strokeColor;
+    updateShapeWidgetSvg(state.selectedWidget.el, w);
+  });
+
+  $propShapeWidth?.addEventListener('input', () => {
+    if (!state.selectedWidget || state.selectedWidget.widget.type !== 'shape') return;
+    const w = state.selectedWidget.widget;
+    w.strokeWidth = Math.max(1, parseInt($propShapeWidth.value) || 2);
+    state.shapeConfig.strokeWidth = w.strokeWidth;
+    updateShapeWidgetSvg(state.selectedWidget.el, w);
+  });
+
+  $propShapeStyle?.addEventListener('change', () => {
+    if (!state.selectedWidget || state.selectedWidget.widget.type !== 'shape') return;
+    const w = state.selectedWidget.widget;
+    w.strokeStyle = $propShapeStyle.value;
+    state.shapeConfig.strokeStyle = w.strokeStyle;
+    updateShapeWidgetSvg(state.selectedWidget.el, w);
+  });
+
+  $propShapeNoFill?.addEventListener('change', () => {
+    if (!state.selectedWidget || state.selectedWidget.widget.type !== 'shape') return;
+    const w = state.selectedWidget.widget;
+    w.hasFill = !$propShapeNoFill.checked;
+    state.shapeConfig.hasFill = w.hasFill;
+    $propShapeFill?.classList.toggle('disabled', !w.hasFill);
+    if ($propShapeFill) $propShapeFill.disabled = !w.hasFill;
+    updateShapeWidgetSvg(state.selectedWidget.el, w);
+  });
+
+  $propShapeFill?.addEventListener('input', () => {
+    if (!state.selectedWidget || state.selectedWidget.widget.type !== 'shape') return;
+    const w = state.selectedWidget.widget;
+    w.fillColor = $propShapeFill.value;
+    state.shapeConfig.fillColor = w.fillColor;
+    updateShapeWidgetSvg(state.selectedWidget.el, w);
+  });
+
+  $propShapeOpacity?.addEventListener('input', () => {
+    if (!state.selectedWidget || state.selectedWidget.widget.type !== 'shape') return;
+    const w = state.selectedWidget.widget;
+    const val = parseInt($propShapeOpacity.value) || 100;
+    w.opacity = val / 100;
+    state.shapeConfig.opacity = w.opacity;
+    if ($shapeOpacityVal) $shapeOpacityVal.textContent = `${val}%`;
+    updateShapeWidgetSvg(state.selectedWidget.el, w);
+  });
+
+  $propShapeRadius?.addEventListener('input', () => {
+    if (!state.selectedWidget || state.selectedWidget.widget.type !== 'shape') return;
+    const w = state.selectedWidget.widget;
+    w.radius = Math.max(0, parseInt($propShapeRadius.value) || 0);
+    state.shapeConfig.radius = w.radius;
+    updateShapeWidgetSvg(state.selectedWidget.el, w);
+  });
+
+  $btnShapeDuplicate?.addEventListener('click', () => {
+    if (!state.selectedWidget || state.selectedWidget.widget.type !== 'shape') return;
+    duplicateWidget(state.selectedWidget.widget, state.selectedWidget.widget.pageIdx);
+  });
+
+  $btnShapeDelete?.addEventListener('click', () => {
+    if (!state.selectedWidget || state.selectedWidget.widget.type !== 'shape') return;
+    deleteWidget(state.selectedWidget.el, state.selectedWidget.widget);
   });
 }
 
@@ -3099,6 +3615,47 @@ async function exportPdf() {
           } catch (stickyErr) {
             console.warn('Failed to draw sticky note on page ' + (i + 1), stickyErr);
           }
+        } else if (w.type === 'shape') {
+          try {
+            const shapePng = await shapeToPngDataUrl(w);
+            if (shapePng) {
+              const imgBytes = dataUrlToUint8Array(shapePng);
+              const embeddedImg = await outDoc.embedPng(imgBytes);
+
+              const sw = (w.width || 120) / scale;
+              const sh = (w.height || 80) / scale;
+              const sx = (w.x || 0) / scale;
+              const sy = (w.y || 0) / scale;
+
+              let wx = sx;
+              let wy = pH - (sy + sh);
+              let rotateVal = undefined;
+
+              if (rotAngle === 90) {
+                wx = sy + sh;
+                wy = sx;
+                rotateVal = degrees(-90);
+              } else if (rotAngle === 180) {
+                wx = pW - sx;
+                wy = sy + sh;
+                rotateVal = degrees(-180);
+              } else if (rotAngle === 270) {
+                wx = pW - sy;
+                wy = pH - sx;
+                rotateVal = degrees(-270);
+              }
+
+              libPage.drawImage(embeddedImg, {
+                x: wx,
+                y: wy,
+                width: sw,
+                height: sh,
+                rotate: rotateVal,
+              });
+            }
+          } catch (shapeErr) {
+            console.warn('Failed to embed shape on page ' + (i + 1), shapeErr);
+          }
         } else if (w.dataUrl) {
           try {
             const imgBytes = dataUrlToUint8Array(w.dataUrl);
@@ -3263,6 +3820,7 @@ function initHelpModal() {
   initSignatureModal();
   initMergeModal();
   initResizeModal();
+  initShapeTools();
 
   // Set up page scroll observer after a short delay
   const observer = new MutationObserver(() => {

@@ -1660,6 +1660,142 @@ kbd {
 .widget-handle.w  { left: -5px; top: calc(50% - 4.5px); cursor: ew-resize; }
 .widget-handle.e  { right: -5px; top: calc(50% - 4.5px); cursor: ew-resize; }
 
+/* ─── SHAPES & SHAPE POPOVER ─────────────────────────────────────────── */
+.shape-btn-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.chevron-down {
+  margin-left: 2px;
+  opacity: 0.6;
+  transition: transform var(--transition);
+}
+.shape-btn-wrapper.open .chevron-down {
+  transform: rotate(180deg);
+}
+
+.shape-popover {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 175px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.18), var(--shadow-glow);
+  padding: 6px;
+  z-index: 120;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  animation: modalPop 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.shape-popover.hidden {
+  display: none;
+}
+
+.shape-opt-btn {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 10px;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition);
+  width: 100%;
+  text-align: left;
+}
+.shape-opt-btn:hover {
+  background: var(--bg-elevated);
+  color: var(--blue);
+}
+.shape-opt-btn.active {
+  background: var(--blue-dim);
+  color: var(--blue);
+  font-weight: 600;
+}
+.shape-opt-btn svg {
+  flex-shrink: 0;
+}
+
+/* Shape Widget */
+.shape-widget {
+  position: absolute;
+  z-index: 25;
+  box-sizing: border-box;
+}
+.shape-widget-content {
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+  overflow: visible;
+}
+.shape-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+/* Drawing ghost preview */
+.shape-drawing-ghost {
+  position: absolute;
+  border: 2px dashed var(--blue);
+  background: var(--blue-dim);
+  pointer-events: none;
+  z-index: 45;
+  box-sizing: border-box;
+}
+
+/* Shape property inputs */
+.prop-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+.prop-checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  user-select: none;
+  text-transform: none;
+}
+.prop-checkbox-label input[type="checkbox"] {
+  accent-color: var(--blue);
+  cursor: pointer;
+}
+.prop-range-input {
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--border);
+  outline: none;
+  cursor: pointer;
+  accent-color: var(--blue);
+  margin-top: 4px;
+}
+.prop-color-input.disabled {
+  opacity: 0.35;
+  pointer-events: none;
+  filter: grayscale(1);
+}
+.prop-btn-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+}
+
 /* ─── STICKY NOTE ANNOTATION ─────────────────────────────────────────── */
 .sticky-note {
   position: absolute;
