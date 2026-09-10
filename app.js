@@ -20,6 +20,15 @@ const state = {
   undoStack: [],
   redoStack: [],
   currentPage: 1,
+  findState: {
+    open: false,
+    query: '',
+    replaceText: '',
+    matchCase: false,
+    wholeWord: false,
+    matches: [],          // Array of { pageIdx, item, el }
+    currentIndex: -1,
+  },
 };
 
 // ─── DOM REFS ────────────────────────────────────────────────────────────────
@@ -45,6 +54,7 @@ const $zoomLabel       = $('zoom-label');
 const $btnBack         = $('btn-back');
 const $btnSelect       = $('btn-select');
 const $btnEdit         = $('btn-edit');
+const $btnFind         = $('btn-find');
 const $btnZoomIn       = $('btn-zoom-in');
 const $btnZoomOut      = $('btn-zoom-out');
 const $btnZoomReset    = $('btn-zoom-reset');
@@ -63,6 +73,19 @@ const $propX           = $('prop-x');
 const $propY           = $('prop-y');
 const $btnApply        = $('btn-apply');
 const $btnDeleteItem   = $('btn-delete-item');
+
+// Find & Replace DOM refs
+const $findReplaceBar  = $('find-replace-bar');
+const $findInput       = $('find-input');
+const $findCount       = $('find-count');
+const $btnFindPrev     = $('btn-find-prev');
+const $btnFindNext     = $('btn-find-next');
+const $btnFindCase     = $('btn-find-case');
+const $btnFindWord     = $('btn-find-word');
+const $btnFindClose    = $('btn-find-close');
+const $replaceInput    = $('replace-input');
+const $btnReplaceOne   = $('btn-replace-one');
+const $btnReplaceAll   = $('btn-replace-all');
 
 // ─── TOAST ───────────────────────────────────────────────────────────────────
 let toastTimer = null;
@@ -150,6 +173,9 @@ async function loadPdf(data) {
     $pagesContainer.innerHTML = '';
     $thumbnails.innerHTML = '';
     state.selectedBlock = null;
+    closeFindReplace();
+    $findInput.value = '';
+    $replaceInput.value = '';
 
     // File info
     $fileNameLabel.textContent = state.fileName;
@@ -500,6 +526,7 @@ function applyChanges(el, item) {
   el.classList.add('modified');
 
   showToast('✓ Text block updated', 'success', 2000);
+  if (state.findState.open) performSearch();
 }
 
 function deleteBlock(el, item) {
@@ -565,7 +592,21 @@ function commitInlineEdit(el, item) {
     el.classList.add('modified');
     $propContent.value = newText;
     showToast('✓ Text updated', 'success', 1500);
+    if (state.findState.open) performSearch();
   }
+}
+
+function updateElementAfterTextChange(el, item, pageData) {
+  const vp = pageData?.viewport || state.pages[item.page - 1]?.viewport;
+  const scaledFontSize = Math.abs(item.fontSize) * (vp?.scale || state.zoom);
+  const scaledWidth = item.width > 0
+    ? (item.text.length / Math.max(item.originalText?.length || 1, 1)) * item.width * (vp?.scale || state.zoom)
+    : item.text.length * scaledFontSize * 0.55;
+
+  el.style.width = `${Math.max(scaledWidth, 12)}px`;
+  el.title = `${item.fontName || 'Unknown'} ${Math.round(item.fontSize)}pt — "${item.text}"`;
+  el.setAttribute('aria-label', `Edit: ${item.text.substring(0, 40)}`);
+  if (item.modified) el.classList.add('modified');
 }
 
 // ─── UNDO / REDO ──────────────────────────────────────────────────────────────
@@ -590,14 +631,22 @@ $btnUndo.addEventListener('click', () => {
 
     Object.assign(item, action.prev);
     if (el) {
-      el.textContent = item.text;
-      el.style.fontFamily = normalizeFontName(item.fontName);
-      el.style.fontSize   = `${item.fontSize * state.zoom}px`;
-      el.style.fontWeight = item.bold ? 'bold' : 'normal';
-      el.style.fontStyle  = item.italic ? 'italic' : 'normal';
-      el.style.color      = item.color;
+      updateElementAfterTextChange(el, item, pageData);
     }
     if (state.selectedBlock?.item === item) showPropsForm(item);
+  } else if (action.type === 'batch_edit') {
+    for (const sub of action.items) {
+      const pageData = state.pages.find(p => p.pageNum === sub.page);
+      if (!pageData) continue;
+      const item = pageData.textItems.find(it => it.id === sub.itemId);
+      if (!item) continue;
+      const el = pageData.textLayerEl?.querySelector(`[data-item-id="${sub.itemId}"]`);
+      Object.assign(item, sub.prev);
+      if (el) {
+        updateElementAfterTextChange(el, item, pageData);
+      }
+    }
+    if (state.findState.open) performSearch();
   }
 
   $btnUndo.disabled = state.undoStack.length === 0;
@@ -623,6 +672,20 @@ $btnZoomReset.addEventListener('click', () => setZoom(1.0));
 // Keyboard shortcuts
 document.addEventListener('keydown', (e) => {
   if (e.ctrlKey || e.metaKey) {
+    if (e.key === 'f' || e.key === 'F') {
+      e.preventDefault();
+      if (state.findState.open && document.activeElement === $findInput) {
+        $findInput.select();
+      } else {
+        openFindReplace(false);
+      }
+      return;
+    }
+    if (e.key === 'h' || e.key === 'H') {
+      e.preventDefault();
+      openFindReplace(true);
+      return;
+    }
     if (e.key === '=' || e.key === '+') { e.preventDefault(); setZoom(state.zoom + 0.15); }
     if (e.key === '-')                  { e.preventDefault(); setZoom(state.zoom - 0.15); }
     if (e.key === '0')                  { e.preventDefault(); setZoom(1.0); }
@@ -630,9 +693,17 @@ document.addEventListener('keydown', (e) => {
     if (e.key === 'y')                  { e.preventDefault(); $btnRedo.click(); }
     if (e.key === 's')                  { e.preventDefault(); exportPdf(); }
   }
+  if (e.key === 'Escape') {
+    if (state.findState.open) {
+      e.preventDefault();
+      closeFindReplace();
+      return;
+    }
+  }
   if (e.key === 'Delete' || e.key === 'Backspace') {
     if (state.selectedBlock && document.activeElement !== $propContent &&
-        !state.selectedBlock.el.classList.contains('editing')) {
+        !state.selectedBlock.el.classList.contains('editing') &&
+        document.activeElement !== $findInput && document.activeElement !== $replaceInput) {
       deleteBlock(state.selectedBlock.el, state.selectedBlock.item);
     }
   }
@@ -654,6 +725,7 @@ async function setZoom(zoom) {
 
   hideLoading();
   if (state.pages.length > 0) updateThumbnailActive(0);
+  if (state.findState.open) performSearch();
 }
 
 // ─── MODE BUTTONS ─────────────────────────────────────────────────────────────
@@ -674,6 +746,243 @@ $btnEdit.addEventListener('click', () => {
   document.querySelectorAll('.page-wrapper').forEach(pw => pw.classList.add('edit-mode'));
   showToast('Edit mode — click text to edit inline, double-click or use sidebar', 'info', 2500);
 });
+
+// ─── FIND & REPLACE ───────────────────────────────────────────────────────────
+function openFindReplace(focusReplace = false) {
+  state.findState.open = true;
+  $findReplaceBar.classList.remove('hidden');
+  $btnFind.classList.add('active');
+  if (focusReplace) {
+    $replaceInput.focus();
+    $replaceInput.select();
+  } else {
+    $findInput.focus();
+    $findInput.select();
+  }
+  performSearch();
+}
+
+function closeFindReplace() {
+  state.findState.open = false;
+  $findReplaceBar.classList.add('hidden');
+  $btnFind.classList.remove('active');
+  clearFindHighlights();
+  $findCount.textContent = '0 of 0';
+}
+
+function clearFindHighlights() {
+  document.querySelectorAll('.text-block.find-match, .text-block.find-match-active').forEach(el => {
+    el.classList.remove('find-match', 'find-match-active');
+  });
+  state.findState.matches = [];
+  state.findState.currentIndex = -1;
+}
+
+function buildSearchRegex(query, matchCase, wholeWord) {
+  if (!query) return null;
+  let pattern = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  if (wholeWord) {
+    pattern = `\\b${pattern}\\b`;
+  }
+  const flags = matchCase ? 'g' : 'gi';
+  try {
+    return new RegExp(pattern, flags);
+  } catch (e) {
+    return null;
+  }
+}
+
+function performSearch() {
+  clearFindHighlights();
+  const query = $findInput.value;
+  state.findState.query = query;
+  if (!query || state.pages.length === 0) {
+    $findCount.textContent = '0 of 0';
+    return;
+  }
+
+  const regex = buildSearchRegex(query, state.findState.matchCase, state.findState.wholeWord);
+  if (!regex) {
+    $findCount.textContent = '0 of 0';
+    return;
+  }
+
+  const matches = [];
+  for (let p = 0; p < state.pages.length; p++) {
+    const pageData = state.pages[p];
+    for (const item of pageData.textItems) {
+      regex.lastIndex = 0;
+      if (regex.test(item.text)) {
+        const el = pageData.textLayerEl?.querySelector(`[data-item-id="${item.id}"]`);
+        if (el) {
+          el.classList.add('find-match');
+          matches.push({ pageIdx: p, item, el });
+        }
+      }
+    }
+  }
+
+  state.findState.matches = matches;
+  if (matches.length > 0) {
+    state.findState.currentIndex = 0;
+    highlightCurrentMatch();
+  } else {
+    state.findState.currentIndex = -1;
+    $findCount.textContent = '0 of 0';
+  }
+}
+
+function highlightCurrentMatch() {
+  const { matches, currentIndex } = state.findState;
+  if (matches.length === 0 || currentIndex < 0) {
+    $findCount.textContent = '0 of 0';
+    return;
+  }
+
+  document.querySelectorAll('.text-block.find-match-active').forEach(el => {
+    el.classList.remove('find-match-active');
+  });
+
+  const current = matches[currentIndex];
+  current.el.classList.add('find-match-active');
+  $findCount.textContent = `${currentIndex + 1} of ${matches.length}`;
+
+  current.el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+  $currentPage.textContent = current.pageIdx + 1;
+  updateThumbnailActive(current.pageIdx);
+}
+
+function nextMatch() {
+  if (state.findState.matches.length === 0) return;
+  state.findState.currentIndex = (state.findState.currentIndex + 1) % state.findState.matches.length;
+  highlightCurrentMatch();
+}
+
+function prevMatch() {
+  if (state.findState.matches.length === 0) return;
+  state.findState.currentIndex = (state.findState.currentIndex - 1 + state.findState.matches.length) % state.findState.matches.length;
+  highlightCurrentMatch();
+}
+
+function replaceCurrentMatch() {
+  const { matches, currentIndex } = state.findState;
+  if (matches.length === 0 || currentIndex < 0) return;
+
+  const current = matches[currentIndex];
+  const query = $findInput.value;
+  const replacement = $replaceInput.value;
+  const regex = buildSearchRegex(query, state.findState.matchCase, state.findState.wholeWord);
+  if (!regex) return;
+
+  const prevText = current.item.text;
+  const newText = prevText.replace(regex, replacement);
+  if (newText === prevText) return;
+
+  pushUndo({
+    type: 'edit',
+    itemId: current.item.id,
+    page: current.item.page,
+    prev: { ...current.item }
+  });
+
+  current.item.text = newText;
+  current.item.modified = true;
+  const pageData = state.pages[current.pageIdx];
+  updateElementAfterTextChange(current.el, current.item, pageData);
+
+  showToast('✓ Match replaced', 'success', 1500);
+  performSearch();
+}
+
+function replaceAllMatches() {
+  const query = $findInput.value;
+  if (!query) return;
+  const replacement = $replaceInput.value;
+  const regex = buildSearchRegex(query, state.findState.matchCase, state.findState.wholeWord);
+  if (!regex) return;
+
+  const undoItems = [];
+  let replaceCount = 0;
+  const affectedPages = new Set();
+
+  for (let p = 0; p < state.pages.length; p++) {
+    const pageData = state.pages[p];
+    for (const item of pageData.textItems) {
+      regex.lastIndex = 0;
+      if (regex.test(item.text)) {
+        const prevText = item.text;
+        const newText = prevText.replace(regex, replacement);
+        if (newText !== prevText) {
+          undoItems.push({ itemId: item.id, page: item.page, prev: { ...item } });
+          item.text = newText;
+          item.modified = true;
+          replaceCount++;
+          affectedPages.add(p + 1);
+          const el = pageData.textLayerEl?.querySelector(`[data-item-id="${item.id}"]`);
+          if (el) {
+            updateElementAfterTextChange(el, item, pageData);
+          }
+        }
+      }
+    }
+  }
+
+  if (replaceCount > 0) {
+    pushUndo({ type: 'batch_edit', items: undoItems });
+    performSearch();
+    showToast(`✓ Replaced ${replaceCount} occurrence${replaceCount > 1 ? 's' : ''} across ${affectedPages.size} page${affectedPages.size > 1 ? 's' : ''}`, 'success', 4000);
+  } else {
+    showToast('No matches found to replace', 'info', 2000);
+  }
+}
+
+// Find & Replace Event Listeners
+$btnFind.addEventListener('click', () => {
+  if (state.findState.open) {
+    closeFindReplace();
+  } else {
+    openFindReplace(false);
+  }
+});
+
+$findInput.addEventListener('input', performSearch);
+$findInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    e.shiftKey ? prevMatch() : nextMatch();
+  }
+});
+
+$btnFindNext.addEventListener('click', nextMatch);
+$btnFindPrev.addEventListener('click', prevMatch);
+
+$btnFindCase.addEventListener('click', () => {
+  state.findState.matchCase = !state.findState.matchCase;
+  $btnFindCase.classList.toggle('active', state.findState.matchCase);
+  performSearch();
+});
+
+$btnFindWord.addEventListener('click', () => {
+  state.findState.wholeWord = !state.findState.wholeWord;
+  $btnFindWord.classList.toggle('active', state.findState.wholeWord);
+  performSearch();
+});
+
+$btnFindClose.addEventListener('click', closeFindReplace);
+
+$replaceInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    if (e.ctrlKey || e.metaKey) {
+      replaceAllMatches();
+    } else {
+      replaceCurrentMatch();
+    }
+  }
+});
+
+$btnReplaceOne.addEventListener('click', replaceCurrentMatch);
+$btnReplaceAll.addEventListener('click', replaceAllMatches);
 
 // ─── THUMBNAILS ───────────────────────────────────────────────────────────────
 function createThumbnail(sourceCanvas, pageIdx, pageNum) {
@@ -746,6 +1055,9 @@ $btnBack.addEventListener('click', () => {
     state.selectedBlock = null;
     state.undoStack = [];
     state.redoStack = [];
+    closeFindReplace();
+    $findInput.value = '';
+    $replaceInput.value = '';
   }
 });
 

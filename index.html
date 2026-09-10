@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=5" />
+  <link rel="stylesheet" href="style.css?v=8" />
 </head>
 <body>
 
@@ -100,6 +100,10 @@
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M11 2.5l2.5 2.5L5 13.5 2 14l.5-3L11 2.5z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             <span>Edit</span>
           </button>
+          <button id="btn-find" class="tool-btn" title="Find & Replace (Ctrl+F / ⌘F)" aria-label="Find and replace">
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.75" stroke="currentColor" stroke-width="1.5"/><path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <span>Find &amp; Replace</span>
+          </button>
         </div>
         <div class="separator"></div>
         <div class="toolbar-group">
@@ -135,6 +139,40 @@
         </button>
       </div>
     </header>
+
+    <!-- ─── FIND & REPLACE WIDGET ──────────────────────────────── -->
+    <div id="find-replace-bar" class="find-replace-bar hidden" role="search" aria-label="Find and Replace">
+      <div class="fr-row">
+        <div class="fr-input-wrap">
+          <svg class="fr-icon" width="13" height="13" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.75" stroke="currentColor" stroke-width="1.5"/><path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <input type="text" id="find-input" class="fr-input" placeholder="Find in document..." autocomplete="off" spellcheck="false" />
+          <span id="find-count" class="fr-count">0 of 0</span>
+        </div>
+        <div class="fr-btn-group">
+          <button id="btn-find-prev" class="fr-icon-btn" title="Previous match (Shift+Enter)" aria-label="Previous match">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 7.5L6 3.5L10 7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <button id="btn-find-next" class="fr-icon-btn" title="Next match (Enter)" aria-label="Next match">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <button id="btn-find-case" class="fr-toggle-btn" title="Match Case" aria-label="Toggle match case">Aa</button>
+          <button id="btn-find-word" class="fr-toggle-btn" title="Match Whole Word" aria-label="Toggle whole word">\b</button>
+          <button id="btn-find-close" class="fr-icon-btn fr-close-btn" title="Close (Esc)" aria-label="Close find and replace">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 2L10 10M10 2L2 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="fr-row fr-replace-row">
+        <div class="fr-input-wrap">
+          <svg class="fr-icon" width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M2 10h8a3 3 0 0 0 3-3V5M2 10l3-3M2 10l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <input type="text" id="replace-input" class="fr-input" placeholder="Replace with..." autocomplete="off" spellcheck="false" />
+        </div>
+        <div class="fr-btn-group">
+          <button id="btn-replace-one" class="fr-action-btn" title="Replace Current Match">Replace</button>
+          <button id="btn-replace-all" class="fr-action-btn fr-action-primary" title="Replace All Across All Pages">Replace All</button>
+        </div>
+      </div>
+    </div>
 
     <!-- Main layout -->
     <div class="editor-layout">
@@ -223,7 +261,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
   <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
-  <script src="app.js?v=7"></script>
+  <script src="app.js?v=8"></script>
 
 </body>
 </html>

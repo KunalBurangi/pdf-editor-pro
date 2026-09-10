@@ -14,8 +14,9 @@
 | 🖱️ **Click to Select** | Hover any text region to see blue highlights; click to view properties |
 | ✏️ **Inline Editing** | Double-click to edit text directly on the page |
 | 📐 **Properties Panel** | Edit font family, size, color, bold/italic, X/Y position |
-| 🔄 **Undo / Redo** | Full undo stack (`Ctrl+Z` / `Ctrl+Y`) |
-| 🔎 **Zoom** | `Ctrl++` / `Ctrl+-` / `Ctrl+0` |
+| 🔎 **Find & Replace** | Search and replace words or phrases across all pages (`Ctrl+F` / `Ctrl+H`), with match case, whole word, and live highlight cycling |
+| 🔄 **Undo / Redo** | Full undo stack (`Ctrl+Z` / `Ctrl+Y`) with batch replace undo |
+| 🔍 **Zoom** | `Ctrl++` / `Ctrl+-` / `Ctrl+0` |
 | 📄 **Re-editable Export** | Saves as a real PDF (text layer preserved) using **pdf-lib** — not an image scan |
 | 🖥️ **HiDPI / Retina** | Sharp rendering on all displays using `devicePixelRatio` canvas scaling |
 
@@ -26,18 +27,24 @@
 3. **Hover** over any area — blue boxes appear over text regions
 4. **Click** a text box → view font/size/color in the right panel
 5. **Double-click** → edit text inline
-6. Click **Save PDF** → downloads a re-editable PDF
+6. **Press `Ctrl+F` / `⌘F`** → search & replace text across all pages in one click
+7. Click **Save PDF** → downloads a re-editable PDF
 
 ## Keyboard Shortcuts
 
 | Key | Action |
 |---|---|
-| `Ctrl+S` | Save PDF |
-| `Ctrl+Z` | Undo |
-| `Ctrl+Y` | Redo |
-| `Ctrl++` | Zoom in |
-| `Ctrl+-` | Zoom out |
-| `Ctrl+0` | Reset zoom |
+| `Ctrl+F` / `⌘F` | Open Find & Replace |
+| `Ctrl+H` / `⌘H` | Open Find & Replace (focus Replace field) |
+| `Enter` (in Find) | Next match |
+| `Shift+Enter` (in Find) | Previous match |
+| `Esc` | Close Find & Replace |
+| `Ctrl+S` / `⌘S` | Save PDF |
+| `Ctrl+Z` / `⌘Z` | Undo |
+| `Ctrl+Y` / `⌘Y` | Redo |
+| `Ctrl++` / `⌘+` | Zoom in |
+| `Ctrl+-` / `⌘-` | Zoom out |
+| `Ctrl+0` / `⌘0` | Reset zoom |
 | `Delete` | Remove selected text block |
 
 ## Tech Stack
