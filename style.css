@@ -311,7 +311,7 @@ body {
 .editor-layout {
   flex: 1;
   display: grid;
-  grid-template-columns: 180px 1fr 260px;
+  grid-template-columns: 215px 1fr 260px;
   overflow: hidden;
 }
 
@@ -323,31 +323,41 @@ body {
   overflow: hidden;
 }
 .sidebar-header {
-  padding: 12px 16px;
+  padding: 10px 12px;
   font-size: 0.75rem; font-weight: 600;
-  color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em;
   border-bottom: 1px solid var(--border);
   display: flex; align-items: center; justify-content: space-between;
+  gap: 6px;
   flex-shrink: 0;
 }
 .sidebar-title-row {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
+  min-width: 0;
+}
+.sidebar-act-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
 }
 .sidebar-add-btn {
   display: flex;
   align-items: center;
-  gap: 5px;
-  padding: 3px 8px;
+  gap: 4px;
+  padding: 4px 7px;
   background: var(--bg-elevated);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   color: var(--text-secondary);
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   font-weight: 600;
   cursor: pointer;
   transition: all var(--transition);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 .sidebar-add-btn:hover {
   background: var(--blue-dim);
@@ -358,9 +368,10 @@ body {
   background: var(--bg-elevated);
   border: 1px solid var(--border);
   border-radius: 100px;
-  padding: 1px 8px;
+  padding: 1px 6px;
   font-size: 0.7rem;
   color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
 }
 .thumbnails {
   flex: 1; overflow-y: auto;
