@@ -48,6 +48,7 @@ const $pagesContainer  = $('pages-container');
 const $fileNameLabel   = $('file-name-label');
 const $fileBadge       = $('file-badge');
 const $sidebarCount    = $('sidebar-page-count');
+const $btnAddPage      = $('btn-add-page');
 const $currentPage     = $('current-page');
 const $totalPages      = $('total-pages');
 const $zoomLabel       = $('zoom-label');
@@ -219,7 +220,21 @@ async function loadPdf(data) {
         };
       }).filter(Boolean);
 
-      state.pages.push({ pdfPage, textItems, pageNum: i });
+      const unscaledVp = pdfPage.getViewport({ scale: 1.0 });
+      state.pages.push({
+        pdfPage,
+        textItems,
+        pageNum: i,
+        originalIndex: i - 1,
+        rotation: 0,
+        isNewPage: false,
+        width: unscaledVp.width,
+        height: unscaledVp.height,
+        wrapper: null,
+        canvas: null,
+        textLayerEl: null,
+        viewport: null,
+      });
     }
 
     setProgress(95);
@@ -245,21 +260,48 @@ async function loadPdf(data) {
 
 // ─── RENDER PAGES ─────────────────────────────────────────────────────────────
 async function renderAllPages() {
+  $pagesContainer.innerHTML = '';
   for (let i = 0; i < state.pages.length; i++) {
     await renderPage(i);
   }
+  renderAllThumbnails();
+  setupPageObserver();
   updateThumbnailActive(0);
 }
 
-async function renderPage(pageIdx) {
-  const { pdfPage, textItems, pageNum } = state.pages[pageIdx];
+async function renderPage(pageIdx, insertBeforeEl = null, replaceEl = null) {
+  const pageData = state.pages[pageIdx];
+  const { pdfPage, textItems, pageNum, rotation, isNewPage } = pageData;
 
   const dpr = window.devicePixelRatio || 1;
+  let cssViewport, renderViewport;
 
-  // cssViewport — logical scale used for DOM layout + text overlay positioning
-  const cssViewport    = pdfPage.getViewport({ scale: state.zoom });
-  // renderViewport — scaled up by dpr so the canvas renders at full physical resolution
-  const renderViewport = pdfPage.getViewport({ scale: state.zoom * dpr });
+  if (isNewPage || !pdfPage) {
+    const baseW = pageData.width || 595.28;
+    const baseH = pageData.height || 841.89;
+    const isSwapped = (rotation % 180 !== 0);
+    const unscaledW = isSwapped ? baseH : baseW;
+    const unscaledH = isSwapped ? baseW : baseH;
+
+    const cssW = unscaledW * state.zoom;
+    const cssH = unscaledH * state.zoom;
+    cssViewport = {
+      width: cssW,
+      height: cssH,
+      scale: state.zoom,
+      rotation: (rotation || 0) % 360,
+      transform: [state.zoom, 0, 0, -state.zoom, 0, cssH],
+    };
+    renderViewport = {
+      width: cssW * dpr,
+      height: cssH * dpr,
+      scale: state.zoom * dpr,
+    };
+  } else {
+    const totalRotation = ((pdfPage.rotate || 0) + (rotation || 0)) % 360;
+    cssViewport    = pdfPage.getViewport({ scale: state.zoom, rotation: totalRotation });
+    renderViewport = pdfPage.getViewport({ scale: state.zoom * dpr, rotation: totalRotation });
+  }
 
   // Wrapper sized at logical CSS dimensions
   const wrapper = document.createElement('div');
@@ -267,20 +309,25 @@ async function renderPage(pageIdx) {
   wrapper.dataset.pageIdx = pageIdx;
   wrapper.style.width  = `${cssViewport.width}px`;
   wrapper.style.height = `${cssViewport.height}px`;
+  if (state.editMode) wrapper.classList.add('edit-mode');
 
-  // Canvas buffer = physical pixels; CSS display = logical pixels → crisp on Retina
+  // Canvas buffer = physical pixels; CSS display = logical pixels
   const canvas = document.createElement('canvas');
   canvas.className    = 'page-canvas';
-  canvas.width        = renderViewport.width;    // physical pixel buffer
-  canvas.height       = renderViewport.height;
-  canvas.style.width  = `${cssViewport.width}px`;   // displayed at CSS size
+  canvas.width        = Math.round(renderViewport.width);
+  canvas.height       = Math.round(renderViewport.height);
+  canvas.style.width  = `${cssViewport.width}px`;
   canvas.style.height = `${cssViewport.height}px`;
 
-  // Render at full physical resolution
   const ctx = canvas.getContext('2d');
-  await pdfPage.render({ canvasContext: ctx, viewport: renderViewport }).promise;
+  if (isNewPage || !pdfPage) {
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  } else {
+    await pdfPage.render({ canvasContext: ctx, viewport: renderViewport }).promise;
+  }
 
-  // Text overlay layer — positioned in cssViewport (logical CSS) coordinates
+  // Text overlay layer
   const textLayer = document.createElement('div');
   textLayer.className = 'text-layer';
   textLayer.dataset.pageIdx = pageIdx;
@@ -299,15 +346,21 @@ async function renderPage(pageIdx) {
   wrapper.appendChild(canvas);
   wrapper.appendChild(textLayer);
   wrapper.appendChild(label);
-  $pagesContainer.appendChild(wrapper);
 
-  // Store cssViewport so applyChanges and undo/redo always use CSS-scale coords
+  if (replaceEl && replaceEl.parentNode) {
+    replaceEl.parentNode.replaceChild(wrapper, replaceEl);
+  } else if (insertBeforeEl && insertBeforeEl.parentNode) {
+    insertBeforeEl.parentNode.insertBefore(wrapper, insertBeforeEl);
+  } else {
+    $pagesContainer.appendChild(wrapper);
+  }
+
+  // Store references
   state.pages[pageIdx].wrapper     = wrapper;
   state.pages[pageIdx].canvas      = canvas;
   state.pages[pageIdx].textLayerEl = textLayer;
   state.pages[pageIdx].viewport    = cssViewport;
 
-  createThumbnail(canvas, pageIdx, pageNum);
   return wrapper;
 }
 
@@ -339,8 +392,6 @@ function createTextBlock(item, viewport) {
   const scaledHeight = scaledFontSize * 1.3;
 
   el.style.position  = 'absolute';
-  el.style.left      = `${sx}px`;
-  el.style.top       = `${sy - scaledFontSize}px`;
   el.style.width     = `${Math.max(scaledWidth, 8)}px`;
   el.style.height    = `${Math.max(scaledHeight, 8)}px`;
   el.style.fontSize  = `${scaledFontSize}px`;
@@ -348,10 +399,31 @@ function createTextBlock(item, viewport) {
   el.style.fontWeight = item.bold   ? 'bold'   : 'normal';
   el.style.fontStyle  = item.italic ? 'italic' : 'normal';
 
-  // Rotation
-  if (item.angle !== 0) {
-    el.style.transformOrigin = '0 100%';
-    el.style.transform = `rotate(${-item.angle}rad)`;
+  // Rotation positioning
+  const rotDeg = ((viewport.rotation || 0) % 360 + 360) % 360;
+  if (rotDeg === 90) {
+    el.style.left = `${sx + scaledFontSize}px`;
+    el.style.top  = `${sy}px`;
+    el.style.transformOrigin = '0 0';
+    el.style.transform = `rotate(${90 - (item.angle * 180 / Math.PI)}deg)`;
+  } else if (rotDeg === 180) {
+    el.style.left = `${sx}px`;
+    el.style.top  = `${sy + scaledFontSize}px`;
+    el.style.transformOrigin = '0 0';
+    el.style.transform = `rotate(${180 - (item.angle * 180 / Math.PI)}deg)`;
+  } else if (rotDeg === 270) {
+    el.style.left = `${sx - scaledFontSize}px`;
+    el.style.top  = `${sy}px`;
+    el.style.transformOrigin = '0 0';
+    el.style.transform = `rotate(${270 - (item.angle * 180 / Math.PI)}deg)`;
+  } else {
+    // 0 deg default
+    el.style.left = `${sx}px`;
+    el.style.top  = `${sy - scaledFontSize}px`;
+    if (item.angle !== 0) {
+      el.style.transformOrigin = '0 100%';
+      el.style.transform = `rotate(${-item.angle}rad)`;
+    }
   }
 
   if (item.modified) {
@@ -725,13 +797,13 @@ async function setZoom(zoom) {
 
   showLoading('Re-rendering…', 'Applying zoom', 10);
   $pagesContainer.innerHTML = '';
-  $thumbnails.innerHTML = '';
 
   for (let i = 0; i < state.pages.length; i++) {
     setProgress(10 + (i / state.pages.length) * 85);
     await renderPage(i);
   }
 
+  setupPageObserver();
   hideLoading();
   if (state.pages.length > 0) updateThumbnailActive(0);
   if (state.findState.open) performSearch();
@@ -993,32 +1065,152 @@ $replaceInput.addEventListener('keydown', (e) => {
 $btnReplaceOne.addEventListener('click', replaceCurrentMatch);
 $btnReplaceAll.addEventListener('click', replaceAllMatches);
 
-// ─── THUMBNAILS ───────────────────────────────────────────────────────────────
-function createThumbnail(sourceCanvas, pageIdx, pageNum) {
+// ─── THUMBNAILS & PAGE MANAGEMENT ──────────────────────────────────────────
+let draggedPageIdx = null;
+
+function renderAllThumbnails() {
+  $thumbnails.innerHTML = '';
+  state.pages.forEach((pageData, idx) => {
+    createThumbnailItem(pageData, idx);
+  });
+  updateThumbnailActive(state.currentPage ? state.currentPage - 1 : 0);
+}
+
+function createThumbnailItem(pageData, idx) {
   const thumb = document.createElement('div');
   thumb.className = 'thumb-item';
-  thumb.dataset.pageIdx = pageIdx;
+  thumb.dataset.pageIdx = idx;
+  thumb.draggable = true;
 
+  // Wrap for canvas + hover actions
   const wrap = document.createElement('div');
   wrap.className = 'thumb-canvas-wrap';
 
+  // Preview canvas
   const thumbCanvas = document.createElement('canvas');
-  const scale = 140 / sourceCanvas.width;
-  thumbCanvas.width  = Math.round(sourceCanvas.width  * scale);
-  thumbCanvas.height = Math.round(sourceCanvas.height * scale);
-  const ctx = thumbCanvas.getContext('2d');
-  ctx.drawImage(sourceCanvas, 0, 0, thumbCanvas.width, thumbCanvas.height);
+  const sourceCanvas = pageData.canvas;
+  const targetW = 140;
 
-  const label = document.createElement('div');
-  label.className = 'thumb-label';
-  label.textContent = `Page ${pageNum}`;
-
+  if (sourceCanvas && sourceCanvas.width > 0) {
+    const scale = targetW / sourceCanvas.width;
+    thumbCanvas.width  = targetW;
+    thumbCanvas.height = Math.round(sourceCanvas.height * scale);
+    const ctx = thumbCanvas.getContext('2d');
+    ctx.drawImage(sourceCanvas, 0, 0, thumbCanvas.width, thumbCanvas.height);
+  } else {
+    thumbCanvas.width  = targetW;
+    thumbCanvas.height = Math.round(targetW * 1.414);
+    const ctx = thumbCanvas.getContext('2d');
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, thumbCanvas.width, thumbCanvas.height);
+  }
   wrap.appendChild(thumbCanvas);
-  thumb.appendChild(wrap);
-  thumb.appendChild(label);
-  $thumbnails.appendChild(thumb);
 
-  thumb.addEventListener('click', () => scrollToPage(pageIdx));
+  // Hover action buttons (Rotate, Duplicate, Delete)
+  const actions = document.createElement('div');
+  actions.className = 'thumb-actions';
+
+  // Rotate button (90° clockwise)
+  const btnRot = document.createElement('button');
+  btnRot.className = 'thumb-act-btn';
+  btnRot.title = 'Rotate 90° clockwise';
+  btnRot.setAttribute('aria-label', `Rotate page ${idx + 1}`);
+  btnRot.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>`;
+  btnRot.addEventListener('click', (e) => {
+    e.stopPropagation();
+    rotatePage(idx);
+  });
+
+  // Duplicate button
+  const btnDup = document.createElement('button');
+  btnDup.className = 'thumb-act-btn';
+  btnDup.title = 'Duplicate page';
+  btnDup.setAttribute('aria-label', `Duplicate page ${idx + 1}`);
+  btnDup.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
+  btnDup.addEventListener('click', (e) => {
+    e.stopPropagation();
+    duplicatePage(idx);
+  });
+
+  // Delete button
+  const btnDel = document.createElement('button');
+  btnDel.className = 'thumb-act-btn danger';
+  btnDel.title = state.pages.length <= 1 ? 'Cannot delete the only page' : 'Delete page';
+  btnDel.setAttribute('aria-label', `Delete page ${idx + 1}`);
+  btnDel.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6"/></svg>`;
+  btnDel.addEventListener('click', (e) => {
+    e.stopPropagation();
+    deletePage(idx);
+  });
+
+  actions.appendChild(btnRot);
+  actions.appendChild(btnDup);
+  actions.appendChild(btnDel);
+  wrap.appendChild(actions);
+
+  // Footer: drag handle + page number label
+  const footer = document.createElement('div');
+  footer.className = 'thumb-footer';
+
+  const dragHandle = document.createElement('span');
+  dragHandle.className = 'thumb-drag-handle';
+  dragHandle.title = 'Drag to reorder';
+  dragHandle.textContent = '⋮⋮';
+
+  const label = document.createElement('span');
+  label.className = 'thumb-label';
+  label.textContent = `Page ${pageData.pageNum}`;
+
+  footer.appendChild(dragHandle);
+  footer.appendChild(label);
+
+  thumb.appendChild(wrap);
+  thumb.appendChild(footer);
+
+  // Drag & drop event listeners
+  thumb.addEventListener('dragstart', (e) => {
+    draggedPageIdx = idx;
+    thumb.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', String(idx));
+  });
+
+  thumb.addEventListener('dragend', () => {
+    thumb.classList.remove('dragging');
+    document.querySelectorAll('.thumb-item').forEach(t => {
+      t.classList.remove('drag-over-top', 'drag-over-bottom');
+    });
+    draggedPageIdx = null;
+  });
+
+  thumb.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    if (draggedPageIdx === null || draggedPageIdx === idx) return;
+    e.dataTransfer.dropEffect = 'move';
+    const rect = thumb.getBoundingClientRect();
+    const isTop = e.clientY < (rect.top + rect.height / 2);
+    thumb.classList.toggle('drag-over-top', isTop);
+    thumb.classList.toggle('drag-over-bottom', !isTop);
+  });
+
+  thumb.addEventListener('dragleave', () => {
+    thumb.classList.remove('drag-over-top', 'drag-over-bottom');
+  });
+
+  thumb.addEventListener('drop', (e) => {
+    e.preventDefault();
+    thumb.classList.remove('drag-over-top', 'drag-over-bottom');
+    if (draggedPageIdx === null || draggedPageIdx === idx) return;
+
+    const rect = thumb.getBoundingClientRect();
+    const isAfter = e.clientY >= (rect.top + rect.height / 2);
+    reorderPages(draggedPageIdx, idx, isAfter);
+  });
+
+  // Click thumbnail to scroll to that page
+  thumb.addEventListener('click', () => scrollToPage(idx));
+
+  $thumbnails.appendChild(thumb);
 }
 
 function updateThumbnailActive(pageIdx) {
@@ -1036,19 +1228,193 @@ function scrollToPage(pageIdx) {
   }
 }
 
+// ─── PAGE MANAGEMENT ACTIONS ──────────────────────────────────────────────────
+function reorderPages(fromIdx, targetIdx, insertAfter) {
+  if (fromIdx === targetIdx) return;
+
+  const [moved] = state.pages.splice(fromIdx, 1);
+  let destIdx = targetIdx;
+  if (fromIdx < targetIdx) {
+    destIdx = insertAfter ? targetIdx : targetIdx - 1;
+  } else {
+    destIdx = insertAfter ? targetIdx + 1 : targetIdx;
+  }
+  destIdx = Math.max(0, Math.min(state.pages.length, destIdx));
+  state.pages.splice(destIdx, 0, moved);
+
+  // Sync DOM order in container (moving existing nodes preserves canvas & listeners)
+  state.pages.forEach(p => {
+    if (p.wrapper) $pagesContainer.appendChild(p.wrapper);
+  });
+
+  refreshAfterPageChange(destIdx);
+  showToast(`✓ Moved Page ${fromIdx + 1} to position ${destIdx + 1}`, 'success', 2000);
+}
+
+async function rotatePage(pageIdx) {
+  const pageData = state.pages[pageIdx];
+  if (!pageData) return;
+
+  pageData.rotation = ((pageData.rotation || 0) + 90) % 360;
+
+  // Re-render this page in place
+  const oldWrapper = pageData.wrapper;
+  await renderPage(pageIdx, null, oldWrapper);
+
+  // Re-render thumbnails to reflect new orientation
+  renderAllThumbnails();
+  setupPageObserver();
+
+  showToast(`✓ Page ${pageData.pageNum} rotated 90° clockwise`, 'success', 2000);
+  if (state.findState.open) performSearch();
+}
+
+async function duplicatePage(pageIdx) {
+  const src = state.pages[pageIdx];
+  if (!src) return;
+
+  showLoading('Duplicating page…', `Cloning page ${src.pageNum}`, 30);
+
+  // Deep clone text items with fresh unique IDs
+  const dupPrefix = `p${Date.now()}`;
+  const clonedTextItems = src.textItems.map((item, idx) => ({
+    ...item,
+    id: `${dupPrefix}-t${idx}`,
+    modified: item.modified,
+    transform: [...item.transform],
+  }));
+
+  const newPageData = {
+    pdfPage: src.pdfPage,
+    textItems: clonedTextItems,
+    pageNum: pageIdx + 2,
+    originalIndex: src.isNewPage ? null : src.originalIndex,
+    rotation: src.rotation || 0,
+    isNewPage: src.isNewPage || false,
+    width: src.width,
+    height: src.height,
+    wrapper: null,
+    canvas: null,
+    textLayerEl: null,
+    viewport: null,
+  };
+
+  state.pages.splice(pageIdx + 1, 0, newPageData);
+
+  // Insert DOM wrapper after source wrapper
+  const nextSibling = src.wrapper ? src.wrapper.nextSibling : null;
+  await renderPage(pageIdx + 1, nextSibling);
+
+  refreshAfterPageChange(pageIdx + 1);
+  hideLoading();
+  showToast(`✓ Duplicated Page ${pageIdx + 1}`, 'success', 2500);
+}
+
+function deletePage(pageIdx) {
+  if (state.pages.length <= 1) {
+    showToast('Cannot delete the only page in the document.', 'error', 3000);
+    return;
+  }
+
+  const targetPage = state.pages[pageIdx];
+  const confirmMsg = targetPage.textItems.length > 0
+    ? `Delete Page ${pageIdx + 1}? All text and edits on this page will be removed.`
+    : `Delete Page ${pageIdx + 1}?`;
+
+  if (!confirm(confirmMsg)) return;
+
+  const [removed] = state.pages.splice(pageIdx, 1);
+  if (removed.wrapper && removed.wrapper.parentNode) {
+    removed.wrapper.remove();
+  }
+
+  if (state.selectedBlock && state.selectedBlock.item.page === removed.pageNum) {
+    deselectAll();
+  }
+
+  const nextFocus = Math.min(pageIdx, state.pages.length - 1);
+  refreshAfterPageChange(nextFocus);
+  showToast(`✓ Deleted Page ${removed.pageNum}`, 'info', 2000);
+}
+
+async function addBlankPage() {
+  if (state.pages.length === 0) return;
+
+  const newIdx = state.pages.length;
+  showLoading('Adding page…', 'Creating blank page', 40);
+
+  const newPageData = {
+    pdfPage: null,
+    textItems: [],
+    pageNum: newIdx + 1,
+    originalIndex: null,
+    rotation: 0,
+    isNewPage: true,
+    width: 595.28,   // Standard A4 width in pt
+    height: 841.89,  // Standard A4 height in pt
+    wrapper: null,
+    canvas: null,
+    textLayerEl: null,
+    viewport: null,
+  };
+
+  state.pages.push(newPageData);
+  await renderPage(newIdx);
+
+  refreshAfterPageChange(newIdx);
+  hideLoading();
+  showToast(`✓ Added blank Page ${newIdx + 1} at end`, 'success', 2500);
+}
+
+function refreshAfterPageChange(focusIdx = -1) {
+  const total = state.pages.length;
+  $sidebarCount.textContent = total;
+  $totalPages.textContent = total;
+
+  state.pages.forEach((p, i) => {
+    p.pageNum = i + 1;
+    if (p.wrapper) {
+      p.wrapper.dataset.pageIdx = i;
+      const lbl = p.wrapper.querySelector('.page-number-label');
+      if (lbl) lbl.textContent = `Page ${i + 1}`;
+    }
+    if (p.textLayerEl) {
+      p.textLayerEl.dataset.pageIdx = i;
+    }
+    p.textItems.forEach(it => { it.page = i + 1; });
+  });
+
+  renderAllThumbnails();
+  setupPageObserver();
+
+  if (focusIdx >= 0 && focusIdx < total) {
+    scrollToPage(focusIdx);
+  }
+}
+
+// Bind Add Page button in sidebar header
+if ($btnAddPage) {
+  $btnAddPage.addEventListener('click', addBlankPage);
+}
+
 // Track current page via intersection observer
+let pageObserver = null;
 function setupPageObserver() {
-  const observer = new IntersectionObserver((entries) => {
+  if (pageObserver) pageObserver.disconnect();
+
+  pageObserver = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if (e.isIntersecting && e.intersectionRatio > 0.5) {
         const idx = parseInt(e.target.dataset.pageIdx);
-        $currentPage.textContent = idx + 1;
-        updateThumbnailActive(idx);
+        if (!isNaN(idx)) {
+          $currentPage.textContent = idx + 1;
+          updateThumbnailActive(idx);
+        }
       }
     });
   }, { root: $('canvas-area'), threshold: 0.5 });
 
-  document.querySelectorAll('.page-wrapper').forEach(pw => observer.observe(pw));
+  document.querySelectorAll('.page-wrapper').forEach(pw => pageObserver.observe(pw));
 }
 
 // ─── BACK / RESET ─────────────────────────────────────────────────────────────
@@ -1060,6 +1426,7 @@ $btnBack.addEventListener('click', () => {
     $thumbnails.innerHTML = '';
     $fileInput.value = '';
     state.pdfDoc = null;
+    state.pdfData = null;
     state.pages = [];
     state.selectedBlock = null;
     state.undoStack = [];
@@ -1070,39 +1437,43 @@ $btnBack.addEventListener('click', () => {
   }
 });
 
-// ─── EXPORT / SAVE PDF (text-preserving via pdf-lib) ─────────────────────────
+// ─── EXPORT / SAVE PDF (copyPages order + text modifications) ────────────────
 async function exportPdf() {
-  if (!state.pdfDoc || !state.pdfData) return;
+  if (!state.pages || state.pages.length === 0) return;
 
-  // Count modifications
   const totalMods = state.pages.reduce((n, p) =>
     n + p.textItems.filter(it => it.modified).length, 0);
 
-  showLoading('Saving PDF…', 'Loading pdf-lib…', 8);
+  showLoading('Saving PDF…', 'Initializing document builder…', 8);
 
   try {
     const { PDFDocument, rgb, StandardFonts, degrees } = PDFLib;
 
-    // ── 1. Load the ORIGINAL PDF bytes (not rasterised) ──────────────────────
-    const pdfLibDoc = await PDFDocument.load(state.pdfData, {
-      ignoreEncryption: true,
-      updateMetadata: false,
-    });
-    const libPages = pdfLibDoc.getPages();
+    // ── 1. Fresh output document ──────────────────────────────────────────────
+    const outDoc = await PDFDocument.create();
+
+    // Load original PDF if available
+    let sourceDoc = null;
+    if (state.pdfData) {
+      sourceDoc = await PDFDocument.load(state.pdfData, {
+        ignoreEncryption: true,
+        updateMetadata: false,
+      });
+    }
 
     setProgress(20);
     $loadingSub.textContent = `Embedding fonts…`;
 
-    // ── 2. Pre-embed all standard fonts we might need ─────────────────────────
+    // ── 2. Pre-embed standard fonts into outDoc ───────────────────────────────
     const fonts = {
-      regular:     await pdfLibDoc.embedFont(StandardFonts.Helvetica),
-      bold:        await pdfLibDoc.embedFont(StandardFonts.HelveticaBold),
-      italic:      await pdfLibDoc.embedFont(StandardFonts.HelveticaOblique),
-      boldItalic:  await pdfLibDoc.embedFont(StandardFonts.HelveticaBoldOblique),
-      times:       await pdfLibDoc.embedFont(StandardFonts.TimesRoman),
-      timesBold:   await pdfLibDoc.embedFont(StandardFonts.TimesRomanBold),
-      courier:     await pdfLibDoc.embedFont(StandardFonts.Courier),
-      courierBold: await pdfLibDoc.embedFont(StandardFonts.CourierBold),
+      regular:     await outDoc.embedFont(StandardFonts.Helvetica),
+      bold:        await outDoc.embedFont(StandardFonts.HelveticaBold),
+      italic:      await outDoc.embedFont(StandardFonts.HelveticaOblique),
+      boldItalic:  await outDoc.embedFont(StandardFonts.HelveticaBoldOblique),
+      times:       await outDoc.embedFont(StandardFonts.TimesRoman),
+      timesBold:   await outDoc.embedFont(StandardFonts.TimesRomanBold),
+      courier:     await outDoc.embedFont(StandardFonts.Courier),
+      courierBold: await outDoc.embedFont(StandardFonts.CourierBold),
     };
 
     function pickFont(item) {
@@ -1130,25 +1501,42 @@ async function exportPdf() {
 
     setProgress(35);
 
-    // ── 3. Apply edits page by page ───────────────────────────────────────────
+    // ── 3. Build destination pages in their current user order ────────────────
     for (let i = 0; i < state.pages.length; i++) {
       const progress = 35 + (i / state.pages.length) * 55;
       setProgress(progress);
       $loadingSub.textContent = `Processing page ${i + 1} of ${state.pages.length}…`;
 
-      const pageData  = state.pages[i];
-      const libPage   = libPages[i];
-      const { height: pageHeight } = libPage.getSize();
+      const pageData = state.pages[i];
+      let libPage;
 
+      if (!pageData.isNewPage && sourceDoc && pageData.originalIndex != null) {
+        // Copy original page from source document
+        const [copiedPage] = await outDoc.copyPages(sourceDoc, [pageData.originalIndex]);
+        libPage = outDoc.addPage(copiedPage);
+      } else {
+        // Blank page (A4 default: 595.28 x 841.89)
+        const w = pageData.width || 595.28;
+        const h = pageData.height || 841.89;
+        libPage = outDoc.addPage([w, h]);
+      }
+
+      // Apply page rotation
+      if (pageData.rotation) {
+        const currentAngle = libPage.getRotation().angle || 0;
+        libPage.setRotation(degrees((currentAngle + pageData.rotation) % 360));
+      }
+
+      // Apply modified text items to libPage
       for (const item of pageData.textItems) {
         if (!item.modified) continue;
 
-        const pdfX    = item.transform[4];
-        const pdfY    = item.transform[5];
-        const fs      = Math.max(item.fontSize, 1);
-        const txtW    = item.width > 0 ? item.width : item.text.length * fs * 0.65;
+        const pdfX = item.transform[4];
+        const pdfY = item.transform[5];
+        const fs   = Math.max(item.fontSize, 1);
+        const txtW = item.width > 0 ? item.width : item.text.length * fs * 0.65;
 
-        // 3a. White-out the original text region
+        // White-out original text region in native PDF coordinates
         libPage.drawRectangle({
           x:      pdfX - 2,
           y:      pdfY - fs * 0.25,
@@ -1158,25 +1546,21 @@ async function exportPdf() {
           opacity: 1,
         });
 
-        // 3b. Draw the new text as real PDF text (stays editable!)
+        // Draw replacement text
         const font = pickFont(item);
         const color = hexToRgb(item.color);
-
-        // Sanitise text: remove characters outside Latin-1 range that
-        // standard PDF fonts can't encode (avoids pdf-lib encoding errors)
         const safeText = item.text.replace(/[^\x00-\xFF]/g, '?');
 
         try {
           libPage.drawText(safeText, {
-            x:    pdfX,
-            y:    pdfY,
+            x: pdfX,
+            y: pdfY,
             size: fs,
             font,
             color,
             rotate: item.angle ? degrees(-(item.angle * 180) / Math.PI) : undefined,
           });
         } catch (drawErr) {
-          // If the text still can't encode, fall back to ASCII-safe version
           const asciiText = item.text.replace(/[^\x20-\x7E]/g, '?');
           libPage.drawText(asciiText, { x: pdfX, y: pdfY, size: fs, font, color });
         }
@@ -1187,12 +1571,12 @@ async function exportPdf() {
     $loadingSub.textContent = 'Writing file…';
 
     // ── 4. Serialise and download ─────────────────────────────────────────────
-    const pdfBytes = await pdfLibDoc.save();
+    const pdfBytes = await outDoc.save();
     const blob = new Blob([pdfBytes], { type: 'application/pdf' });
     const url  = URL.createObjectURL(blob);
     const anchor = document.createElement('a');
     anchor.href     = url;
-    anchor.download = state.fileName.replace(/\.pdf$/i, '') + '_edited.pdf';
+    anchor.download = (state.fileName || 'document').replace(/\.pdf$/i, '') + '_edited.pdf';
     document.body.appendChild(anchor);
     anchor.click();
     document.body.removeChild(anchor);
@@ -1202,8 +1586,8 @@ async function exportPdf() {
     hideLoading();
 
     const msg = totalMods > 0
-      ? `✓ Saved! ${totalMods} text block${totalMods > 1 ? 's' : ''} edited — re-editable in any PDF editor`
-      : '✓ Saved (no changes made)';
+      ? `✓ Saved ${state.pages.length} page${state.pages.length > 1 ? 's' : ''}! (${totalMods} edited block${totalMods > 1 ? 's' : ''})`
+      : `✓ Saved ${state.pages.length} page${state.pages.length > 1 ? 's' : ''}!`;
     showToast(msg, 'success', 5000);
 
   } catch (err) {
