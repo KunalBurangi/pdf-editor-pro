@@ -836,7 +836,7 @@ body {
   top: 66px;
   right: 280px;
   z-index: 150;
-  background: rgba(14, 19, 38, 0.92);
+  background: rgba(14, 19, 38, 0.95);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(79, 142, 247, 0.35);
@@ -846,7 +846,8 @@ body {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  width: 380px;
+  width: 435px;
+  max-width: calc(100vw - 32px);
   animation: fr-appear 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -859,10 +860,12 @@ body {
   display: flex;
   align-items: center;
   gap: 6px;
+  width: 100%;
 }
 
 .fr-input-wrap {
   flex: 1;
+  min-width: 0;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -885,13 +888,14 @@ body {
 
 .fr-input {
   flex: 1;
+  min-width: 30px;
+  width: 0;
   background: transparent;
   border: none;
   outline: none;
   color: var(--text-primary);
   font-size: 0.8rem;
   font-family: inherit;
-  min-width: 60px;
 }
 
 .fr-input::placeholder {
@@ -905,12 +909,14 @@ body {
   font-family: 'JetBrains Mono', monospace;
   white-space: nowrap;
   padding: 0 4px;
+  flex-shrink: 0;
 }
 
 .fr-btn-group {
   display: flex;
   align-items: center;
   gap: 3px;
+  flex-shrink: 0;
 }
 
 .fr-icon-btn {
@@ -925,12 +931,17 @@ body {
   color: var(--text-secondary);
   cursor: pointer;
   transition: all var(--transition);
+  flex-shrink: 0;
 }
 
 .fr-icon-btn:hover {
   background: var(--bg-panel);
   color: var(--text-primary);
   border-color: var(--border-active);
+}
+
+.fr-close-btn {
+  flex-shrink: 0;
 }
 
 .fr-close-btn:hover {
@@ -954,6 +965,7 @@ body {
   font-family: 'JetBrains Mono', monospace;
   cursor: pointer;
   transition: all var(--transition);
+  flex-shrink: 0;
 }
 
 .fr-toggle-btn:hover {
