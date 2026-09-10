@@ -425,8 +425,14 @@ body {
   box-shadow: 0 0 0 2px rgba(79,142,247,0.3);
 }
 .text-block.modified {
-  border-color: rgba(34,211,164,0.6) !important;
-  background: rgba(34,211,164,0.08) !important;
+  background: #ffffff !important;
+  color: #000000;
+  border: 1px dashed rgba(34, 211, 164, 0.85) !important;
+  box-shadow: 0 0 0 1.5px rgba(34, 211, 164, 0.35) !important;
+  white-space: pre;
+  overflow: visible;
+  line-height: 1.15;
+  z-index: 5;
 }
 .text-block.editing {
   background: rgba(255,255,255,0.95) !important;

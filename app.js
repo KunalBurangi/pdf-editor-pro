@@ -354,6 +354,12 @@ function createTextBlock(item, viewport) {
     el.style.transform = `rotate(${-item.angle}rad)`;
   }
 
+  if (item.modified) {
+    el.classList.add('modified');
+    el.textContent = item.text;
+    el.style.color = item.color || '#000000';
+  }
+
   // Info tooltip (shows font on hover)
   el.title = `${item.fontName || 'Unknown'} ${Math.round(item.fontSize)}pt — click to edit`;
 
@@ -503,27 +509,10 @@ function applyChanges(el, item) {
   const [sx, sy] = applyTransform(vp, newX, newY);
   const scaledFontSize = newSize * (vp.scale || state.zoom);
 
-  // Update element styles
-  el.textContent = newText;
-  el.style.left        = `${sx}px`;
-  el.style.top         = `${sy - scaledFontSize}px`;
-  el.style.fontSize    = `${scaledFontSize}px`;
-  el.style.fontFamily  = normalizeFontName(newFont);
-  el.style.fontWeight  = newBold   ? 'bold'   : 'normal';
-  el.style.fontStyle   = newItalic ? 'italic' : 'normal';
-  el.style.color       = newColor;
+  el.style.left = `${sx}px`;
+  el.style.top  = `${sy - scaledFontSize}px`;
 
-  // Re-add info bar and handle
-  const info = document.createElement('div');
-  info.className = 'info-bar';
-  info.textContent = `${normalizeFontName(newFont)} ${Math.round(newSize)}pt`;
-  el.appendChild(info);
-
-  const handle = document.createElement('div');
-  handle.className = 'resize-handle';
-  el.appendChild(handle);
-
-  el.classList.add('modified');
+  updateElementAfterTextChange(el, item, pageData);
 
   showToast('✓ Text block updated', 'success', 2000);
   if (state.findState.open) performSearch();
@@ -556,6 +545,8 @@ function startInlineEdit(el, item) {
 
   selectBlock(el, item);
   el.classList.add('editing');
+  el.textContent = item.text;
+  el.style.color = item.color || '#000000';
   el.contentEditable = 'true';
   el.focus();
 
@@ -570,9 +561,10 @@ function startInlineEdit(el, item) {
   el.addEventListener('blur', () => commitInlineEdit(el, item), { once: true });
   el.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-      el.textContent = item.text;
-      el.classList.remove('editing');
       el.contentEditable = 'false';
+      el.classList.remove('editing');
+      const pageData = state.pages.find(p => p.pageNum === item.page);
+      updateElementAfterTextChange(el, item, pageData);
     }
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -585,28 +577,45 @@ function commitInlineEdit(el, item) {
   el.classList.remove('editing');
   el.contentEditable = 'false';
   const newText = el.textContent;
+  const pageData = state.pages.find(p => p.pageNum === item.page);
   if (newText !== item.text) {
     pushUndo({ type: 'edit', itemId: item.id, page: item.page, prev: { ...item } });
     item.text = newText;
     item.modified = true;
-    el.classList.add('modified');
+    updateElementAfterTextChange(el, item, pageData);
     $propContent.value = newText;
     showToast('✓ Text updated', 'success', 1500);
     if (state.findState.open) performSearch();
+  } else {
+    updateElementAfterTextChange(el, item, pageData);
   }
 }
 
 function updateElementAfterTextChange(el, item, pageData) {
   const vp = pageData?.viewport || state.pages[item.page - 1]?.viewport;
-  const scaledFontSize = Math.abs(item.fontSize) * (vp?.scale || state.zoom);
+  const scale = vp?.scale || state.zoom || 1.0;
+  const scaledFontSize = Math.abs(item.fontSize) * scale;
   const scaledWidth = item.width > 0
-    ? (item.text.length / Math.max(item.originalText?.length || 1, 1)) * item.width * (vp?.scale || state.zoom)
+    ? (item.text.length / Math.max(item.originalText?.length || 1, 1)) * item.width * scale
     : item.text.length * scaledFontSize * 0.55;
 
   el.style.width = `${Math.max(scaledWidth, 12)}px`;
+  el.style.height = `${Math.max(scaledFontSize * 1.3, 14)}px`;
+  el.style.fontSize = `${scaledFontSize}px`;
+  el.style.fontFamily = normalizeFontName(item.fontName);
+  el.style.fontWeight = item.bold ? 'bold' : 'normal';
+  el.style.fontStyle = item.italic ? 'italic' : 'normal';
   el.title = `${item.fontName || 'Unknown'} ${Math.round(item.fontSize)}pt — "${item.text}"`;
   el.setAttribute('aria-label', `Edit: ${item.text.substring(0, 40)}`);
-  if (item.modified) el.classList.add('modified');
+
+  if (item.modified) {
+    el.classList.add('modified');
+    el.textContent = item.text;
+    el.style.color = item.color || '#000000';
+  } else {
+    el.classList.remove('modified');
+    el.textContent = '';
+  }
 }
 
 // ─── UNDO / REDO ──────────────────────────────────────────────────────────────
