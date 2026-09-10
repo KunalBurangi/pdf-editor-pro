@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Dancing+Script:wght@600&family=Great+Vibes&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=15" />
+  <link rel="stylesheet" href="style.css?v=16" />
 </head>
 <body>
 
@@ -28,46 +28,228 @@
       <div class="blob blob-3"></div>
     </div>
     <div class="landing-content">
-      <div class="logo">
-        <span class="logo-icon">✦</span>
-        <span class="logo-text">PDF<span class="accent">Editor</span> Pro</span>
-      </div>
-      <h1 class="landing-title">Edit PDFs with<br /><span class="gradient-text">Perfect Typography</span></h1>
-      <p class="landing-sub">Upload any PDF and edit text while preserving the exact font, size, and style of every element.</p>
+      <!-- Top Navigation -->
+      <header class="landing-header">
+        <div class="logo">
+          <span class="logo-icon">✦</span>
+          <span class="logo-text">PDF<span class="accent">Editor</span> <span class="badge-pro">PRO</span></span>
+        </div>
+        <button id="btn-theme-toggle-landing" class="theme-toggle-btn" type="button" aria-label="Toggle light or dark theme">
+          <span class="theme-icon">☀️</span>
+          <span class="theme-label">Light Mode</span>
+        </button>
+      </header>
 
-      <div class="upload-zone" id="upload-zone" tabindex="0" role="button" aria-label="Upload PDF file">
-        <div class="upload-icon-wrap">
-          <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
-            <circle cx="26" cy="26" r="25" stroke="url(#grad)" stroke-width="1.5"/>
-            <path d="M26 34V20M26 20L20 26M26 20L32 26" stroke="url(#grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M18 36h16" stroke="url(#grad)" stroke-width="2" stroke-linecap="round"/>
-            <defs>
-              <linearGradient id="grad" x1="0" y1="0" x2="52" y2="52" gradientUnits="userSpaceOnUse">
-                <stop stop-color="#4f8ef7"/>
-                <stop offset="1" stop-color="#a855f7"/>
-              </linearGradient>
-            </defs>
-          </svg>
+      <!-- Hero & Upload -->
+      <div class="landing-hero">
+        <div class="hero-badge">
+          <span class="hero-badge-dot"></span>
+          <span>100% In-Browser &bull; Zero Server Uploads &bull; Private</span>
         </div>
-        <p class="upload-label">Click to upload PDF</p>
-        <p class="upload-hint">or drag &amp; drop — PDF files only</p>
-        <input type="file" id="file-input" accept=".pdf" aria-label="Upload PDF" />
+        <h1 class="landing-title">Edit PDFs with<br /><span class="gradient-text">Perfect Typography</span></h1>
+        <p class="landing-sub">Upload any PDF and edit text directly while preserving font family, weight, size, and color. Sign, annotate, reorder, merge, and resize effortlessly.</p>
+
+        <div class="upload-zone" id="upload-zone" tabindex="0" role="button" aria-label="Upload PDF file">
+          <div class="upload-icon-wrap">
+            <svg width="56" height="56" viewBox="0 0 52 52" fill="none">
+              <circle cx="26" cy="26" r="25" stroke="url(#grad)" stroke-width="1.5"/>
+              <path d="M26 34V20M26 20L20 26M26 20L32 26" stroke="url(#grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M18 36h16" stroke="url(#grad)" stroke-width="2" stroke-linecap="round"/>
+              <defs>
+                <linearGradient id="grad" x1="0" y1="0" x2="52" y2="52" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#4f8ef7"/>
+                  <stop offset="1" stop-color="#a855f7"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <p class="upload-label">Choose a PDF or drag it here</p>
+          <p class="upload-hint">Supports all standard PDF documents &bull; Processed securely on your device</p>
+          <input type="file" id="file-input" accept=".pdf" aria-label="Upload PDF" />
+        </div>
+
+        <div class="upload-quick-tags">
+          <span class="quick-tag">🔒 100% Private</span>
+          <span class="quick-tag">⚡ Exact Font Matching</span>
+          <span class="quick-tag">✍️ Signatures &amp; Stamps</span>
+          <span class="quick-tag">📑 Page Organizer</span>
+          <span class="quick-tag">🔄 Merge &amp; Resize</span>
+        </div>
       </div>
 
-      <div class="features">
-        <div class="feature-card">
-          <span class="feature-icon">🔍</span>
-          <span>Extracts every text block</span>
+      <!-- ─── FEATURES BENTO GRID ───────────────────────────────────── -->
+      <section class="features-section" aria-label="Features showcase">
+        <div class="section-header">
+          <span class="section-tag">All-In-One Studio</span>
+          <h2 class="section-title">Built for Precision. Zero Compromises.</h2>
+          <p class="section-sub">A complete suite of PDF manipulation tools running entirely in client-side WebAssembly with zero data leakage.</p>
         </div>
-        <div class="feature-card">
-          <span class="feature-icon">✏️</span>
-          <span>Edit with matched styles</span>
+
+        <div class="bento-grid">
+          <!-- Featured: Typography Matching -->
+          <div class="bento-card featured">
+            <div class="bento-card-top">
+              <div class="bento-icon-wrap">🎯</div>
+              <span class="bento-tag">Signature Capability</span>
+            </div>
+            <h3 class="bento-card-title">Vector Font &amp; Style Matching Engine</h3>
+            <p class="bento-card-sub">Extracts exact font-family metadata, font weight, slope, point size, and RGB text colors directly from PDF content streams. Edits look authentic and natural without clumsy misaligned text boxes.</p>
+          </div>
+
+          <!-- Card 2: Find & Replace -->
+          <div class="bento-card">
+            <div class="bento-card-top">
+              <div class="bento-icon-wrap purple">🔍</div>
+              <span class="bento-tag">Ctrl+F</span>
+            </div>
+            <h3 class="bento-card-title">Document Find &amp; Replace</h3>
+            <p class="bento-card-sub">Search across all pages instantly with live occurrence highlights, match counters, case sensitivity toggling, and one-click global "Replace All".</p>
+          </div>
+
+          <!-- Card 3: Digital Signatures -->
+          <div class="bento-card">
+            <div class="bento-card-top">
+              <div class="bento-icon-wrap">✍️</div>
+              <span class="bento-tag">Draw &amp; Type</span>
+            </div>
+            <h3 class="bento-card-title">Digital Signatures</h3>
+            <p class="bento-card-sub">Draw natural handwriting with Bezier smoothing, or generate calligraphy signatures using elegant cursive fonts (Caveat, Dancing Script, Great Vibes).</p>
+          </div>
+
+          <!-- Card 4: Image & Logo Insertion -->
+          <div class="bento-card">
+            <div class="bento-card-top">
+              <div class="bento-icon-wrap green">🖼️</div>
+              <span class="bento-tag green">PNG / JPG</span>
+            </div>
+            <h3 class="bento-card-title">Images, Stamps &amp; Logos</h3>
+            <p class="bento-card-sub">Add transparent company logos, official seals, or photos. Position anywhere on pages with intuitive interactive resize handles.</p>
+          </div>
+
+          <!-- Card 5: Pen & Highlighter -->
+          <div class="bento-card">
+            <div class="bento-card-top">
+              <div class="bento-icon-wrap amber">🖍️</div>
+              <span class="bento-tag">Annotations</span>
+            </div>
+            <h3 class="bento-card-title">Pen &amp; Text Highlighter</h3>
+            <p class="bento-card-sub">Sketch diagrams, underline key clauses, and highlight contract terms with customizable highlighter colors, opacities, and stroke widths.</p>
+          </div>
+
+          <!-- Card 6: Sticky Notes -->
+          <div class="bento-card">
+            <div class="bento-card-top">
+              <div class="bento-icon-wrap amber">💬</div>
+              <span class="bento-tag">Comments</span>
+            </div>
+            <h3 class="bento-card-title">Pinned Sticky Notes</h3>
+            <p class="bento-card-sub">Leave editorial comments, review checklists, and reminders right on the page canvas with collapsible amber note cards.</p>
+          </div>
+
+          <!-- Card 7: Page Management -->
+          <div class="bento-card">
+            <div class="bento-card-top">
+              <div class="bento-icon-wrap purple">📑</div>
+              <span class="bento-tag">Visual Strip</span>
+            </div>
+            <h3 class="bento-card-title">Visual Page Management</h3>
+            <p class="bento-card-sub">Sidebar thumbnails with drag-and-drop page reordering, instant duplicate, 90°/180° page rotation, and page deletion.</p>
+          </div>
+
+          <!-- Card 8: Merge & Resize -->
+          <div class="bento-card">
+            <div class="bento-card-top">
+              <div class="bento-icon-wrap">🔄</div>
+              <span class="bento-tag">Multi-Doc</span>
+            </div>
+            <h3 class="bento-card-title">Merge &amp; Resize Documents</h3>
+            <p class="bento-card-sub">Combine secondary PDF files anywhere in the page sequence, and convert between A4, Letter, Legal, A3, and custom formats with vector content scaling.</p>
+          </div>
+
+          <!-- Card 9: 100% Privacy -->
+          <div class="bento-card">
+            <div class="bento-card-top">
+              <div class="bento-icon-wrap green">🔒</div>
+              <span class="bento-tag green">100% Local</span>
+            </div>
+            <h3 class="bento-card-title">Private &amp; Offline Ready</h3>
+            <p class="bento-card-sub">Your sensitive files never touch any backend server. Everything executes locally in your browser memory for total compliance and peace of mind.</p>
+          </div>
         </div>
-        <div class="feature-card">
-          <span class="feature-icon">💾</span>
-          <span>Export as clean PDF</span>
+      </section>
+
+      <!-- ─── USAGE & SHORTCUTS SECTION ───────────────────────────── -->
+      <section class="usage-shortcuts-section" aria-label="Usage guide and shortcuts">
+        <!-- Quick Start Guide -->
+        <div class="guide-card">
+          <div class="card-header-row">
+            <div class="bento-icon-wrap">🚀</div>
+            <h3 class="card-header-title">How To Use in 3 Simple Steps</h3>
+          </div>
+          <div class="steps-list">
+            <div class="step-item">
+              <span class="step-number">1</span>
+              <div class="step-content">
+                <strong>Upload Your Document</strong>
+                <p>Drag &amp; drop any PDF into the upload area above or click to select from your files.</p>
+              </div>
+            </div>
+            <div class="step-item">
+              <span class="step-number">2</span>
+              <div class="step-content">
+                <strong>Select, Edit &amp; Annotate</strong>
+                <p>Click any text to edit with matched typography, or pick Sign, Image, Draw, Note, Merge, or Resize from the topbar.</p>
+              </div>
+            </div>
+            <div class="step-item">
+              <span class="step-number">3</span>
+              <div class="step-content">
+                <strong>Save &amp; Download</strong>
+                <p>Click "Save PDF" in the top-right corner to compile and download your publication-ready document.</p>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+
+        <!-- Shortcuts Card -->
+        <div class="shortcuts-card">
+          <div class="card-header-row">
+            <div class="bento-icon-wrap purple">⌨️</div>
+            <h3 class="card-header-title">Keyboard Shortcuts</h3>
+          </div>
+          <div class="shortcuts-table">
+            <div class="shortcut-row">
+              <span class="shortcut-desc">Find &amp; Replace</span>
+              <div class="shortcut-keys"><kbd>Ctrl</kbd> / <kbd>⌘</kbd> + <kbd>F</kbd></div>
+            </div>
+            <div class="shortcut-row">
+              <span class="shortcut-desc">Undo last change</span>
+              <div class="shortcut-keys"><kbd>Ctrl</kbd> / <kbd>⌘</kbd> + <kbd>Z</kbd></div>
+            </div>
+            <div class="shortcut-row">
+              <span class="shortcut-desc">Redo change</span>
+              <div class="shortcut-keys"><kbd>Ctrl</kbd> / <kbd>⌘</kbd> + <kbd>Y</kbd></div>
+            </div>
+            <div class="shortcut-row">
+              <span class="shortcut-desc">Direct text edit</span>
+              <div class="shortcut-keys"><kbd>Double Click</kbd></div>
+            </div>
+            <div class="shortcut-row">
+              <span class="shortcut-desc">Delete selected item</span>
+              <div class="shortcut-keys"><kbd>Delete</kbd> / <kbd>Backspace</kbd></div>
+            </div>
+            <div class="shortcut-row">
+              <span class="shortcut-desc">Open Help modal</span>
+              <div class="shortcut-keys"><kbd>?</kbd></div>
+            </div>
+            <div class="shortcut-row">
+              <span class="shortcut-desc">Close open modal / cancel</span>
+              <div class="shortcut-keys"><kbd>Esc</kbd></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
     </div>
   </div>
 
@@ -167,6 +349,12 @@
         <div class="page-indicator">
           <span id="current-page">1</span> / <span id="total-pages">1</span>
         </div>
+        <button id="btn-theme-toggle-editor" class="tool-btn icon-only" title="Toggle Light / Dark theme" aria-label="Toggle theme">
+          <span id="editor-theme-icon" style="font-size: 0.95rem; line-height: 1;">☀️</span>
+        </button>
+        <button id="btn-help" class="tool-btn icon-only" title="Keyboard Shortcuts &amp; Guide (?)" aria-label="Keyboard Shortcuts and Help">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </button>
         <button id="btn-save" class="btn-save" aria-label="Download edited PDF">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v7M8 10l-3-3M8 10l3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 13h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
           Save PDF
@@ -581,6 +769,103 @@
     </div>
   </div>
 
+  <!-- ─── HELP & SHORTCUTS MODAL ──────────────────────────────── -->
+  <div id="modal-help" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="help-modal-title">
+    <div class="modal-card help-modal-card">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <h2 id="help-modal-title" class="modal-title">Keyboard Shortcuts &amp; Feature Guide</h2>
+        </div>
+        <button id="btn-close-help" class="modal-close-btn" aria-label="Close help modal">✕</button>
+      </div>
+
+      <div class="modal-body help-modal-body">
+        <div>
+          <div class="help-section-title">Essential Shortcuts</div>
+          <div class="shortcuts-table">
+            <div class="shortcut-row">
+              <span class="shortcut-desc">Find &amp; Replace text</span>
+              <div class="shortcut-keys"><kbd>Ctrl</kbd> / <kbd>⌘</kbd> + <kbd>F</kbd></div>
+            </div>
+            <div class="shortcut-row">
+              <span class="shortcut-desc">Undo last edit</span>
+              <div class="shortcut-keys"><kbd>Ctrl</kbd> / <kbd>⌘</kbd> + <kbd>Z</kbd></div>
+            </div>
+            <div class="shortcut-row">
+              <span class="shortcut-desc">Redo edit</span>
+              <div class="shortcut-keys"><kbd>Ctrl</kbd> / <kbd>⌘</kbd> + <kbd>Y</kbd></div>
+            </div>
+            <div class="shortcut-row">
+              <span class="shortcut-desc">Direct text edit</span>
+              <div class="shortcut-keys"><kbd>Double Click</kbd></div>
+            </div>
+            <div class="shortcut-row">
+              <span class="shortcut-desc">Delete selected item</span>
+              <div class="shortcut-keys"><kbd>Delete</kbd> / <kbd>Backspace</kbd></div>
+            </div>
+            <div class="shortcut-row">
+              <span class="shortcut-desc">Close dialog / cancel</span>
+              <div class="shortcut-keys"><kbd>Esc</kbd></div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="help-section-title">Editor Features Quick Guide</div>
+          <div class="help-grid">
+            <div class="help-item">
+              <span class="help-item-icon">🎯</span>
+              <div class="help-item-text">
+                <strong>Text Editing</strong>
+                <p>Click any text to open properties. Edit text, font size, weight, and color while preserving original styles.</p>
+              </div>
+            </div>
+            <div class="help-item">
+              <span class="help-item-icon">✍️</span>
+              <div class="help-item-text">
+                <strong>Digital Signatures</strong>
+                <p>Draw smooth signatures or generate stylized typography signatures. Drag and resize on any page.</p>
+              </div>
+            </div>
+            <div class="help-item">
+              <span class="help-item-icon">🖼️</span>
+              <div class="help-item-text">
+                <strong>Image Stamps</strong>
+                <p>Upload logos, stamps, or photos and freely reposition or scale them using corner handles.</p>
+              </div>
+            </div>
+            <div class="help-item">
+              <span class="help-item-icon">🖍️</span>
+              <div class="help-item-text">
+                <strong>Pen &amp; Highlighter</strong>
+                <p>Draw freehand notes or highlight contracts with semi-transparent colors.</p>
+              </div>
+            </div>
+            <div class="help-item">
+              <span class="help-item-icon">📑</span>
+              <div class="help-item-text">
+                <strong>Page Management</strong>
+                <p>Drag thumbnails to reorder pages, rotate 90°/180°, duplicate, or delete from the left sidebar.</p>
+              </div>
+            </div>
+            <div class="help-item">
+              <span class="help-item-icon">🔄</span>
+              <div class="help-item-text">
+                <strong>Merge &amp; Resize</strong>
+                <p>Insert pages from other PDFs or resize page dimensions (A4, Letter, Legal, A3) with vector scaling.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button id="btn-dismiss-help" class="btn-primary" type="button">Got it</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ─── LOADING OVERLAY ───────────────────────────────────────── -->
   <div id="loading-overlay" class="loading-overlay hidden">
     <div class="loading-card">
@@ -600,7 +885,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
   <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
-  <script src="app.js?v=15"></script>
+  <script src="app.js?v=16"></script>
 
 </body>
 </html>

@@ -134,6 +134,13 @@ const $btnZoomReset    = $('btn-zoom-reset');
 const $btnUndo         = $('btn-undo');
 const $btnRedo         = $('btn-redo');
 const $btnSave         = $('btn-save');
+const $btnThemeLanding = $('btn-theme-toggle-landing');
+const $btnThemeEditor  = $('btn-theme-toggle-editor');
+const $editorThemeIcon = $('editor-theme-icon');
+const $btnHelp         = $('btn-help');
+const $modalHelp       = $('modal-help');
+const $btnCloseHelp    = $('btn-close-help');
+const $btnDismissHelp  = $('btn-dismiss-help');
 const $propsEmpty      = $('props-empty');
 const $propsForm       = $('props-form');
 const $propContent     = $('prop-content');
@@ -929,11 +936,25 @@ document.addEventListener('keydown', (e) => {
     if (e.key === 's')                  { e.preventDefault(); exportPdf(); }
   }
   if (e.key === 'Escape') {
+    if ($modalHelp && !$modalHelp.classList.contains('hidden')) {
+      e.preventDefault();
+      closeHelpModal();
+      return;
+    }
     if (state.findState.open) {
       e.preventDefault();
       closeFindReplace();
       return;
     }
+  }
+  if (e.key === '?' && !['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName) && !document.activeElement?.isContentEditable) {
+    e.preventDefault();
+    if ($modalHelp && !$modalHelp.classList.contains('hidden')) {
+      closeHelpModal();
+    } else {
+      openHelpModal();
+    }
+    return;
   }
   if (e.key === 'Delete' || e.key === 'Backspace') {
     if (state.selectedWidget) {
@@ -3156,10 +3177,97 @@ async function exportPdf() {
 $btnSave.addEventListener('click', exportPdf);
 
 
+// ─── THEME CONTROLLER ────────────────────────────────────────────────────────
+const THEME_KEY = 'pdf_editor_theme';
+
+function getCurrentTheme() {
+  const saved = localStorage.getItem(THEME_KEY);
+  if (saved === 'light' || saved === 'dark') return saved;
+  return (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+}
+
+function applyTheme(theme) {
+  if (theme === 'light') {
+    document.documentElement.setAttribute('data-theme', 'light');
+    if ($btnThemeLanding) {
+      const icon = $btnThemeLanding.querySelector('.theme-icon');
+      const label = $btnThemeLanding.querySelector('.theme-label');
+      if (icon) icon.textContent = '🌙';
+      if (label) label.textContent = 'Dark Mode';
+    }
+    if ($editorThemeIcon) {
+      $editorThemeIcon.textContent = '🌙';
+      if ($btnThemeEditor) $btnThemeEditor.title = 'Switch to Dark theme';
+    }
+  } else {
+    document.documentElement.removeAttribute('data-theme');
+    if ($btnThemeLanding) {
+      const icon = $btnThemeLanding.querySelector('.theme-icon');
+      const label = $btnThemeLanding.querySelector('.theme-label');
+      if (icon) icon.textContent = '☀️';
+      if (label) label.textContent = 'Light Mode';
+    }
+    if ($editorThemeIcon) {
+      $editorThemeIcon.textContent = '☀️';
+      if ($btnThemeEditor) $btnThemeEditor.title = 'Switch to Light theme';
+    }
+  }
+}
+
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+  const next = current === 'light' ? 'dark' : 'light';
+  localStorage.setItem(THEME_KEY, next);
+  applyTheme(next);
+  showToast(`Switched to ${next === 'light' ? 'Light' : 'Dark'} mode`, 'info', 1500);
+}
+
+function initTheme() {
+  const initialTheme = getCurrentTheme();
+  applyTheme(initialTheme);
+
+  $btnThemeLanding?.addEventListener('click', toggleTheme);
+  $btnThemeEditor?.addEventListener('click', toggleTheme);
+
+  if (window.matchMedia) {
+    window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', (e) => {
+      if (!localStorage.getItem(THEME_KEY)) {
+        applyTheme(e.matches ? 'light' : 'dark');
+      }
+    });
+  }
+}
+
+
+// ─── HELP MODAL CONTROLLER ───────────────────────────────────────────────────
+function openHelpModal() {
+  if ($modalHelp) {
+    $modalHelp.classList.remove('hidden');
+  }
+}
+
+function closeHelpModal() {
+  if ($modalHelp) {
+    $modalHelp.classList.add('hidden');
+  }
+}
+
+function initHelpModal() {
+  $btnHelp?.addEventListener('click', openHelpModal);
+  $btnCloseHelp?.addEventListener('click', closeHelpModal);
+  $btnDismissHelp?.addEventListener('click', closeHelpModal);
+  $modalHelp?.addEventListener('click', (e) => {
+    if (e.target === $modalHelp) closeHelpModal();
+  });
+}
+
+
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 (function init() {
   $zoomLabel.textContent = '100%';
   hideLoading();
+  initTheme();
+  initHelpModal();
   initSignatureModal();
   initMergeModal();
   initResizeModal();
