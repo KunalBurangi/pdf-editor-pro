@@ -592,30 +592,46 @@ kbd {
 }
 
 /* TOPBAR */
+/* TOPBAR (MAIN HEADER) */
 .topbar {
-  height: 56px;
+  height: 48px;
   background: var(--bg-surface);
   border-bottom: 1px solid var(--border);
   display: flex; align-items: center;
   justify-content: space-between;
-  padding: 0 16px; gap: 8px;
+  padding: 0 16px; gap: 12px;
   flex-shrink: 0;
   position: relative; z-index: 50;
   min-width: 0;
 }
 .topbar-left {
-  display: flex; align-items: center; gap: 8px;
+  display: flex; align-items: center; gap: 12px;
   flex-shrink: 0;
   min-width: 0;
 }
-.topbar-center {
-  display: flex; align-items: center; justify-content: center; gap: 3px;
-  flex: 1;
-  min-width: 0;
-}
 .topbar-right {
-  display: flex; align-items: center; gap: 10px;
+  display: flex; align-items: center; gap: 8px;
   flex-shrink: 0; justify-content: flex-end;
+}
+
+/* FEATURE SUB-HEADER / TOOLBAR */
+.feature-bar {
+  height: 44px;
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 16px; gap: 8px;
+  flex-shrink: 0;
+  position: relative; z-index: 45;
+  user-select: none;
+}
+[data-theme="light"] .feature-bar {
+  background: #fdfdfe;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+}
+.feature-group {
+  display: flex; align-items: center; gap: 4px;
+  flex-shrink: 0;
 }
 
 .btn-icon {
@@ -640,13 +656,13 @@ kbd {
 
 .file-badge {
   display: flex; align-items: center; gap: 6px;
-  padding: 4px 10px;
+  padding: 4px 12px;
   background: var(--bg-elevated);
   border: 1px solid var(--border);
   border-radius: 100px;
-  font-size: 0.75rem; color: var(--text-secondary);
-  max-width: 150px; overflow: hidden;
-  flex-shrink: 1;
+  font-size: 0.78rem; color: var(--text-secondary);
+  max-width: 280px; overflow: hidden;
+  flex-shrink: 0;
 }
 .file-badge span {
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
@@ -1224,23 +1240,23 @@ kbd {
 * { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
 
 /* ─── RESPONSIVE ──────────────────────────────────────────────────────── */
-@media (max-width: 1300px) {
-  .topbar-center .tool-btn:not(.active) span {
-    display: none;
-  }
-  .file-badge {
-    max-width: 120px;
-  }
+@media (max-width: 1024px) {
+  .file-badge { max-width: 200px; }
+  .zoom-label { display: none; }
 }
 
-@media (max-width: 1100px) {
-  .topbar-center .tool-btn span {
+@media (max-width: 840px) {
+  .feature-bar .tool-btn:not(.active) span {
     display: none;
   }
-  .file-badge {
-    max-width: 90px;
+  .file-badge { max-width: 140px; }
+}
+
+@media (max-width: 640px) {
+  .feature-bar .tool-btn span {
+    display: none;
   }
-  .zoom-label {
+  .page-indicator {
     display: none;
   }
 }
@@ -1248,13 +1264,13 @@ kbd {
 @media (max-width: 900px) {
   .editor-layout { grid-template-columns: 0 1fr 0; }
   .sidebar, .properties-panel { display: none; }
-  .find-replace-bar { right: 16px !important; left: 16px !important; width: auto !important; }
+  .find-replace-bar { right: 16px !important; left: 16px !important; width: auto !important; top: 100px !important; }
 }
 
 /* ─── FIND & REPLACE FLOATING BAR ─────────────────────────────────────── */
 .find-replace-bar {
   position: absolute;
-  top: 66px;
+  top: 100px;
   right: 280px;
   z-index: 150;
   background: rgba(14, 19, 38, 0.95);
@@ -1437,7 +1453,7 @@ kbd {
 /* ─── ANNOTATION FLOATING SUB-TOOLBAR ─────────────────────────────────── */
 .annotation-toolbar {
   position: absolute;
-  top: 66px;
+  top: 100px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 140;

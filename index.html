@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Dancing+Script:wght@600&family=Great+Vibes&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=18" />
+  <link rel="stylesheet" href="style.css?v=19" />
 </head>
 <body>
 
@@ -256,7 +256,7 @@
   <!-- ─── EDITOR SCREEN ─────────────────────────────────────────── -->
   <div id="editor" class="editor hidden">
 
-    <!-- Topbar -->
+    <!-- Topbar (Main Header) -->
     <header class="topbar" id="topbar">
       <div class="topbar-left">
         <button id="btn-back" class="btn-icon" title="Close file" aria-label="Go back to landing">
@@ -266,104 +266,28 @@
           <span class="logo-icon">✦</span>
           <span class="logo-text">PDF<span class="accent">Editor</span></span>
         </div>
-        <div class="file-badge" id="file-badge">
+        <div class="file-badge" id="file-badge" title="Current document">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 2h7l3 3v7H2V2z" stroke="#4f8ef7" stroke-width="1.2" stroke-linejoin="round"/><path d="M9 2v3h3" stroke="#4f8ef7" stroke-width="1.2" stroke-linejoin="round"/></svg>
           <span id="file-name-label">document.pdf</span>
         </div>
       </div>
 
-      <div class="topbar-center">
+      <div class="topbar-right">
         <div class="toolbar-group">
-          <button id="btn-select" class="tool-btn active" title="Select mode" aria-label="Select mode">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 2l10 6-5 1.5L6 14 3 2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
-            <span>Select</span>
+          <button id="btn-undo" class="tool-btn icon-only" title="Undo (Ctrl+Z / ⌘Z)" aria-label="Undo" disabled>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 7l-2-2 2-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M1 5h8a4 4 0 0 1 0 8H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
           </button>
-          <button id="btn-edit" class="tool-btn" title="Edit text mode" aria-label="Edit text mode">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M11 2.5l2.5 2.5L5 13.5 2 14l.5-3L11 2.5z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <span>Edit</span>
-          </button>
-          <button id="btn-find" class="tool-btn" title="Find & Replace (Ctrl+F / ⌘F)" aria-label="Find and replace">
-            <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.75" stroke="currentColor" stroke-width="1.5"/><path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-            <span>Find</span>
+          <button id="btn-redo" class="tool-btn icon-only" title="Redo (Ctrl+Y / ⌘Y)" aria-label="Redo" disabled>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13 7l2-2-2-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 5H7A4 4 0 0 0 7 13h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
           </button>
         </div>
         <div class="separator"></div>
         <div class="toolbar-group">
-          <button id="btn-sign" class="tool-btn" title="Digital Signature" aria-label="Add digital signature">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 2l6 6L7 23H1v-6L16 2zM19 5l-2-2"/></svg>
-            <span>Sign</span>
-          </button>
-          <button id="btn-image" class="tool-btn" title="Insert Image" aria-label="Insert image">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-            <span>Image</span>
-          </button>
-          <div class="shape-btn-wrapper">
-            <button id="btn-shape" class="tool-btn" title="Add Shapes (Rectangles, Circles, Lines, Arrows)" aria-label="Add shapes">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="3" width="10" height="10" rx="1.5" />
-                <circle cx="15.5" cy="15.5" r="5.5" />
-              </svg>
-              <span>Shape</span>
-              <svg class="chevron-down" width="8" height="8" viewBox="0 0 10 10" fill="none"><path d="M2.5 3.5L5 6L7.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </button>
-            <div id="shape-popover" class="shape-popover hidden" role="menu" aria-label="Select shape">
-              <button class="shape-opt-btn active" data-shape="rectangle" role="menuitem" type="button">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="1"/></svg>
-                <span>Rectangle</span>
-              </button>
-              <button class="shape-opt-btn" data-shape="rounded-rect" role="menuitem" type="button">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/></svg>
-                <span>Rounded Rect</span>
-              </button>
-              <button class="shape-opt-btn" data-shape="circle" role="menuitem" type="button">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg>
-                <span>Circle / Ellipse</span>
-              </button>
-              <button class="shape-opt-btn" data-shape="line" role="menuitem" type="button">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="21" x2="21" y2="3"/></svg>
-                <span>Line</span>
-              </button>
-              <button class="shape-opt-btn" data-shape="arrow" role="menuitem" type="button">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="12" x2="20" y2="12"/><polyline points="14 6 20 12 14 18"/></svg>
-                <span>Arrow</span>
-              </button>
-              <button class="shape-opt-btn" data-shape="star" role="menuitem" type="button">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                <span>Star</span>
-              </button>
-            </div>
-          </div>
-          <button id="btn-draw" class="tool-btn" title="Freehand Pen" aria-label="Freehand pen">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg>
-            <span>Pen</span>
-          </button>
-          <button id="btn-highlight" class="tool-btn" title="Highlighter" aria-label="Highlighter">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l-6 6v3h3l6-6"/><path d="M22 2l-7 7-4-4 7-7 4 4z"/></svg>
-            <span>Highlight</span>
-          </button>
-          <button id="btn-sticky" class="tool-btn" title="Sticky Note" aria-label="Sticky comment note">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-            <span>Note</span>
-          </button>
-        </div>
-        <div class="separator"></div>
-        <div class="toolbar-group">
-          <button id="btn-merge" class="tool-btn" title="Merge another PDF into this document" aria-label="Merge PDF">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4"/><polyline points="14 2 14 8 20 8"/><path d="M2 15h10M9 12l3 3-3 3"/></svg>
-            <span>Merge</span>
-          </button>
-          <button id="btn-resize" class="tool-btn" title="Resize Page Dimensions" aria-label="Resize page">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
-            <span>Resize</span>
-          </button>
-        </div>
-        <div class="separator"></div>
-        <div class="toolbar-group">
-          <button id="btn-zoom-out" class="tool-btn icon-only" title="Zoom out" aria-label="Zoom out">
+          <button id="btn-zoom-out" class="tool-btn icon-only" title="Zoom out (-)" aria-label="Zoom out">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5"/><path d="M12 12l2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M5 7h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
           </button>
           <span id="zoom-label" class="zoom-label">100%</span>
-          <button id="btn-zoom-in" class="tool-btn icon-only" title="Zoom in" aria-label="Zoom in">
+          <button id="btn-zoom-in" class="tool-btn icon-only" title="Zoom in (+)" aria-label="Zoom in">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5"/><path d="M12 12l2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M7 5v4M5 7h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
           </button>
           <button id="btn-zoom-reset" class="tool-btn icon-only" title="Fit to page" aria-label="Fit page to screen">
@@ -371,21 +295,10 @@
           </button>
         </div>
         <div class="separator"></div>
-        <div class="toolbar-group">
-          <button id="btn-undo" class="tool-btn icon-only" title="Undo" aria-label="Undo" disabled>
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 7l-2-2 2-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M1 5h8a4 4 0 0 1 0 8H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-          </button>
-          <button id="btn-redo" class="tool-btn icon-only" title="Redo" aria-label="Redo" disabled>
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13 7l2-2-2-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 5H7A4 4 0 0 0 7 13h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-          </button>
-        </div>
-      </div>
-
-      <div class="topbar-right">
         <div class="page-indicator">
           <span id="current-page">1</span> / <span id="total-pages">1</span>
         </div>
-        <button id="btn-theme-toggle-editor" class="tool-btn icon-only" title="Switch to Dark theme" aria-label="Toggle theme">
+        <button id="btn-theme-toggle-editor" class="tool-btn icon-only" title="Switch Theme" aria-label="Toggle theme">
           <span id="editor-theme-icon" style="font-size: 0.95rem; line-height: 1;">🌙</span>
         </button>
         <button id="btn-help" class="tool-btn icon-only" title="Keyboard Shortcuts &amp; Guide (?)" aria-label="Keyboard Shortcuts and Help">
@@ -397,6 +310,98 @@
         </button>
       </div>
     </header>
+
+    <!-- ─── FEATURE SUB-HEADER / TOOLBAR ────────────────────────── -->
+    <nav class="feature-bar" id="feature-bar" aria-label="Feature toolbar">
+      <div class="feature-group">
+        <button id="btn-select" class="tool-btn active" title="Select mode" aria-label="Select mode">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 2l10 6-5 1.5L6 14 3 2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          <span>Select</span>
+        </button>
+        <button id="btn-edit" class="tool-btn" title="Edit text mode" aria-label="Edit text mode">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M11 2.5l2.5 2.5L5 13.5 2 14l.5-3L11 2.5z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Edit</span>
+        </button>
+        <button id="btn-find" class="tool-btn" title="Find & Replace (Ctrl+F / ⌘F)" aria-label="Find and replace">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.75" stroke="currentColor" stroke-width="1.5"/><path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <span>Find</span>
+        </button>
+      </div>
+
+      <div class="separator"></div>
+
+      <div class="feature-group">
+        <button id="btn-sign" class="tool-btn" title="Digital Signature" aria-label="Add digital signature">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 2l6 6L7 23H1v-6L16 2zM19 5l-2-2"/></svg>
+          <span>Sign</span>
+        </button>
+        <button id="btn-image" class="tool-btn" title="Insert Image" aria-label="Insert image">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          <span>Image</span>
+        </button>
+        <div class="shape-btn-wrapper">
+          <button id="btn-shape" class="tool-btn" title="Add Shapes (Rectangles, Circles, Lines, Arrows)" aria-label="Add shapes">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="10" height="10" rx="1.5" />
+              <circle cx="15.5" cy="15.5" r="5.5" />
+            </svg>
+            <span>Shape</span>
+            <svg class="chevron-down" width="8" height="8" viewBox="0 0 10 10" fill="none"><path d="M2.5 3.5L5 6L7.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div id="shape-popover" class="shape-popover hidden" role="menu" aria-label="Select shape">
+            <button class="shape-opt-btn active" data-shape="rectangle" role="menuitem" type="button">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="1"/></svg>
+              <span>Rectangle</span>
+            </button>
+            <button class="shape-opt-btn" data-shape="rounded-rect" role="menuitem" type="button">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/></svg>
+              <span>Rounded Rect</span>
+            </button>
+            <button class="shape-opt-btn" data-shape="circle" role="menuitem" type="button">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg>
+              <span>Circle / Ellipse</span>
+            </button>
+            <button class="shape-opt-btn" data-shape="line" role="menuitem" type="button">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="21" x2="21" y2="3"/></svg>
+              <span>Line</span>
+            </button>
+            <button class="shape-opt-btn" data-shape="arrow" role="menuitem" type="button">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="12" x2="20" y2="12"/><polyline points="14 6 20 12 14 18"/></svg>
+              <span>Arrow</span>
+            </button>
+            <button class="shape-opt-btn" data-shape="star" role="menuitem" type="button">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <span>Star</span>
+            </button>
+          </div>
+        </div>
+        <button id="btn-draw" class="tool-btn" title="Freehand Pen" aria-label="Freehand pen">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg>
+          <span>Pen</span>
+        </button>
+        <button id="btn-highlight" class="tool-btn" title="Highlighter" aria-label="Highlighter">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l-6 6v3h3l6-6"/><path d="M22 2l-7 7-4-4 7-7 4 4z"/></svg>
+          <span>Highlight</span>
+        </button>
+        <button id="btn-sticky" class="tool-btn" title="Sticky Note" aria-label="Sticky comment note">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          <span>Note</span>
+        </button>
+      </div>
+
+      <div class="separator"></div>
+
+      <div class="feature-group">
+        <button id="btn-merge" class="tool-btn" title="Merge another PDF into this document" aria-label="Merge PDF">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4"/><polyline points="14 2 14 8 20 8"/><path d="M2 15h10M9 12l3 3-3 3"/></svg>
+          <span>Merge PDF</span>
+        </button>
+        <button id="btn-resize" class="tool-btn" title="Resize Page Dimensions" aria-label="Resize page">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+          <span>Resize</span>
+        </button>
+      </div>
+    </nav>
 
     <!-- ─── FIND & REPLACE WIDGET ──────────────────────────────── -->
     <div id="find-replace-bar" class="find-replace-bar hidden" role="search" aria-label="Find and Replace">
@@ -984,7 +989,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
   <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
-  <script src="app.js?v=18"></script>
+  <script src="app.js?v=19"></script>
 
 </body>
 </html>
