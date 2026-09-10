@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Dancing+Script:wght@600&family=Great+Vibes&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=13" />
+  <link rel="stylesheet" href="style.css?v=14" />
 </head>
 <body>
 
@@ -124,8 +124,19 @@
             <span>Highlight</span>
           </button>
           <button id="btn-sticky" class="tool-btn" title="Sticky Note" aria-label="Sticky comment note">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
             <span>Note</span>
+          </button>
+        </div>
+        <div class="separator"></div>
+        <div class="toolbar-group">
+          <button id="btn-merge" class="tool-btn" title="Merge another PDF into this document" aria-label="Merge PDF">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4"/><polyline points="14 2 14 8 20 8"/><path d="M2 15h10M9 12l3 3-3 3"/></svg>
+            <span>Merge</span>
+          </button>
+          <button id="btn-resize" class="tool-btn" title="Resize Page Dimensions" aria-label="Resize page">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+            <span>Resize</span>
           </button>
         </div>
         <div class="separator"></div>
@@ -237,10 +248,16 @@
             <span>Pages</span>
             <span class="page-count" id="sidebar-page-count">0</span>
           </div>
-          <button id="btn-add-page" class="sidebar-add-btn" title="Add blank page at end" aria-label="Add blank page">
-            <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M7 2v10M2 7h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-            <span>Add</span>
-          </button>
+          <div class="sidebar-act-group">
+            <button id="btn-merge-sidebar" class="sidebar-add-btn" title="Merge another PDF into this document" aria-label="Merge PDF">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4"/><polyline points="14 2 14 8 20 8"/><path d="M2 15h10M9 12l3 3-3 3"/></svg>
+              <span>Merge</span>
+            </button>
+            <button id="btn-add-page" class="sidebar-add-btn" title="Add blank page at end" aria-label="Add blank page">
+              <svg width="11" height="11" viewBox="0 0 14 14" fill="none"><path d="M7 2v10M2 7h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              <span>+ Page</span>
+            </button>
+          </div>
         </div>
         <div class="thumbnails" id="thumbnails"></div>
       </aside>
@@ -387,6 +404,183 @@
     </div>
   </div>
 
+  <!-- ─── MODAL: MERGE PDF ──────────────────────────────────────── -->
+  <div id="modal-merge" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="merge-modal-title">
+    <div class="modal-card merge-modal-card">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="modal-icon">📑</span>
+          <h3 id="merge-modal-title" class="modal-title">Merge PDF Documents</h3>
+        </div>
+        <button id="btn-close-merge" class="modal-close-btn" aria-label="Close modal">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="merge-upload-zone" id="merge-upload-zone">
+          <input type="file" id="merge-file-input" accept=".pdf" style="display:none" />
+          <div id="merge-upload-empty" class="merge-drop-prompt">
+            <div class="merge-upload-icon">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+            </div>
+            <p class="merge-primary-text">Click or drag &amp; drop PDF to merge</p>
+            <span class="merge-sub-text">Select a PDF file to append or insert into this document</span>
+          </div>
+          <div id="merge-file-preview" class="merge-file-preview hidden">
+            <div class="merge-file-info">
+              <div class="merge-file-icon">📄</div>
+              <div class="merge-file-details">
+                <span id="merge-file-name" class="merge-filename">document.pdf</span>
+                <span id="merge-file-pages" class="merge-pagecount">0 pages found</span>
+              </div>
+            </div>
+            <button id="btn-change-merge-file" class="btn-text" type="button">Change File</button>
+          </div>
+        </div>
+
+        <div class="merge-options-section" id="merge-options-section">
+          <label class="modal-label">Insert Position</label>
+          <div class="merge-position-group">
+            <label class="merge-radio-card active">
+              <input type="radio" name="merge-pos" value="end" checked />
+              <div class="radio-content">
+                <span class="radio-title">At the End</span>
+                <span class="radio-desc">Append pages after Page <span id="merge-end-page-num">1</span></span>
+              </div>
+            </label>
+            <label class="merge-radio-card">
+              <input type="radio" name="merge-pos" value="start" />
+              <div class="radio-content">
+                <span class="radio-title">At Beginning</span>
+                <span class="radio-desc">Insert before Page 1</span>
+              </div>
+            </label>
+            <label class="merge-radio-card">
+              <input type="radio" name="merge-pos" value="current" />
+              <div class="radio-content">
+                <span class="radio-title">After Current Page</span>
+                <span class="radio-desc">Insert after Page <span id="merge-current-page-num">1</span></span>
+              </div>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button id="btn-cancel-merge" class="btn-secondary" type="button">Cancel</button>
+        <button id="btn-confirm-merge" class="btn-primary" type="button" disabled>Merge &amp; Insert Pages</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── MODAL: RESIZE PDF ──────────────────────────────────────── -->
+  <div id="modal-resize" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="resize-modal-title">
+    <div class="modal-card resize-modal-card">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="modal-icon">📐</span>
+          <h3 id="resize-modal-title" class="modal-title">Resize Page Dimensions</h3>
+        </div>
+        <button id="btn-close-resize" class="modal-close-btn" aria-label="Close modal">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Preset Cards -->
+        <label class="modal-label">Standard Presets</label>
+        <div class="resize-preset-grid">
+          <button class="resize-preset-chip active" data-preset="a4" data-w="595.28" data-h="841.89" type="button">
+            <span class="preset-name">A4</span>
+            <span class="preset-dims">210 × 297 mm</span>
+          </button>
+          <button class="resize-preset-chip" data-preset="letter" data-w="612" data-h="792" type="button">
+            <span class="preset-name">US Letter</span>
+            <span class="preset-dims">8.5 × 11 in</span>
+          </button>
+          <button class="resize-preset-chip" data-preset="legal" data-w="612" data-h="1008" type="button">
+            <span class="preset-name">US Legal</span>
+            <span class="preset-dims">8.5 × 14 in</span>
+          </button>
+          <button class="resize-preset-chip" data-preset="a3" data-w="841.89" data-h="1190.55" type="button">
+            <span class="preset-name">A3</span>
+            <span class="preset-dims">297 × 420 mm</span>
+          </button>
+          <button class="resize-preset-chip" data-preset="a5" data-w="419.53" data-h="595.28" type="button">
+            <span class="preset-name">A5</span>
+            <span class="preset-dims">148 × 210 mm</span>
+          </button>
+          <button class="resize-preset-chip" data-preset="custom" type="button">
+            <span class="preset-name">Custom</span>
+            <span class="preset-dims">Set width/height</span>
+          </button>
+        </div>
+
+        <!-- Custom Dimensions Row -->
+        <div class="resize-custom-row hidden" id="resize-custom-row">
+          <div class="resize-dim-field">
+            <label for="resize-custom-w" class="field-label">Width (pt)</label>
+            <input type="number" id="resize-custom-w" class="dim-input" value="595" min="100" max="5000" step="1" />
+          </div>
+          <span class="dim-separator">×</span>
+          <div class="resize-dim-field">
+            <label for="resize-custom-h" class="field-label">Height (pt)</label>
+            <input type="number" id="resize-custom-h" class="dim-input" value="842" min="100" max="5000" step="1" />
+          </div>
+        </div>
+
+        <!-- Orientation and Scope -->
+        <div class="resize-controls-grid">
+          <div class="ctrl-col">
+            <label class="modal-label">Orientation</label>
+            <div class="resize-orient-toggle">
+              <button id="btn-orient-portrait" class="orient-btn active" type="button" data-orient="portrait">
+                <span class="orient-icon">▯</span> Portrait
+              </button>
+              <button id="btn-orient-landscape" class="orient-btn" type="button" data-orient="landscape">
+                <span class="orient-icon">▭</span> Landscape
+              </button>
+            </div>
+          </div>
+          <div class="ctrl-col">
+            <label class="modal-label">Apply To</label>
+            <div class="resize-scope-toggle">
+              <button id="btn-scope-all" class="scope-btn active" type="button" data-scope="all">All Pages</button>
+              <button id="btn-scope-current" class="scope-btn" type="button" data-scope="current">Current Page</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Content Scaling Mode -->
+        <div class="resize-scale-mode-section">
+          <label class="modal-label">Content Scaling</label>
+          <div class="scale-mode-group">
+            <label class="scale-radio active">
+              <input type="radio" name="scale-mode" value="fit" checked />
+              <div class="scale-radio-text">
+                <span class="scale-title">Fit &amp; Scale Content</span>
+                <span class="scale-sub">Proportionally scales text, annotations, and images to fit the new page size</span>
+              </div>
+            </label>
+            <label class="scale-radio">
+              <input type="radio" name="scale-mode" value="canvas" />
+              <div class="scale-radio-text">
+                <span class="scale-title">Adjust Canvas Only</span>
+                <span class="scale-sub">Keeps existing content 1:1 and adds or trims page margins</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="resize-summary-pill" id="resize-summary-pill">
+          Target: <strong id="resize-target-text">A4 Portrait (595 × 842 pt)</strong>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button id="btn-cancel-resize" class="btn-secondary" type="button">Cancel</button>
+        <button id="btn-apply-resize" class="btn-primary" type="button">Apply Resize</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ─── LOADING OVERLAY ───────────────────────────────────────── -->
   <div id="loading-overlay" class="loading-overlay hidden">
     <div class="loading-card">
@@ -406,7 +600,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
   <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
-  <script src="app.js?v=11"></script>
+  <script src="app.js?v=14"></script>
 
 </body>
 </html>

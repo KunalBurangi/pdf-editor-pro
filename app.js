@@ -96,6 +96,38 @@ const $sigUploadPreviewWrap= $('sig-upload-preview-wrap');
 const $sigUploadPreviewImg = $('sig-upload-preview-img');
 const $btnRemoveUploadedSig= $('btn-remove-uploaded-sig');
 
+// Merge Modal DOM Refs
+const $btnMerge            = $('btn-merge');
+const $btnMergeSidebar     = $('btn-merge-sidebar');
+const $modalMerge          = $('modal-merge');
+const $btnCloseMerge       = $('btn-close-merge');
+const $btnCancelMerge      = $('btn-cancel-merge');
+const $btnConfirmMerge     = $('btn-confirm-merge');
+const $mergeFileInput      = $('merge-file-input');
+const $mergeUploadZone     = $('merge-upload-zone');
+const $mergeUploadEmpty    = $('merge-upload-empty');
+const $mergeFilePreview    = $('merge-file-preview');
+const $mergeFileName       = $('merge-file-name');
+const $mergeFilePages      = $('merge-file-pages');
+const $btnChangeMergeFile  = $('btn-change-merge-file');
+const $mergeEndPageNum     = $('merge-end-page-num');
+const $mergeCurrentPageNum = $('merge-current-page-num');
+
+// Resize Modal DOM Refs
+const $btnResize           = $('btn-resize');
+const $modalResize         = $('modal-resize');
+const $btnCloseResize      = $('btn-close-resize');
+const $btnCancelResize     = $('btn-cancel-resize');
+const $btnApplyResize      = $('btn-apply-resize');
+const $resizeCustomRow     = $('resize-custom-row');
+const $resizeCustomW       = $('resize-custom-w');
+const $resizeCustomH       = $('resize-custom-h');
+const $btnOrientPortrait   = $('btn-orient-portrait');
+const $btnOrientLandscape  = $('btn-orient-landscape');
+const $btnScopeAll         = $('btn-scope-all');
+const $btnScopeCurrent     = $('btn-scope-current');
+const $resizeTargetText    = $('resize-target-text');
+
 const $btnZoomIn       = $('btn-zoom-in');
 const $btnZoomOut      = $('btn-zoom-out');
 const $btnZoomReset    = $('btn-zoom-reset');
@@ -268,7 +300,9 @@ async function loadPdf(data) {
         originalIndex: i - 1,
         rotation: 0,
         isNewPage: false,
+        sourcePdfData: state.pdfData,
         width: unscaledVp.width,
+        height: unscaledVp.height,
         wrapper: null,
         canvas: null,
         textLayerEl: null,
@@ -339,6 +373,26 @@ async function renderPage(pageIdx, insertBeforeEl = null, replaceEl = null) {
       height: cssH * dpr,
       scale: state.zoom * dpr,
     };
+  } else if (pageData.resized) {
+    const totalRotation = ((pdfPage.rotate || 0) + (rotation || 0)) % 360;
+    const isSwapped = (totalRotation % 180 !== 0);
+    const baseW = isSwapped ? pageData.height : pageData.width;
+    const baseH = isSwapped ? pageData.width : pageData.height;
+
+    const cssW = baseW * state.zoom;
+    const cssH = baseH * state.zoom;
+    cssViewport = {
+      width: cssW,
+      height: cssH,
+      scale: state.zoom,
+      rotation: totalRotation,
+      transform: [state.zoom, 0, 0, -state.zoom, 0, cssH],
+    };
+    renderViewport = {
+      width: cssW * dpr,
+      height: cssH * dpr,
+      scale: state.zoom * dpr,
+    };
   } else {
     const totalRotation = ((pdfPage.rotate || 0) + (rotation || 0)) % 360;
     cssViewport    = pdfPage.getViewport({ scale: state.zoom, rotation: totalRotation });
@@ -365,6 +419,19 @@ async function renderPage(pageIdx, insertBeforeEl = null, replaceEl = null) {
   if (isNewPage || !pdfPage) {
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+  } else if (pageData.resized) {
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    try {
+      const origVp = pdfPage.getViewport({ scale: 1.0, rotation: ((pdfPage.rotate || 0) + (rotation || 0)) % 360 });
+      const scaleFactor = (pageData.resized.mode === 'fit')
+        ? Math.min(renderViewport.width / origVp.width, renderViewport.height / origVp.height)
+        : state.zoom * dpr;
+      const scaledVp = pdfPage.getViewport({ scale: scaleFactor, rotation: ((pdfPage.rotate || 0) + (rotation || 0)) % 360 });
+      await pdfPage.render({ canvasContext: ctx, viewport: scaledVp }).promise;
+    } catch (renderErr) {
+      console.warn('Fallback render on resized page:', renderErr);
+    }
   } else {
     await pdfPage.render({ canvasContext: ctx, viewport: renderViewport }).promise;
   }
@@ -1993,7 +2060,19 @@ function createThumbnailItem(pageData, idx) {
     deletePage(idx);
   });
 
+  // Resize button
+  const btnRes = document.createElement('button');
+  btnRes.className = 'thumb-act-btn';
+  btnRes.title = 'Resize page dimensions';
+  btnRes.setAttribute('aria-label', `Resize page ${idx + 1}`);
+  btnRes.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>`;
+  btnRes.addEventListener('click', (e) => {
+    e.stopPropagation();
+    openResizeModal(idx);
+  });
+
   actions.appendChild(btnRot);
+  actions.appendChild(btnRes);
   actions.appendChild(btnDup);
   actions.appendChild(btnDel);
   wrap.appendChild(actions);
@@ -2267,6 +2346,433 @@ function setupPageObserver() {
   document.querySelectorAll('.page-wrapper').forEach(pw => pageObserver.observe(pw));
 }
 
+// ─── MERGE PDF CONTROLLER ───────────────────────────────────────────────────
+let pendingMergeBytes = null;
+let pendingMergeDoc = null;
+let pendingMergeFileName = '';
+
+function initMergeModal() {
+  if (!$modalMerge) return;
+
+  $btnMerge?.addEventListener('click', openMergeModal);
+  $btnMergeSidebar?.addEventListener('click', openMergeModal);
+  $btnCloseMerge?.addEventListener('click', closeMergeModal);
+  $btnCancelMerge?.addEventListener('click', closeMergeModal);
+
+  $mergeUploadZone?.addEventListener('click', () => $mergeFileInput?.click());
+
+  $mergeFileInput?.addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (file) await handleMergeFile(file);
+  });
+
+  $btnChangeMergeFile?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    resetMergeFile();
+    $mergeFileInput?.click();
+  });
+
+  // Drag & drop on upload zone
+  $mergeUploadZone?.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    $mergeUploadZone.classList.add('dragover');
+  });
+  $mergeUploadZone?.addEventListener('dragleave', () => {
+    $mergeUploadZone.classList.remove('dragover');
+  });
+  $mergeUploadZone?.addEventListener('drop', async (e) => {
+    e.preventDefault();
+    $mergeUploadZone.classList.remove('dragover');
+    const file = e.dataTransfer.files[0];
+    if (file && file.name.toLowerCase().endsWith('.pdf')) {
+      await handleMergeFile(file);
+    } else {
+      showToast('Please select a valid PDF file to merge', 'error');
+    }
+  });
+
+  // Radio selection highlighting
+  document.querySelectorAll('input[name="merge-pos"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      document.querySelectorAll('.merge-radio-card').forEach(card => {
+        const r = card.querySelector('input[type="radio"]');
+        card.classList.toggle('active', r && r.checked);
+      });
+    });
+  });
+
+  $btnConfirmMerge?.addEventListener('click', insertMergedPages);
+}
+
+function openMergeModal() {
+  if (state.pages.length === 0) {
+    showToast('Please open or create a document first', 'error');
+    return;
+  }
+  resetMergeFile();
+  if ($mergeEndPageNum) $mergeEndPageNum.textContent = state.pages.length;
+  if ($mergeCurrentPageNum) $mergeCurrentPageNum.textContent = state.currentPage;
+  $modalMerge?.classList.remove('hidden');
+}
+
+function closeMergeModal() {
+  $modalMerge?.classList.add('hidden');
+  resetMergeFile();
+}
+
+function resetMergeFile() {
+  pendingMergeBytes = null;
+  pendingMergeDoc = null;
+  pendingMergeFileName = '';
+  if ($mergeFileInput) $mergeFileInput.value = '';
+  $mergeUploadEmpty?.classList.remove('hidden');
+  $mergeFilePreview?.classList.add('hidden');
+  if ($btnConfirmMerge) $btnConfirmMerge.disabled = true;
+}
+
+async function handleMergeFile(file) {
+  if (!file.name.toLowerCase().endsWith('.pdf')) {
+    showToast('Please select a valid PDF document', 'error');
+    return;
+  }
+  try {
+    showLoading('Inspecting PDF…', 'Reading file headers and pages…', 20);
+    const arrayBuffer = await file.arrayBuffer();
+    pendingMergeBytes = new Uint8Array(arrayBuffer);
+    pendingMergeFileName = file.name;
+
+    // Parse with PDF.js
+    pendingMergeDoc = await pdfjsLib.getDocument({ data: pendingMergeBytes.slice(0) }).promise;
+
+    if ($mergeFileName) $mergeFileName.textContent = file.name;
+    if ($mergeFilePages) $mergeFilePages.textContent = `${pendingMergeDoc.numPages} page${pendingMergeDoc.numPages > 1 ? 's' : ''} ready to merge`;
+
+    $mergeUploadEmpty?.classList.add('hidden');
+    $mergeFilePreview?.classList.remove('hidden');
+    if ($btnConfirmMerge) $btnConfirmMerge.disabled = false;
+
+    hideLoading();
+    showToast(`✓ Found ${pendingMergeDoc.numPages} pages in ${file.name}`, 'info', 2000);
+  } catch (err) {
+    hideLoading();
+    showToast(`Failed to read PDF: ${err.message}`, 'error', 3500);
+    resetMergeFile();
+  }
+}
+
+async function insertMergedPages() {
+  if (!pendingMergeDoc || !pendingMergeBytes) return;
+
+  const numToMerge = pendingMergeDoc.numPages;
+  const posRadio = document.querySelector('input[name="merge-pos"]:checked');
+  const pos = posRadio ? posRadio.value : 'end';
+
+  let insertIdx = state.pages.length;
+  if (pos === 'start') {
+    insertIdx = 0;
+  } else if (pos === 'current') {
+    insertIdx = Math.min(state.currentPage, state.pages.length);
+  }
+
+  closeMergeModal();
+  showLoading('Merging PDF…', `Importing ${numToMerge} pages…`, 10);
+
+  try {
+    const importedPages = [];
+
+    for (let i = 1; i <= numToMerge; i++) {
+      const progress = 10 + (i / numToMerge) * 75;
+      setProgress(progress);
+      $loadingSub.textContent = `Extracting page ${i} of ${numToMerge}…`;
+
+      const pdfPage = await pendingMergeDoc.getPage(i);
+      const textContent = await pdfPage.getTextContent({ normalizeWhitespace: true });
+
+      const textItems = textContent.items.map((item, itemIdx) => {
+        if (!item.str || item.str.trim() === '') return null;
+        const tx = item.transform;
+        const fontSize = Math.hypot(tx[2], tx[3]) || Math.hypot(tx[0], tx[1]);
+        const angle = Math.atan2(tx[1], tx[0]);
+
+        return {
+          id: `page-m-${Date.now()}-${i}-${itemIdx}`,
+          page: 0,
+          text: item.str,
+          originalText: item.str,
+          fontSize: fontSize || 12,
+          fontName: item.fontName || 'Helvetica',
+          angle,
+          width: item.width,
+          height: item.height,
+          bold: /bold/i.test(item.fontName),
+          italic: /italic|oblique/i.test(item.fontName),
+          color: '#000000',
+          transform: [...tx],
+          modified: false,
+        };
+      }).filter(Boolean);
+
+      const unscaledVp = pdfPage.getViewport({ scale: 1.0 });
+
+      importedPages.push({
+        pdfPage,
+        textItems,
+        pageNum: 0,
+        originalIndex: i - 1,
+        rotation: 0,
+        isNewPage: false,
+        sourcePdfData: pendingMergeBytes,
+        width: unscaledVp.width,
+        height: unscaledVp.height,
+        wrapper: null,
+        canvas: null,
+        textLayerEl: null,
+        annotCanvas: null,
+        annotDataUrl: null,
+        widgets: [],
+        viewport: null,
+      });
+    }
+
+    // Insert imported pages into state.pages at insertIdx
+    state.pages.splice(insertIdx, 0, ...importedPages);
+
+    setProgress(90);
+    $loadingSub.textContent = 'Rendering merged document…';
+
+    // Full refresh of page numbering, thumbnails, and DOM
+    await renderAllPages();
+    refreshAfterPageChange(insertIdx);
+
+    hideLoading();
+    showToast(`✓ Successfully merged ${numToMerge} page${numToMerge > 1 ? 's' : ''}!`, 'success', 3500);
+
+  } catch (err) {
+    hideLoading();
+    showToast(`Merge error: ${err.message}`, 'error', 3500);
+    console.error('Merge error:', err);
+  }
+}
+
+// ─── RESIZE PDF CONTROLLER ──────────────────────────────────────────────────
+const PRESET_DIMS = {
+  a4:     { w: 595.28, h: 841.89, name: 'A4' },
+  letter: { w: 612,    h: 792,    name: 'US Letter' },
+  legal:  { w: 612,    h: 1008,   name: 'US Legal' },
+  a3:     { w: 841.89, h: 1190.55,name: 'A3' },
+  a5:     { w: 419.53, h: 595.28, name: 'A5' },
+};
+
+let resizeState = {
+  preset: 'a4',
+  customW: 595,
+  customH: 842,
+  orientation: 'portrait',
+  scope: 'all',
+  scaleMode: 'fit',
+  targetPageIdx: null,
+};
+
+function initResizeModal() {
+  if (!$modalResize) return;
+
+  $btnResize?.addEventListener('click', () => openResizeModal());
+  $btnCloseResize?.addEventListener('click', closeResizeModal);
+  $btnCancelResize?.addEventListener('click', closeResizeModal);
+
+  // Preset chips
+  document.querySelectorAll('.resize-preset-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.resize-preset-chip').forEach(c => c.classList.toggle('active', c === chip));
+      resizeState.preset = chip.dataset.preset;
+      const isCustom = resizeState.preset === 'custom';
+      $resizeCustomRow?.classList.toggle('hidden', !isCustom);
+      updateResizeSummary();
+    });
+  });
+
+  // Custom inputs
+  $resizeCustomW?.addEventListener('input', () => {
+    resizeState.customW = parseFloat($resizeCustomW.value) || 595;
+    updateResizeSummary();
+  });
+  $resizeCustomH?.addEventListener('input', () => {
+    resizeState.customH = parseFloat($resizeCustomH.value) || 842;
+    updateResizeSummary();
+  });
+
+  // Orientation toggle
+  $btnOrientPortrait?.addEventListener('click', () => {
+    resizeState.orientation = 'portrait';
+    $btnOrientPortrait.classList.add('active');
+    $btnOrientLandscape.classList.remove('active');
+    updateResizeSummary();
+  });
+  $btnOrientLandscape?.addEventListener('click', () => {
+    resizeState.orientation = 'landscape';
+    $btnOrientLandscape.classList.add('active');
+    $btnOrientPortrait.classList.remove('active');
+    updateResizeSummary();
+  });
+
+  // Scope toggle
+  $btnScopeAll?.addEventListener('click', () => {
+    resizeState.scope = 'all';
+    $btnScopeAll.classList.add('active');
+    $btnScopeCurrent.classList.remove('active');
+  });
+  $btnScopeCurrent?.addEventListener('click', () => {
+    resizeState.scope = 'current';
+    $btnScopeCurrent.classList.add('active');
+    $btnScopeAll.classList.remove('active');
+  });
+
+  // Scale mode radio cards
+  document.querySelectorAll('input[name="scale-mode"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      document.querySelectorAll('.scale-radio').forEach(card => {
+        const r = card.querySelector('input[type="radio"]');
+        card.classList.toggle('active', r && r.checked);
+      });
+      resizeState.scaleMode = radio.value;
+    });
+  });
+
+  $btnApplyResize?.addEventListener('click', applyPageResize);
+}
+
+function openResizeModal(targetIdx = null) {
+  if (state.pages.length === 0) {
+    showToast('Please open a document first', 'error');
+    return;
+  }
+
+  resizeState.targetPageIdx = targetIdx;
+  if (targetIdx !== null) {
+    resizeState.scope = 'current';
+    $btnScopeCurrent?.classList.add('active');
+    $btnScopeAll?.classList.remove('active');
+  } else {
+    resizeState.scope = 'all';
+    $btnScopeAll?.classList.add('active');
+    $btnScopeCurrent?.classList.remove('active');
+  }
+
+  updateResizeSummary();
+  $modalResize?.classList.remove('hidden');
+}
+
+function closeResizeModal() {
+  $modalResize?.classList.add('hidden');
+}
+
+function getTargetDimensions() {
+  let w, h, name;
+  if (resizeState.preset === 'custom') {
+    w = resizeState.customW;
+    h = resizeState.customH;
+    name = 'Custom';
+  } else {
+    const p = PRESET_DIMS[resizeState.preset] || PRESET_DIMS.a4;
+    w = p.w;
+    h = p.h;
+    name = p.name;
+  }
+
+  // Handle landscape/portrait
+  if (resizeState.orientation === 'landscape' && w < h) {
+    const tmp = w; w = h; h = tmp;
+  } else if (resizeState.orientation === 'portrait' && w > h) {
+    const tmp = w; w = h; h = tmp;
+  }
+
+  return { w: Math.round(w * 100) / 100, h: Math.round(h * 100) / 100, name };
+}
+
+function updateResizeSummary() {
+  if (!$resizeTargetText) return;
+  const { w, h, name } = getTargetDimensions();
+  const orientStr = resizeState.orientation.charAt(0).toUpperCase() + resizeState.orientation.slice(1);
+  $resizeTargetText.textContent = `${name} ${orientStr} (${Math.round(w)} × ${Math.round(h)} pt)`;
+}
+
+async function applyPageResize() {
+  const { w: targetW, h: targetH, name } = getTargetDimensions();
+  const targetIndices = resizeState.scope === 'current'
+    ? [resizeState.targetPageIdx !== null ? resizeState.targetPageIdx : Math.max(0, state.currentPage - 1)]
+    : state.pages.map((_, i) => i);
+
+  closeResizeModal();
+  showLoading('Resizing pages…', `Applying ${name} (${Math.round(targetW)}×${Math.round(targetH)} pt)…`, 30);
+
+  try {
+    for (const idx of targetIndices) {
+      const pageData = state.pages[idx];
+      if (!pageData) continue;
+
+      const oldW = pageData.width || 595.28;
+      const oldH = pageData.height || 841.89;
+      const scaleX = targetW / oldW;
+      const scaleY = targetH / oldH;
+
+      if (resizeState.scaleMode === 'fit') {
+        // Proportionally scale text blocks
+        (pageData.textItems || []).forEach(it => {
+          it.transform[0] *= scaleX;
+          it.transform[3] *= scaleY;
+          it.transform[4] *= scaleX;
+          it.transform[5] *= scaleY;
+          it.fontSize     *= Math.min(scaleX, scaleY);
+          it.width        *= scaleX;
+          it.height       *= scaleY;
+          it.modified = true;
+        });
+
+        // Proportionally scale widgets (signatures, images, notes)
+        (pageData.widgets || []).forEach(w => {
+          w.x      = Math.round(w.x * scaleX);
+          w.y      = Math.round(w.y * scaleY);
+          w.width  = Math.round((w.width || 180) * scaleX);
+          w.height = Math.round((w.height || 80) * scaleY);
+        });
+
+        pageData.resized = {
+          targetW,
+          targetH,
+          scaleX,
+          scaleY,
+          mode: 'fit',
+        };
+      } else {
+        pageData.resized = {
+          targetW,
+          targetH,
+          mode: 'canvas',
+        };
+      }
+
+      pageData.width = targetW;
+      pageData.height = targetH;
+    }
+
+    setProgress(80);
+    $loadingSub.textContent = 'Updating view…';
+
+    // Re-render pages and thumbnails
+    await renderAllPages();
+    refreshAfterPageChange(targetIndices[0]);
+
+    hideLoading();
+    const count = targetIndices.length;
+    showToast(`✓ Resized ${count} page${count > 1 ? 's' : ''} to ${name} (${Math.round(targetW)}×${Math.round(targetH)} pt)!`, 'success', 3500);
+
+  } catch (err) {
+    hideLoading();
+    showToast(`Resize error: ${err.message}`, 'error', 3500);
+    console.error('Resize error:', err);
+  }
+}
+
 // ─── BACK / RESET ─────────────────────────────────────────────────────────────
 $btnBack.addEventListener('click', () => {
   if (confirm('Close this file? Unsaved changes will be lost.')) {
@@ -2307,13 +2813,18 @@ async function exportPdf() {
     // ── 1. Fresh output document ──────────────────────────────────────────────
     const outDoc = await PDFDocument.create();
 
-    // Load original PDF if available
-    let sourceDoc = null;
+    // Cache of loaded source PDFDocuments (supports multiple merged PDFs)
+    const sourceDocsMap = new Map();
     if (state.pdfData) {
-      sourceDoc = await PDFDocument.load(state.pdfData, {
-        ignoreEncryption: true,
-        updateMetadata: false,
-      });
+      try {
+        const doc = await PDFDocument.load(state.pdfData, {
+          ignoreEncryption: true,
+          updateMetadata: false,
+        });
+        sourceDocsMap.set(state.pdfData, doc);
+      } catch (e) {
+        console.warn('Failed to load main sourceDoc:', e);
+      }
     }
 
     setProgress(20);
@@ -2365,10 +2876,50 @@ async function exportPdf() {
       const pageData = state.pages[i];
       let libPage;
 
-      if (!pageData.isNewPage && sourceDoc && pageData.originalIndex != null) {
-        // Copy original page from source document
-        const [copiedPage] = await outDoc.copyPages(sourceDoc, [pageData.originalIndex]);
-        libPage = outDoc.addPage(copiedPage);
+      const srcBytes = pageData.sourcePdfData || state.pdfData;
+      let pageSourceDoc = null;
+      if (srcBytes) {
+        if (!sourceDocsMap.has(srcBytes)) {
+          try {
+            const doc = await PDFDocument.load(srcBytes, {
+              ignoreEncryption: true,
+              updateMetadata: false,
+            });
+            sourceDocsMap.set(srcBytes, doc);
+          } catch (e) {
+            console.warn('Failed to load page source document:', e);
+          }
+        }
+        pageSourceDoc = sourceDocsMap.get(srcBytes);
+      }
+
+      if (!pageData.isNewPage && pageSourceDoc && pageData.originalIndex != null) {
+        if (pageData.resized && pageData.resized.mode === 'fit') {
+          // Fit & Scale Content: create target-sized page and embed source page
+          const targetW = pageData.width;
+          const targetH = pageData.height;
+          libPage = outDoc.addPage([targetW, targetH]);
+          try {
+            const [srcPage] = await outDoc.copyPages(pageSourceDoc, [pageData.originalIndex]);
+            const embeddedPage = await outDoc.embedPage(srcPage);
+            libPage.drawPage(embeddedPage, {
+              x: 0,
+              y: 0,
+              width: targetW,
+              height: targetH,
+            });
+          } catch (scaleErr) {
+            console.warn('Failed to embed scaled page, falling back to setSize:', scaleErr);
+            libPage.setSize(targetW, targetH);
+          }
+        } else {
+          // Copy original page from source document
+          const [copiedPage] = await outDoc.copyPages(pageSourceDoc, [pageData.originalIndex]);
+          libPage = outDoc.addPage(copiedPage);
+          if (pageData.resized) {
+            libPage.setSize(pageData.width, pageData.height);
+          }
+        }
       } else {
         // Blank page (A4 default: 595.28 x 841.89)
         const w = pageData.width || 595.28;
@@ -2610,6 +3161,8 @@ $btnSave.addEventListener('click', exportPdf);
   $zoomLabel.textContent = '100%';
   hideLoading();
   initSignatureModal();
+  initMergeModal();
+  initResizeModal();
 
   // Set up page scroll observer after a short delay
   const observer = new MutationObserver(() => {
