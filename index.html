@@ -7,8 +7,8 @@
   <meta name="description" content="A professional PDF editor that reads every text element from your PDF and lets you edit it with the same font, size, and style." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=10" />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Dancing+Script:wght@600&family=Great+Vibes&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css?v=11" />
 </head>
 <body>
 
@@ -102,7 +102,30 @@
           </button>
           <button id="btn-find" class="tool-btn" title="Find & Replace (Ctrl+F / ⌘F)" aria-label="Find and replace">
             <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.75" stroke="currentColor" stroke-width="1.5"/><path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-            <span>Find &amp; Replace</span>
+            <span>Find</span>
+          </button>
+        </div>
+        <div class="separator"></div>
+        <div class="toolbar-group">
+          <button id="btn-sign" class="tool-btn" title="Digital Signature" aria-label="Add digital signature">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 2l6 6L7 23H1v-6L16 2zM19 5l-2-2"/></svg>
+            <span>Sign</span>
+          </button>
+          <button id="btn-image" class="tool-btn" title="Insert Image" aria-label="Insert image">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+            <span>Image</span>
+          </button>
+          <button id="btn-draw" class="tool-btn" title="Freehand Pen" aria-label="Freehand pen">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg>
+            <span>Pen</span>
+          </button>
+          <button id="btn-highlight" class="tool-btn" title="Highlighter" aria-label="Highlighter">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l-6 6v3h3l6-6"/><path d="M22 2l-7 7-4-4 7-7 4 4z"/></svg>
+            <span>Highlight</span>
+          </button>
+          <button id="btn-sticky" class="tool-btn" title="Sticky Note" aria-label="Sticky comment note">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg>
+            <span>Note</span>
           </button>
         </div>
         <div class="separator"></div>
@@ -172,6 +195,36 @@
           <button id="btn-replace-all" class="fr-action-btn fr-action-primary" title="Replace All Across All Pages">Replace All</button>
         </div>
       </div>
+    </div>
+
+    <!-- ─── ANNOTATION SUB-TOOLBAR ─────────────────────────────── -->
+    <div id="annotation-toolbar" class="annotation-toolbar hidden" role="toolbar" aria-label="Annotation settings">
+      <div class="annot-group">
+        <span class="annot-label">Color</span>
+        <div class="color-palette">
+          <button class="color-dot active" data-color="#000000" style="background:#000000" title="Black"></button>
+          <button class="color-dot" data-color="#2563eb" style="background:#2563eb" title="Blue"></button>
+          <button class="color-dot" data-color="#dc2626" style="background:#dc2626" title="Red"></button>
+          <button class="color-dot" data-color="#16a34a" style="background:#16a34a" title="Green"></button>
+          <button class="color-dot" data-color="#f59e0b" style="background:#f59e0b" title="Yellow"></button>
+          <button class="color-dot" data-color="#9333ea" style="background:#9333ea" title="Purple"></button>
+        </div>
+      </div>
+      <div class="annot-separator"></div>
+      <div class="annot-group">
+        <span class="annot-label">Thickness</span>
+        <div class="size-selector">
+          <button class="size-btn active" data-size="2" title="Thin">2px</button>
+          <button class="size-btn" data-size="5" title="Medium">5px</button>
+          <button class="size-btn" data-size="10" title="Thick">10px</button>
+          <button class="size-btn" data-size="18" title="Extra Thick">18px</button>
+        </div>
+      </div>
+      <div class="annot-separator"></div>
+      <button id="btn-clear-drawings" class="annot-action-btn danger" title="Clear freehand annotations on current page">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6"/></svg>
+        <span>Clear Page</span>
+      </button>
     </div>
 
     <!-- Main layout -->
@@ -248,6 +301,92 @@
     </div>
   </div>
 
+  <!-- Hidden Image File Picker -->
+  <input type="file" id="image-file-input" accept="image/png,image/jpeg,image/webp,image/svg+xml" style="display:none" />
+
+  <!-- ─── SIGNATURE MODAL ───────────────────────────────────────── -->
+  <div id="modal-signature" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="sig-modal-title">
+    <div class="modal-card sig-modal-card">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 2l6 6L7 23H1v-6L16 2zM19 5l-2-2"/></svg>
+          <h2 id="sig-modal-title" class="modal-title">Digital Signature</h2>
+        </div>
+        <button id="btn-close-sig" class="modal-close-btn" aria-label="Close signature modal">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+
+      <!-- Tabs -->
+      <div class="sig-tabs" role="tablist">
+        <button id="tab-sig-draw" class="sig-tab active" role="tab" aria-selected="true">Draw</button>
+        <button id="tab-sig-type" class="sig-tab" role="tab" aria-selected="false">Type</button>
+        <button id="tab-sig-upload" class="sig-tab" role="tab" aria-selected="false">Upload</button>
+      </div>
+
+      <!-- Tab 1: Draw -->
+      <div id="pane-sig-draw" class="sig-pane active">
+        <div class="sig-canvas-container">
+          <canvas id="sig-pad-canvas" width="520" height="180"></canvas>
+          <div class="sig-pad-guide"></div>
+        </div>
+        <div class="sig-draw-controls">
+          <div class="sig-colors">
+            <span class="sig-ctrl-label">Ink Color:</span>
+            <button class="sig-color-dot active" data-color="#000000" style="background:#000000" title="Black"></button>
+            <button class="sig-color-dot" data-color="#1d4ed8" style="background:#1d4ed8" title="Navy Blue"></button>
+            <button class="sig-color-dot" data-color="#b91c1c" style="background:#b91c1c" title="Dark Red"></button>
+          </div>
+          <button id="btn-clear-sig-pad" class="btn-text" type="button">Clear</button>
+        </div>
+      </div>
+
+      <!-- Tab 2: Type -->
+      <div id="pane-sig-type" class="sig-pane hidden">
+        <div class="sig-type-field">
+          <label for="sig-type-input" class="sig-ctrl-label">Your Name</label>
+          <input type="text" id="sig-type-input" class="sig-input" placeholder="Type your full name…" maxlength="40" autocomplete="off" />
+        </div>
+        <div class="sig-font-previews" id="sig-font-previews">
+          <div class="sig-font-card active" data-font="Dancing Script" style="font-family:'Dancing Script', cursive;">
+            <span class="sig-font-name">Dancing Script</span>
+            <div class="sig-preview-text">Your Signature</div>
+          </div>
+          <div class="sig-font-card" data-font="Caveat" style="font-family:'Caveat', cursive;">
+            <span class="sig-font-name">Caveat</span>
+            <div class="sig-preview-text">Your Signature</div>
+          </div>
+          <div class="sig-font-card" data-font="Great Vibes" style="font-family:'Great Vibes', cursive;">
+            <span class="sig-font-name">Great Vibes</span>
+            <div class="sig-preview-text">Your Signature</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 3: Upload -->
+      <div id="pane-sig-upload" class="sig-pane hidden">
+        <div class="sig-upload-dropzone" id="sig-upload-dropzone">
+          <input type="file" id="sig-file-input" accept="image/png,image/jpeg,image/webp" style="display:none" />
+          <div id="sig-upload-empty">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+            <p>Click or drag &amp; drop signature image here</p>
+            <span>PNG, JPG, WebP supported</span>
+          </div>
+          <div id="sig-upload-preview-wrap" class="hidden">
+            <img id="sig-upload-preview-img" alt="Signature preview" />
+            <button id="btn-remove-uploaded-sig" class="btn-text danger" type="button">Remove</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer">
+        <button id="btn-cancel-sig" class="btn-secondary" type="button">Cancel</button>
+        <button id="btn-insert-sig" class="btn-primary" type="button">Insert Signature</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ─── LOADING OVERLAY ───────────────────────────────────────── -->
   <div id="loading-overlay" class="loading-overlay hidden">
     <div class="loading-card">
@@ -267,7 +406,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
   <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
-  <script src="app.js?v=10"></script>
+  <script src="app.js?v=11"></script>
 
 </body>
 </html>
