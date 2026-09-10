@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PDF Editor Pro — Edit PDFs with Matching Fonts</title>
+  <meta name="description" content="A professional PDF editor that reads every text element from your PDF and lets you edit it with the same font, size, and style." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css?v=5" />
+</head>
+<body>
+
+  <!-- ─── DROP OVERLAY ─────────────────────────────────────────── -->
+  <div id="drop-overlay" class="drop-overlay hidden">
+    <div class="drop-box">
+      <div class="drop-icon">📄</div>
+      <p>Drop your PDF here</p>
+    </div>
+  </div>
+
+  <!-- ─── LANDING / UPLOAD SCREEN ─────────────────────────────── -->
+  <div id="landing" class="landing">
+    <div class="landing-bg">
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+      <div class="blob blob-3"></div>
+    </div>
+    <div class="landing-content">
+      <div class="logo">
+        <span class="logo-icon">✦</span>
+        <span class="logo-text">PDF<span class="accent">Editor</span> Pro</span>
+      </div>
+      <h1 class="landing-title">Edit PDFs with<br /><span class="gradient-text">Perfect Typography</span></h1>
+      <p class="landing-sub">Upload any PDF and edit text while preserving the exact font, size, and style of every element.</p>
+
+      <div class="upload-zone" id="upload-zone" tabindex="0" role="button" aria-label="Upload PDF file">
+        <div class="upload-icon-wrap">
+          <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+            <circle cx="26" cy="26" r="25" stroke="url(#grad)" stroke-width="1.5"/>
+            <path d="M26 34V20M26 20L20 26M26 20L32 26" stroke="url(#grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M18 36h16" stroke="url(#grad)" stroke-width="2" stroke-linecap="round"/>
+            <defs>
+              <linearGradient id="grad" x1="0" y1="0" x2="52" y2="52" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#4f8ef7"/>
+                <stop offset="1" stop-color="#a855f7"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <p class="upload-label">Click to upload PDF</p>
+        <p class="upload-hint">or drag &amp; drop — PDF files only</p>
+        <input type="file" id="file-input" accept=".pdf" aria-label="Upload PDF" />
+      </div>
+
+      <div class="features">
+        <div class="feature-card">
+          <span class="feature-icon">🔍</span>
+          <span>Extracts every text block</span>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">✏️</span>
+          <span>Edit with matched styles</span>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">💾</span>
+          <span>Export as clean PDF</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── EDITOR SCREEN ─────────────────────────────────────────── -->
+  <div id="editor" class="editor hidden">
+
+    <!-- Topbar -->
+    <header class="topbar" id="topbar">
+      <div class="topbar-left">
+        <button id="btn-back" class="btn-icon" title="Close file" aria-label="Go back to landing">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M11 4L6 9L11 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="logo-sm">
+          <span class="logo-icon">✦</span>
+          <span class="logo-text">PDF<span class="accent">Editor</span></span>
+        </div>
+        <div class="file-badge" id="file-badge">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 2h7l3 3v7H2V2z" stroke="#4f8ef7" stroke-width="1.2" stroke-linejoin="round"/><path d="M9 2v3h3" stroke="#4f8ef7" stroke-width="1.2" stroke-linejoin="round"/></svg>
+          <span id="file-name-label">document.pdf</span>
+        </div>
+      </div>
+
+      <div class="topbar-center">
+        <div class="toolbar-group">
+          <button id="btn-select" class="tool-btn active" title="Select mode" aria-label="Select mode">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 2l10 6-5 1.5L6 14 3 2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+            <span>Select</span>
+          </button>
+          <button id="btn-edit" class="tool-btn" title="Edit text mode" aria-label="Edit text mode">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M11 2.5l2.5 2.5L5 13.5 2 14l.5-3L11 2.5z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Edit</span>
+          </button>
+        </div>
+        <div class="separator"></div>
+        <div class="toolbar-group">
+          <button id="btn-zoom-out" class="tool-btn icon-only" title="Zoom out" aria-label="Zoom out">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5"/><path d="M12 12l2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M5 7h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+          <span id="zoom-label" class="zoom-label">100%</span>
+          <button id="btn-zoom-in" class="tool-btn icon-only" title="Zoom in" aria-label="Zoom in">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5"/><path d="M12 12l2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M7 5v4M5 7h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+          <button id="btn-zoom-reset" class="tool-btn icon-only" title="Fit to page" aria-label="Fit page to screen">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="1" stroke="currentColor" stroke-width="1.5"/><path d="M5 5h2M5 5v2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M11 5h-2M11 5v2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M5 11h2M5 11v-2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M11 11h-2M11 11v-2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+        <div class="separator"></div>
+        <div class="toolbar-group">
+          <button id="btn-undo" class="tool-btn icon-only" title="Undo" aria-label="Undo" disabled>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 7l-2-2 2-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M1 5h8a4 4 0 0 1 0 8H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+          <button id="btn-redo" class="tool-btn icon-only" title="Redo" aria-label="Redo" disabled>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13 7l2-2-2-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 5H7A4 4 0 0 0 7 13h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="topbar-right">
+        <div class="page-indicator">
+          <span id="current-page">1</span> / <span id="total-pages">1</span>
+        </div>
+        <button id="btn-save" class="btn-save" aria-label="Download edited PDF">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v7M8 10l-3-3M8 10l3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 13h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          Save PDF
+        </button>
+      </div>
+    </header>
+
+    <!-- Main layout -->
+    <div class="editor-layout">
+
+      <!-- Sidebar -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+          <span>Pages</span>
+          <span class="page-count" id="sidebar-page-count">0</span>
+        </div>
+        <div class="thumbnails" id="thumbnails"></div>
+      </aside>
+
+      <!-- Canvas area -->
+      <main class="canvas-area" id="canvas-area">
+        <div class="pages-container" id="pages-container"></div>
+      </main>
+
+      <!-- Properties panel -->
+      <aside class="properties-panel" id="props-panel">
+        <div class="props-header">Text Properties</div>
+        <div class="props-empty" id="props-empty">
+          <div class="props-empty-icon">🖱️</div>
+          <p>Click on any text block to view and edit its properties</p>
+        </div>
+        <div class="props-form hidden" id="props-form">
+          <div class="prop-group">
+            <label class="prop-label" for="prop-content">Content</label>
+            <textarea id="prop-content" class="prop-textarea" rows="4" placeholder="Text content..."></textarea>
+          </div>
+          <div class="prop-group">
+            <label class="prop-label" for="prop-font">Font Family</label>
+            <input id="prop-font" class="prop-input" type="text" placeholder="Helvetica" />
+          </div>
+          <div class="prop-row">
+            <div class="prop-group">
+              <label class="prop-label" for="prop-size">Font Size</label>
+              <input id="prop-size" class="prop-input" type="number" min="1" max="200" step="0.5" />
+            </div>
+            <div class="prop-group">
+              <label class="prop-label" for="prop-color">Color</label>
+              <input id="prop-color" class="prop-color-input" type="color" value="#000000" />
+            </div>
+          </div>
+          <div class="prop-row">
+            <button id="prop-bold" class="style-btn" title="Toggle Bold">B</button>
+            <button id="prop-italic" class="style-btn italic-btn" title="Toggle Italic">I</button>
+          </div>
+          <div class="prop-group">
+            <label class="prop-label">Position</label>
+            <div class="prop-row">
+              <div class="prop-group">
+                <label class="prop-label-sm" for="prop-x">X</label>
+                <input id="prop-x" class="prop-input" type="number" step="0.5" />
+              </div>
+              <div class="prop-group">
+                <label class="prop-label-sm" for="prop-y">Y</label>
+                <input id="prop-y" class="prop-input" type="number" step="0.5" />
+              </div>
+            </div>
+          </div>
+          <button id="btn-apply" class="btn-apply">Apply Changes</button>
+          <button id="btn-delete-item" class="btn-delete">Remove Text Block</button>
+        </div>
+      </aside>
+
+    </div>
+  </div>
+
+  <!-- ─── LOADING OVERLAY ───────────────────────────────────────── -->
+  <div id="loading-overlay" class="loading-overlay hidden">
+    <div class="loading-card">
+      <div class="spinner-ring"></div>
+      <p class="loading-title" id="loading-title">Processing PDF…</p>
+      <p class="loading-sub" id="loading-sub">Extracting text and font data</p>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar" id="progress-bar" style="width:0%"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── TOAST ─────────────────────────────────────────────────── -->
+  <div id="toast" class="toast hidden" role="alert" aria-live="polite"></div>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
+  <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+  <script src="app.js?v=7"></script>
+
+</body>
+</html>
