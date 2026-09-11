@@ -1679,10 +1679,156 @@ body {
   }
 }
 
-@media (max-width: 900px) {
-  .editor-layout { grid-template-columns: 0 1fr 0; }
-  .sidebar, .properties-panel { display: none; }
-  .find-replace-bar { right: 16px !important; left: 16px !important; width: auto !important; top: 100px !important; }
+/* Responsive Editor Layout for Mobile / Tablet (< 768px) */
+@media (max-width: 767.98px) {
+  .editor-screen {
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+  }
+  .editor-header {
+    padding: 6px 12px !important;
+  }
+  .editor-header-left {
+    gap: 6px !important;
+    min-width: 0;
+  }
+  .breadcrumb-doc-name {
+    max-width: 120px !important;
+  }
+  .editor-layout {
+    flex-direction: column !important;
+    overflow: hidden;
+  }
+  /* Bottom Horizontal Tool Ribbon */
+  .editor-tool-strip {
+    order: 2;
+    width: 100% !important;
+    height: 60px !important;
+    min-height: 60px !important;
+    border-right: none !important;
+    border-top: 1px solid var(--border) !important;
+    background: var(--bg-surface);
+    padding: 4px 6px !important;
+    flex-direction: row !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    z-index: 60;
+  }
+  .editor-tool-strip::-webkit-scrollbar {
+    height: 3px;
+  }
+  .editor-tool-strip::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 9999px;
+  }
+  .strip-header {
+    display: none !important;
+  }
+  .strip-tools-list {
+    flex-direction: row !important;
+    gap: 4px !important;
+    height: 100%;
+    align-items: center;
+  }
+  .strip-btn {
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 2px !important;
+    min-width: 56px !important;
+    height: 50px !important;
+    padding: 4px 2px !important;
+    border-radius: 8px !important;
+    text-align: center !important;
+  }
+  .strip-btn span {
+    font-size: 0.68rem !important;
+    font-weight: 500 !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+  }
+  .strip-btn svg {
+    width: 18px !important;
+    height: 18px !important;
+  }
+  .strip-divider {
+    width: 1px !important;
+    height: 28px !important;
+    margin: 0 4px !important;
+    flex-shrink: 0;
+  }
+  .shape-btn-wrapper {
+    position: relative;
+  }
+  .shape-popover {
+    position: fixed !important;
+    bottom: 66px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    top: auto !important;
+    z-index: 1050 !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25) !important;
+  }
+  /* Canvas Area: full mobile width */
+  .canvas-area {
+    order: 1;
+    flex: 1;
+    width: 100% !important;
+    padding: 0 8px 72px !important;
+  }
+  .canvas-floating-controls {
+    top: 8px !important;
+    padding: 3px 8px !important;
+    gap: 2px !important;
+    margin-bottom: 12px !important;
+    max-width: 95vw !important;
+  }
+  .pill-btn {
+    width: 26px !important;
+    height: 26px !important;
+  }
+  .pill-page-selector {
+    font-size: 0.76rem !important;
+    padding: 2px 6px !important;
+  }
+  .pill-zoom-text {
+    font-size: 0.76rem !important;
+    min-width: 38px !important;
+  }
+  #btn-zoom-reset {
+    display: none !important;
+  }
+  /* Floating Find & Replace on Mobile */
+  .find-replace-bar {
+    position: fixed !important;
+    top: 56px !important;
+    left: 12px !important;
+    right: 12px !important;
+    width: auto !important;
+    max-width: calc(100vw - 24px) !important;
+    z-index: 1050 !important;
+  }
+  /* Mobile Overlay for Thumbnails Sidebar and Properties Panel */
+  .sidebar {
+    position: fixed !important;
+    top: 52px !important;
+    left: 0 !important;
+    bottom: 60px !important;
+    width: 210px !important;
+    z-index: 1040 !important;
+    box-shadow: 4px 0 24px rgba(0,0,0,0.2) !important;
+  }
+  .properties-panel {
+    position: fixed !important;
+    top: 52px !important;
+    right: 0 !important;
+    bottom: 60px !important;
+    width: 260px !important;
+    z-index: 1040 !important;
+    box-shadow: -4px 0 24px rgba(0,0,0,0.2) !important;
+  }
 }
 
 /* ─── FIND & REPLACE FLOATING BAR ─────────────────────────────────────── */
