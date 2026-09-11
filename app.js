@@ -549,10 +549,15 @@ async function loadPdf(data) {
       setTimeout(() => openSignatureModal(), 400);
     } else if (state.openRedactOnLoad) {
       state.openRedactOnLoad = false;
-      setActiveTool('shape');
-      state.shapeType = 'rectangle';
-      state.shapeFill = '#000000';
-      state.shapeStroke = '#000000';
+      setTool('shape');
+      if (state.shapeConfig) {
+        state.shapeConfig.type = 'rectangle';
+        state.shapeConfig.fillColor = '#000000';
+        state.shapeConfig.hasFill = true;
+        state.shapeConfig.strokeColor = '#000000';
+        state.shapeConfig.opacity = 1;
+        state.shapeConfig.radius = 0;
+      }
       showToast('🛡️ Redaction Mode: Drag to draw black boxes over sensitive content to redact it', 'info', 4000);
     } else {
       showToast(`✓ Loaded ${numPages} pages with ${state.pages.reduce((a, p) => a + p.textItems.length, 0)} text blocks`, 'success');
@@ -1224,6 +1229,10 @@ async function setZoom(zoom) {
 }
 
 // ─── TOOL MODES ───────────────────────────────────────────────────────────────
+function setActiveTool(tool) {
+  setTool(tool);
+}
+
 function setTool(tool) {
   state.currentTool = tool;
 
@@ -4620,10 +4629,15 @@ body { font-family: Calibri, Arial, sans-serif; font-size: 11pt; color: #0f172a;
   $cardRedactPdf?.addEventListener('click', () => {
     if (state.pages && state.pages.length > 0) {
       showScreen('editor');
-      setActiveTool('shape');
-      state.shapeType = 'rectangle';
-      state.shapeFill = '#000000';
-      state.shapeStroke = '#000000';
+      setTool('shape');
+      if (state.shapeConfig) {
+        state.shapeConfig.type = 'rectangle';
+        state.shapeConfig.fillColor = '#000000';
+        state.shapeConfig.hasFill = true;
+        state.shapeConfig.strokeColor = '#000000';
+        state.shapeConfig.opacity = 1;
+        state.shapeConfig.radius = 0;
+      }
       showToast('🛡️ Redaction Mode: Drag to draw black boxes over sensitive content to redact it', 'info', 4000);
     } else {
       state.openRedactOnLoad = true;
