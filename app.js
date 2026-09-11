@@ -179,7 +179,25 @@ const $btnChangeMergeFile  = $('btn-change-merge-file');
 const $mergeEndPageNum     = $('merge-end-page-num');
 const $mergeCurrentPageNum = $('merge-current-page-num');
 
-// Resize Modal DOM Refs
+// Split Modal & Tool Input DOM Refs
+const $multiMergeInput   = $('multi-merge-input');
+const $imageToPdfInput   = $('image-to-pdf-input');
+const $pdfToWordInput    = $('pdf-to-word-input');
+const $pdfToImageInput   = $('pdf-to-image-input');
+const $splitFileInput    = $('split-file-input');
+
+const $modalSplit        = $('modal-split');
+const $btnCloseSplit     = $('btn-close-split');
+const $btnCancelSplit    = $('btn-cancel-split');
+const $btnConfirmSplit   = $('btn-confirm-split');
+const $splitDocName      = $('split-doc-name');
+const $splitDocPages     = $('split-doc-pages');
+const $splitRangeInput   = $('split-range-input');
+const $splitModeRange    = $('split-mode-range');
+const $splitModeAll      = $('split-mode-all');
+const $splitRangeInputWrap = $('split-range-input-wrap');
+const $splitOptRangeCard = $('split-opt-range-card');
+const $splitOptAllCard   = $('split-opt-all-card');
 const $btnResize           = $('btn-resize');
 const $modalResize         = $('modal-resize');
 const $btnCloseResize      = $('btn-close-resize');
@@ -427,7 +445,13 @@ async function loadPdf(data) {
 
     setProgress(100);
     hideLoading();
-    showToast(`✓ Loaded ${numPages} pages with ${state.pages.reduce((a, p) => a + p.textItems.length, 0)} text blocks`, 'success');
+    if (state.openSidebarOnLoad) {
+      $sidebar?.classList.remove('hidden');
+      state.openSidebarOnLoad = false;
+      showToast('Page Organizer: Drag to reorder, click ↻ to rotate, or ✕ to delete', 'info', 3500);
+    } else {
+      showToast(`✓ Loaded ${numPages} pages with ${state.pages.reduce((a, p) => a + p.textItems.length, 0)} text blocks`, 'success');
+    }
 
   } catch (err) {
     hideLoading();
@@ -4066,113 +4090,459 @@ function initDashboard() {
     });
   });
 
-  // Tool Card Clicks
-  $cardEditPdf?.addEventListener('click', () => {
-    $fileInput.click();
-  });
+  // Helper: HTML escaping for Word output
+  function escapeHtml(str) {
+    return (str || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
 
-  $cardMergePdf?.addEventListener('click', () => {
-    if (state.pages && state.pages.length > 0) {
-      openMergeModal();
-    } else {
-      $fileInput.click();
-      showToast('Open your main PDF first, then merge additional documents', 'info', 3500);
-    }
-  });
-
-  $cardSplitPdf?.addEventListener('click', () => {
-    if (state.pages && state.pages.length > 0) {
-      $sidebar?.classList.remove('hidden');
-      showScreen('editor');
-      showToast('Select or delete pages in the sidebar to split your PDF', 'info', 3500);
-    } else {
-      $fileInput.click();
-      showToast('Open a PDF document to split or organize pages', 'info', 3000);
-    }
-  });
-
-  $cardCompressPdf?.addEventListener('click', () => {
-    showScreen('compress-screen');
-  });
-
-  $cardPdfToWord?.addEventListener('click', async () => {
-    if (!state.pages || state.pages.length === 0) {
-      showToast('Open a PDF document first to convert to text', 'info', 3000);
-      $fileInput.click();
-      return;
-    }
-    showLoading('Converting to Text…', 'Extracting document text stream…', 50);
+  // ─── 5. PDF TO WORD CONVERTER ──────────────────────────────────────────────
+  async function exportPdfToWord(pages, fileName) {
+    if (!pages || pages.length === 0) return;
+    showLoading('Converting to Word…', 'Extracting structured text and layout…', 40);
     try {
-      let fullText = '';
-      for (let i = 0; i < state.pages.length; i++) {
-        fullText += `\n--- PAGE ${i + 1} ---\n\n`;
-        const items = state.pages[i].textItems || [];
+      let body = '';
+      pages.forEach((p, idx) => {
+        body += `<div style="page-break-after: always; padding: 24px;">`;
+        body += `<h2 style="color:#1e3a8a; border-bottom:1.5px solid #cbd5e1; padding-bottom:6px; font-family:Arial,sans-serif;">Page ${idx + 1}</h2>`;
+        const items = p.textItems || [];
         const sorted = [...items].sort((a, b) => b.originalY - a.originalY || a.originalX - b.originalX);
-        fullText += sorted.map(t => t.str).join(' ') + '\n';
-      }
-      const blob = new Blob([fullText], { type: 'text/plain;charset=utf-8' });
+        if (sorted.length === 0) {
+          body += `<p style="color:#64748b; font-style:italic;">[No text detected on this page]</p>`;
+        } else {
+          let lastY = null;
+          let line = '';
+          sorted.forEach(item => {
+            if (lastY !== null && Math.abs(item.originalY - lastY) > 8) {
+              body += `<p style="margin:6px 0; font-family:Calibri,Arial,sans-serif; font-size:11.5pt; line-height:1.5;">${escapeHtml(line)}</p>`;
+              line = item.str;
+            } else {
+              line += (line ? ' ' : '') + item.str;
+            }
+            lastY = item.originalY;
+          });
+          if (line) {
+            body += `<p style="margin:6px 0; font-family:Calibri,Arial,sans-serif; font-size:11.5pt; line-height:1.5;">${escapeHtml(line)}</p>`;
+          }
+        }
+        body += `</div>`;
+      });
+
+      const docContent = `<!DOCTYPE html>
+<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+<head><meta charset='utf-8'><title>Converted Document</title>
+<!--[if gte mso 9]>
+<xml><w:WordDocument><w:View>Print</w:View><w:Zoom>100</w:Zoom></w:WordDocument></xml>
+<![endif]-->
+<style>
+body { font-family: Calibri, Arial, sans-serif; font-size: 11pt; color: #0f172a; }
+</style>
+</head>
+<body>${body}</body>
+</html>`;
+
+      const blob = new Blob([docContent], { type: 'application/msword' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = (state.fileName ? state.fileName.replace(/\.pdf$/i, '') : 'document') + '.txt';
+      const baseName = fileName ? fileName.replace(/\.pdf$/i, '') : 'document';
+      a.download = `${baseName}.doc`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
       hideLoading();
-      showToast('✓ Extracted text document downloaded!', 'success', 3000);
+      showToast('✓ Converted & downloaded editable Word document (.doc)!', 'success', 3500);
     } catch (err) {
       hideLoading();
-      showToast('Conversion error: ' + err.message, 'error', 3000);
+      showToast('Word conversion error: ' + err.message, 'error', 3500);
     }
-  });
+  }
 
-  $cardPdfToImage?.addEventListener('click', () => {
-    if (!state.pages || state.pages.length === 0) {
-      showToast('Open a PDF document first to export as image', 'info', 3000);
-      $fileInput.click();
+  // ─── 6. PDF TO IMAGE CONVERTER ─────────────────────────────────────────────
+  async function exportPdfToImages(pages, fileName) {
+    if (!pages || pages.length === 0) return;
+    showLoading('Exporting Images…', `Rendering ${pages.length} page${pages.length > 1 ? 's' : ''} to PNG…`, 30);
+    try {
+      const baseName = fileName ? fileName.replace(/\.pdf$/i, '') : 'document';
+      let exportedCount = 0;
+
+      for (let i = 0; i < pages.length; i++) {
+        setProgress(30 + Math.round((i / pages.length) * 60));
+        const pageData = pages[i];
+        let canvas = pageData.canvas;
+        if (!canvas && pageData.pdfPage) {
+          canvas = document.createElement('canvas');
+          const viewport = pageData.pdfPage.getViewport({ scale: 2.0 });
+          canvas.width = viewport.width;
+          canvas.height = viewport.height;
+          const ctx = canvas.getContext('2d');
+          await pageData.pdfPage.render({ canvasContext: ctx, viewport }).promise;
+        }
+        if (canvas) {
+          const dataUrl = canvas.toDataURL('image/png');
+          const a = document.createElement('a');
+          a.href = dataUrl;
+          a.download = `${baseName}_page_${i + 1}.png`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          exportedCount++;
+          if (pages.length > 1) await new Promise(r => setTimeout(r, 200));
+        }
+      }
+      hideLoading();
+      showToast(`✓ Exported ${exportedCount} high-resolution PNG image${exportedCount > 1 ? 's' : ''}!`, 'success', 3500);
+    } catch (err) {
+      hideLoading();
+      showToast('Image export error: ' + err.message, 'error', 3500);
+    }
+  }
+
+  // ─── 2. MULTI-MERGE INPUT HANDLER ──────────────────────────────────────────
+  $multiMergeInput?.addEventListener('change', async (e) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+    if (files.length === 1) {
+      handleFile(files[0]);
+      setTimeout(() => { openMergeModal(); }, 1200);
       return;
     }
-    showLoading('Exporting Image…', 'Rendering page 1 to PNG…', 60);
+    showLoading('Merging PDFs…', `Combining ${files.length} documents into one…`, 25);
     try {
-      const page0 = state.pages[0];
-      if (page0 && page0.canvas) {
-        const dataUrl = page0.canvas.toDataURL('image/png');
-        const a = document.createElement('a');
-        a.href = dataUrl;
-        a.download = (state.fileName ? state.fileName.replace(/\.pdf$/i, '') : 'document') + '_page_1.png';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        hideLoading();
-        showToast('✓ Page 1 exported as high-res PNG image!', 'success', 3000);
-      } else {
-        hideLoading();
-        showToast('No rendered pages available to export', 'error');
+      const { PDFDocument } = PDFLib;
+      const mergedDoc = await PDFDocument.create();
+      for (let i = 0; i < files.length; i++) {
+        setProgress(25 + Math.round((i / files.length) * 50));
+        const buf = await files[i].arrayBuffer();
+        const doc = await PDFDocument.load(buf, { ignoreEncryption: true });
+        const indices = doc.getPageIndices();
+        const copied = await mergedDoc.copyPages(doc, indices);
+        copied.forEach(p => mergedDoc.addPage(p));
       }
+      setProgress(90);
+      const mergedBytes = await mergedDoc.save();
+      state.fileName = 'merged_document.pdf';
+      state.pdfData = mergedBytes.slice(0);
+      await loadPdf(mergedBytes);
+      hideLoading();
+      showToast(`✓ Successfully merged ${files.length} PDF files!`, 'success', 3500);
     } catch (err) {
       hideLoading();
-      showToast('Export error: ' + err.message, 'error');
+      showToast('Error merging PDFs: ' + err.message, 'error', 3500);
     }
+    $multiMergeInput.value = '';
   });
 
-  $cardImageToPdf?.addEventListener('click', () => {
+  // ─── 7. IMAGE TO PDF INPUT HANDLER ────────────────────────────────────────
+  $imageToPdfInput?.addEventListener('change', async (e) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+    showLoading('Converting Images to PDF…', `Processing ${files.length} image${files.length > 1 ? 's' : ''}…`, 20);
+    try {
+      const { PDFDocument } = PDFLib;
+      const newDoc = await PDFDocument.create();
+      for (let i = 0; i < files.length; i++) {
+        setProgress(20 + Math.round((i / files.length) * 60));
+        const file = files[i];
+        const buf = await file.arrayBuffer();
+        let embedded;
+        if (file.type === 'image/jpeg' || file.name.match(/\.jpe?g$/i)) {
+          embedded = await newDoc.embedJpg(buf);
+        } else {
+          embedded = await newDoc.embedPng(buf);
+        }
+        const page = newDoc.addPage([embedded.width, embedded.height]);
+        page.drawImage(embedded, {
+          x: 0,
+          y: 0,
+          width: embedded.width,
+          height: embedded.height,
+        });
+      }
+      setProgress(90);
+      const pdfBytes = await newDoc.save();
+      state.fileName = 'converted_images.pdf';
+      state.pdfData = pdfBytes.slice(0);
+      await loadPdf(pdfBytes);
+      hideLoading();
+      showToast(`✓ Converted ${files.length} image${files.length > 1 ? 's' : ''} into a new PDF!`, 'success', 3500);
+    } catch (err) {
+      hideLoading();
+      showToast('Error converting images to PDF: ' + err.message, 'error', 3500);
+    }
+    $imageToPdfInput.value = '';
+  });
+
+  // ─── DIRECT PDF TO WORD INPUT HANDLER ──────────────────────────────────────
+  $pdfToWordInput?.addEventListener('change', async (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    showLoading('Converting PDF to Word…', 'Extracting document text…', 30);
+    try {
+      const buf = await file.arrayBuffer();
+      const loadingTask = pdfjsLib.getDocument({ data: new Uint8Array(buf) });
+      const pdfDoc = await loadingTask.promise;
+      const pages = [];
+      for (let i = 1; i <= pdfDoc.numPages; i++) {
+        const page = await pdfDoc.getPage(i);
+        const textContent = await page.getTextContent();
+        const textItems = textContent.items.map(it => ({
+          str: it.str,
+          originalX: it.transform[4],
+          originalY: it.transform[5],
+        }));
+        pages.push({ textItems });
+      }
+      await exportPdfToWord(pages, file.name);
+    } catch (err) {
+      hideLoading();
+      showToast('Word conversion error: ' + err.message, 'error', 3500);
+    }
+    $pdfToWordInput.value = '';
+  });
+
+  // ─── DIRECT PDF TO IMAGE INPUT HANDLER ─────────────────────────────────────
+  $pdfToImageInput?.addEventListener('change', async (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    showLoading('Converting PDF to Images…', 'Rendering pages to PNG…', 30);
+    try {
+      const buf = await file.arrayBuffer();
+      const loadingTask = pdfjsLib.getDocument({ data: new Uint8Array(buf) });
+      const pdfDoc = await loadingTask.promise;
+      const pages = [];
+      for (let i = 1; i <= pdfDoc.numPages; i++) {
+        const pdfPage = await pdfDoc.getPage(i);
+        pages.push({ pdfPage, canvas: null });
+      }
+      await exportPdfToImages(pages, file.name);
+    } catch (err) {
+      hideLoading();
+      showToast('Image conversion error: ' + err.message, 'error', 3500);
+    }
+    $pdfToImageInput.value = '';
+  });
+
+  // ─── DIRECT SPLIT FILE INPUT HANDLER ───────────────────────────────────────
+  $splitFileInput?.addEventListener('change', async (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    handleFile(file);
+    setTimeout(() => { openSplitModal(); }, 1200);
+    $splitFileInput.value = '';
+  });
+
+  // ─── 8 TOOL CARDS CLICK HANDLERS ───────────────────────────────────────────
+  // 1. Edit PDF: add text, images, shapes, signatures
+  $cardEditPdf?.addEventListener('click', () => {
     if (state.pages && state.pages.length > 0) {
-      $imageFileInput?.click();
+      showScreen('editor');
     } else {
-      showToast('Open or create a PDF first, then add images', 'info', 3000);
       $fileInput.click();
     }
   });
 
+  // 2. Merge PDF: combine multiple PDFs
+  $cardMergePdf?.addEventListener('click', () => {
+    if (state.pages && state.pages.length > 0) {
+      openMergeModal();
+    } else {
+      $multiMergeInput?.click();
+    }
+  });
+
+  // 3. Split PDF: extract pages
+  $cardSplitPdf?.addEventListener('click', () => {
+    if (state.pages && state.pages.length > 0) {
+      openSplitModal();
+    } else {
+      $splitFileInput?.click();
+    }
+  });
+
+  // 4. Compress PDF: reduce file size
+  $cardCompressPdf?.addEventListener('click', () => {
+    showScreen('compress-screen');
+  });
+
+  // 5. PDF to Word: convert to editable Word (.doc) file
+  $cardPdfToWord?.addEventListener('click', () => {
+    if (state.pages && state.pages.length > 0) {
+      exportPdfToWord(state.pages, state.fileName);
+    } else {
+      $pdfToWordInput?.click();
+    }
+  });
+
+  // 6. PDF to Image: convert to high-res PNG images
+  $cardPdfToImage?.addEventListener('click', () => {
+    if (state.pages && state.pages.length > 0) {
+      exportPdfToImages(state.pages, state.fileName);
+    } else {
+      $pdfToImageInput?.click();
+    }
+  });
+
+  // 7. Image to PDF: turn images into PDF
+  $cardImageToPdf?.addEventListener('click', () => {
+    $imageToPdfInput?.click();
+  });
+
+  // 8. Organize Pages: reorder, rotate, delete
   $cardOrganizePages?.addEventListener('click', () => {
     if (state.pages && state.pages.length > 0) {
       $sidebar?.classList.remove('hidden');
       showScreen('editor');
-      showToast('Drag, duplicate, or delete pages in the sidebar', 'info', 3000);
+      showToast('Page Organizer: Drag to reorder, click ↻ to rotate, or ✕ to delete', 'info', 3500);
     } else {
+      state.openSidebarOnLoad = true;
       $fileInput.click();
-      showToast('Open a PDF document to organize pages', 'info', 3000);
+    }
+  });
+}
+
+// ─── 3. SPLIT PDF MODAL CONTROLLER ──────────────────────────────────────────
+function parsePageRanges(str, maxPages) {
+  const parts = str.split(',').map(s => s.trim()).filter(Boolean);
+  const pages = new Set();
+  for (const part of parts) {
+    if (part.includes('-')) {
+      const [start, end] = part.split('-').map(n => parseInt(n.trim()));
+      if (!isNaN(start) && !isNaN(end)) {
+        for (let p = Math.min(start, end); p <= Math.max(start, end); p++) {
+          if (p >= 1 && p <= maxPages) pages.add(p - 1);
+        }
+      }
+    } else {
+      const p = parseInt(part);
+      if (!isNaN(p) && p >= 1 && p <= maxPages) pages.add(p - 1);
+    }
+  }
+  return Array.from(pages).sort((a, b) => a - b);
+}
+
+function openSplitModal() {
+  if (!state.pages || state.pages.length === 0) {
+    showToast('Open a PDF document first to split pages.', 'info', 2500);
+    $splitFileInput?.click();
+    return;
+  }
+  if ($splitDocName) $splitDocName.textContent = state.fileName || 'document.pdf';
+  if ($splitDocPages) $splitDocPages.textContent = `Total: ${state.pages.length} page${state.pages.length > 1 ? 's' : ''}`;
+  if ($splitRangeInput) $splitRangeInput.value = state.pages.length > 1 ? `1-${Math.min(2, state.pages.length)}` : '1';
+  $modalSplit?.classList.remove('hidden');
+}
+
+function closeSplitModal() {
+  $modalSplit?.classList.add('hidden');
+}
+
+function initSplitModal() {
+  if (!$modalSplit) return;
+
+  $btnCloseSplit?.addEventListener('click', closeSplitModal);
+  $btnCancelSplit?.addEventListener('click', closeSplitModal);
+  $modalSplit?.addEventListener('click', (e) => {
+    if (e.target === $modalSplit) closeSplitModal();
+  });
+
+  const updateSplitMode = () => {
+    const isRange = $splitModeRange?.checked;
+    if ($splitRangeInputWrap) $splitRangeInputWrap.style.display = isRange ? 'block' : 'none';
+    $splitOptRangeCard?.classList.toggle('active', isRange);
+    $splitOptAllCard?.classList.toggle('active', !isRange);
+  };
+
+  $splitModeRange?.addEventListener('change', updateSplitMode);
+  $splitModeAll?.addEventListener('change', updateSplitMode);
+  $splitOptRangeCard?.addEventListener('click', () => {
+    if ($splitModeRange) $splitModeRange.checked = true;
+    updateSplitMode();
+  });
+  $splitOptAllCard?.addEventListener('click', () => {
+    if ($splitModeAll) $splitModeAll.checked = true;
+    updateSplitMode();
+  });
+
+  $btnConfirmSplit?.addEventListener('click', async () => {
+    if (!state.pages || state.pages.length === 0) return;
+    const isRange = $splitModeRange?.checked;
+    const baseName = state.fileName ? state.fileName.replace(/\.pdf$/i, '') : 'document';
+    const { PDFDocument } = PDFLib;
+
+    closeSplitModal();
+
+    try {
+      showLoading('Splitting PDF…', 'Extracting pages…', 30);
+
+      const srcBytes = state.pdfData;
+      if (!srcBytes) {
+        showToast('Document source unavailable for direct split.', 'error');
+        hideLoading();
+        return;
+      }
+      const srcDoc = await PDFDocument.load(srcBytes, { ignoreEncryption: true });
+
+      if (isRange) {
+        const val = ($splitRangeInput?.value || '').trim();
+        const indices = parsePageRanges(val, state.pages.length);
+        if (indices.length === 0) {
+          hideLoading();
+          showToast('Invalid page range entered. Example: 1-3, 5', 'error', 3000);
+          return;
+        }
+
+        setProgress(65);
+        const newDoc = await PDFDocument.create();
+        const copied = await newDoc.copyPages(srcDoc, indices);
+        copied.forEach(p => newDoc.addPage(p));
+
+        setProgress(90);
+        const splitBytes = await newDoc.save();
+        const blob = new Blob([splitBytes], { type: 'application/pdf' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${baseName}_split_pages_${val.replace(/[\s,]+/g, '_')}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        hideLoading();
+        showToast(`✓ Extracted ${indices.length} page${indices.length > 1 ? 's' : ''} to new PDF!`, 'success', 3500);
+      } else {
+        const total = state.pages.length;
+        for (let i = 0; i < total; i++) {
+          setProgress(30 + Math.round((i / total) * 60));
+          const singleDoc = await PDFDocument.create();
+          const [singlePage] = await singleDoc.copyPages(srcDoc, [i]);
+          singleDoc.addPage(singlePage);
+          const bytes = await singleDoc.save();
+          const blob = new Blob([bytes], { type: 'application/pdf' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `${baseName}_page_${i + 1}.pdf`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+          if (total > 1) await new Promise(r => setTimeout(r, 200));
+        }
+
+        hideLoading();
+        showToast(`✓ Split ${total} pages into individual PDF files!`, 'success', 3500);
+      }
+    } catch (err) {
+      hideLoading();
+      showToast('Split PDF error: ' + err.message, 'error', 3500);
+      console.error('Split error:', err);
     }
   });
 }
@@ -4211,6 +4581,7 @@ function initEditorHeaderAndControls() {
   initHelpModal();
   initSignatureModal();
   initMergeModal();
+  initSplitModal();
   initResizeModal();
   initShapeTools();
   initDashboard();
