@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="light" data-bs-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,7 +8,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Dancing+Script:wght@600&family=Great+Vibes&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=21" />
+  <!-- Bootstrap 5.3.3 CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+  <link rel="stylesheet" href="style.css?v=22" />
 </head>
 <body>
 
@@ -23,78 +25,81 @@
   <!-- ─── SCREEN 1: LANDING / HERO VIEW ─────────────────────────── -->
   <div id="landing" class="screen-view landing-screen">
     <!-- Global Header -->
-    <header class="global-header">
-      <div class="header-left">
-        <a href="#" class="brand-logo" id="logo-home-landing">
-          <svg class="pdf-logo-icon" width="26" height="26" viewBox="0 0 24 24" fill="none">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" fill="#ef4444" fill-opacity="0.12" stroke="#ef4444" stroke-width="2" stroke-linejoin="round"/>
-            <path d="M14 2v6h6" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M9 13h2a1.5 1.5 0 0 0 0-3H9v6" stroke="#ef4444" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          <span class="brand-name">PDF Editor</span>
-        </a>
-        <nav class="nav-links">
-          <a href="#features" class="nav-link" id="nav-link-features">Features</a>
-          <a href="#tools" class="nav-link" id="nav-link-tools">Tools</a>
-          <a href="#pricing" class="nav-link" id="nav-link-pricing">Pricing</a>
-          <a href="#resources" class="nav-link" id="nav-link-resources">Resources</a>
-        </nav>
-      </div>
-      <div class="header-right">
-        <button id="btn-theme-toggle-landing" class="btn-icon-ghost" title="Toggle Theme" aria-label="Toggle theme">
-          <span class="theme-icon">🌙</span>
-        </button>
-        <button class="nav-btn-link" id="btn-nav-signin" type="button">Sign In</button>
-        <button class="btn-pill-dark" id="btn-nav-get-started" type="button">Get Started</button>
+    <header class="global-header navbar navbar-expand-lg border-bottom bg-white sticky-top">
+      <div class="container-fluid px-3 px-md-4 d-flex justify-content-between align-items-center">
+        <div class="header-left d-flex align-items-center gap-4">
+          <a href="#" class="brand-logo d-flex align-items-center gap-2 text-decoration-none" id="logo-home-landing">
+            <svg class="pdf-logo-icon" width="26" height="26" viewBox="0 0 24 24" fill="none">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" fill="#ef4444" fill-opacity="0.12" stroke="#ef4444" stroke-width="2" stroke-linejoin="round"/>
+              <path d="M14 2v6h6" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M9 13h2a1.5 1.5 0 0 0 0-3H9v6" stroke="#ef4444" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="brand-name">PDF Editor</span>
+          </a>
+          <nav class="nav-links d-none d-md-flex align-items-center gap-3">
+            <a href="#features" class="nav-link" id="nav-link-features">Features</a>
+            <a href="#tools" class="nav-link" id="nav-link-tools">Tools</a>
+            <a href="#pricing" class="nav-link" id="nav-link-pricing">Pricing</a>
+            <a href="#resources" class="nav-link" id="nav-link-resources">Resources</a>
+          </nav>
+        </div>
+        <div class="header-right d-flex align-items-center gap-2 gap-md-3">
+          <button id="btn-theme-toggle-landing" class="btn-icon-ghost" title="Toggle Theme" aria-label="Toggle theme">
+            <span class="theme-icon">🌙</span>
+          </button>
+          <button class="nav-btn-link btn btn-link text-decoration-none text-muted" id="btn-nav-signin" type="button">Sign In</button>
+          <button class="btn-pill-dark btn btn-dark rounded-pill px-3 py-2 fw-semibold" id="btn-nav-get-started" type="button">Get Started</button>
+        </div>
       </div>
     </header>
 
     <!-- Hero Content -->
-    <main class="hero-section">
-      <div class="hero-container">
-        <!-- Left Hero Column -->
-        <div class="hero-left">
-          <div class="hero-text-block">
-            <h1 class="hero-title">PDF Editor</h1>
-            <h2 class="hero-subhead">All the tools you need,<br />in one place.</h2>
-            <p class="hero-desc">Edit, convert, merge, compress and do more with your PDFs. Simple. Fast. Secure.</p>
-          </div>
+    <main class="hero-section py-4 py-lg-5">
+      <div class="container hero-container">
+        <div class="row align-items-center g-5">
+          <!-- Left Hero Column -->
+          <div class="col-12 col-lg-6 hero-left">
+            <div class="hero-text-block">
+              <h1 class="hero-title">PDF Editor</h1>
+              <h2 class="hero-subhead">All the tools you need,<br />in one place.</h2>
+              <p class="hero-desc">Edit, convert, merge, compress and do more with your PDFs. Simple. Fast. Secure.</p>
+            </div>
 
-          <div class="hero-cta-group">
-            <button class="btn-pill-dark btn-hero-primary" id="btn-hero-get-started" type="button">
-              Get Started <span class="arrow-icon">→</span>
-            </button>
-            <button class="btn-link-secondary" id="btn-hero-see-tools" type="button">See All Tools</button>
-          </div>
+            <div class="hero-cta-group d-flex align-items-center gap-3 my-4">
+              <button class="btn-pill-dark btn-hero-primary btn btn-dark rounded-pill px-4 py-3 fw-bold" id="btn-hero-get-started" type="button">
+                Get Started <span class="arrow-icon">→</span>
+              </button>
+              <button class="btn-link-secondary btn btn-link text-decoration-none text-secondary fw-semibold" id="btn-hero-see-tools" type="button">See All Tools</button>
+            </div>
 
-          <!-- Trust Badges -->
-          <div class="trust-badges-row">
-            <div class="trust-badge">
-              <span class="trust-icon">🛡️</span>
-              <div class="trust-info">
-                <strong>Secure</strong>
-                <span>and private</span>
+            <!-- Trust Badges -->
+            <div class="trust-badges-row d-flex flex-wrap gap-4 pt-3">
+              <div class="trust-badge d-flex align-items-center gap-2">
+                <span class="trust-icon">🛡️</span>
+                <div class="trust-info">
+                  <strong>Secure</strong>
+                  <span>and private</span>
+                </div>
+              </div>
+              <div class="trust-badge d-flex align-items-center gap-2">
+                <span class="trust-icon">⚡</span>
+                <div class="trust-info">
+                  <strong>Fast</strong>
+                  <span>and reliable</span>
+                </div>
+              </div>
+              <div class="trust-badge d-flex align-items-center gap-2">
+                <span class="trust-icon">📱</span>
+                <div class="trust-info">
+                  <strong>Works on</strong>
+                  <span>any device</span>
+                </div>
               </div>
             </div>
-            <div class="trust-badge">
-              <span class="trust-icon">⚡</span>
-              <div class="trust-info">
-                <strong>Fast</strong>
-                <span>and reliable</span>
-              </div>
-            </div>
-            <div class="trust-badge">
-              <span class="trust-icon">📱</span>
-              <div class="trust-info">
-                <strong>Works on</strong>
-                <span>any device</span>
-              </div>
-            </div>
           </div>
-        </div>
 
-        <!-- Right Hero Column: 3D Layered Document with Floating Icons -->
-        <div class="hero-right">
+          <!-- Right Hero Column: 3D Layered Document with Floating Icons -->
+          <div class="col-12 col-lg-6 hero-right d-flex flex-column align-items-center justify-content-center position-relative">
           <div class="doodle-annotation">
             <span class="doodle-text">Do more with PDFs</span>
             <svg class="doodle-arrow" width="46" height="42" viewBox="0 0 50 45" fill="none">
@@ -156,281 +161,307 @@
   <!-- ─── SCREEN 2: TOOLS HUB / DASHBOARD VIEW ────────────────────── -->
   <div id="dashboard" class="screen-view dashboard-screen hidden">
     <!-- Top Global Header -->
-    <header class="global-header dashboard-header">
-      <div class="header-left">
-        <a href="#" class="brand-logo" id="logo-home-dash">
-          <svg class="pdf-logo-icon" width="26" height="26" viewBox="0 0 24 24" fill="none">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" fill="#ef4444" fill-opacity="0.12" stroke="#ef4444" stroke-width="2" stroke-linejoin="round"/>
-            <path d="M14 2v6h6" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M9 13h2a1.5 1.5 0 0 0 0-3H9v6" stroke="#ef4444" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          <span class="brand-name">PDF Editor</span>
-        </a>
-        <nav class="nav-links">
-          <a href="#features" class="nav-link" id="nav-dash-features">Features</a>
-          <a href="#tools" class="nav-link active" id="nav-dash-tools-top">Tools</a>
-          <a href="#pricing" class="nav-link">Pricing</a>
-          <a href="#resources" class="nav-link">Resources</a>
-        </nav>
-      </div>
-      <div class="header-right">
-        <button id="btn-theme-toggle-dash" class="btn-icon-ghost" title="Toggle Theme" aria-label="Toggle theme">
-          <span class="theme-icon">🌙</span>
-        </button>
-        <div class="header-search-icon" title="Search">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+    <header class="global-header dashboard-header navbar navbar-expand border-bottom bg-white sticky-top">
+      <div class="container-fluid px-3 px-md-4 d-flex justify-content-between align-items-center">
+        <div class="header-left d-flex align-items-center gap-4">
+          <a href="#" class="brand-logo d-flex align-items-center gap-2 text-decoration-none" id="logo-home-dash">
+            <svg class="pdf-logo-icon" width="26" height="26" viewBox="0 0 24 24" fill="none">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" fill="#ef4444" fill-opacity="0.12" stroke="#ef4444" stroke-width="2" stroke-linejoin="round"/>
+              <path d="M14 2v6h6" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M9 13h2a1.5 1.5 0 0 0 0-3H9v6" stroke="#ef4444" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="brand-name">PDF Editor</span>
+          </a>
+          <nav class="nav-links d-none d-md-flex align-items-center gap-3">
+            <a href="#features" class="nav-link" id="nav-dash-features">Features</a>
+            <a href="#tools" class="nav-link active fw-bold text-primary" id="nav-dash-tools-top">Tools</a>
+            <a href="#pricing" class="nav-link">Pricing</a>
+            <a href="#resources" class="nav-link">Resources</a>
+          </nav>
         </div>
-        <div class="user-avatar-circle" title="Kunal">K</div>
+        <div class="header-right d-flex align-items-center gap-3">
+          <button id="btn-theme-toggle-dash" class="btn-icon-ghost" title="Toggle Theme" aria-label="Toggle theme">
+            <span class="theme-icon">🌙</span>
+          </button>
+          <div class="header-search-icon d-none d-sm-block text-muted" title="Search">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          </div>
+          <div class="user-avatar-circle d-flex align-items-center justify-content-center fw-bold" title="Kunal">K</div>
+        </div>
       </div>
     </header>
 
     <!-- Dashboard Layout: Sidebar + Main Content -->
-    <div class="dashboard-body">
-      <!-- Left Sidebar -->
-      <aside class="dashboard-sidebar">
-        <nav class="dash-sidebar-nav">
-          <button class="dash-nav-item" id="dash-nav-home">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-            <span>Home</span>
-          </button>
-          <button class="dash-nav-item active" id="dash-nav-tools">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-            <span>All Tools</span>
-          </button>
-          <button class="dash-nav-item" id="dash-nav-recent">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            <span>Recent Files</span>
-          </button>
-          <button class="dash-nav-item" id="dash-nav-starred">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            <span>Starred</span>
-          </button>
-          <button class="dash-nav-item" id="dash-nav-shared">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            <span>Shared</span>
-          </button>
-          <button class="dash-nav-item" id="dash-nav-trash">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-            <span>Trash</span>
-          </button>
-        </nav>
+    <div class="dashboard-body container-fluid p-0">
+      <div class="row g-0 min-vh-100 flex-column flex-md-row">
+        <!-- Left Sidebar -->
+        <aside class="dashboard-sidebar col-12 col-md-3 col-xl-2 border-end bg-white p-3 d-flex flex-column justify-content-between">
+          <nav class="dash-sidebar-nav d-flex flex-column gap-1">
+            <button class="dash-nav-item btn text-start d-flex align-items-center gap-2 w-100" id="dash-nav-home">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              <span>Home</span>
+            </button>
+            <button class="dash-nav-item active btn text-start d-flex align-items-center gap-2 w-100" id="dash-nav-tools">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+              <span>All Tools</span>
+            </button>
+            <button class="dash-nav-item btn text-start d-flex align-items-center gap-2 w-100" id="dash-nav-recent">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <span>Recent Files</span>
+            </button>
+            <button class="dash-nav-item btn text-start d-flex align-items-center gap-2 w-100" id="dash-nav-starred">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <span>Starred</span>
+            </button>
+            <button class="dash-nav-item btn text-start d-flex align-items-center gap-2 w-100" id="dash-nav-shared">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              <span>Shared</span>
+            </button>
+            <button class="dash-nav-item btn text-start d-flex align-items-center gap-2 w-100" id="dash-nav-trash">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+              <span>Trash</span>
+            </button>
+          </nav>
 
-        <!-- Storage Card Widget -->
-        <div class="storage-widget">
-          <div class="storage-text-row">
-            <span class="storage-label">2.4 GB of 10 GB used</span>
-          </div>
-          <div class="storage-meter">
-            <div class="storage-meter-fill" style="width: 24%"></div>
-          </div>
-          <a href="#upgrade" class="storage-upgrade-link">Upgrade →</a>
-        </div>
-      </aside>
-
-      <!-- Main Tools Content -->
-      <main class="dashboard-main">
-        <div class="dash-top-bar">
-          <div class="dash-title-group">
-            <h1 class="dash-main-title">Tools for every PDF need</h1>
-            <p class="dash-main-sub">Simple tools. Powerful results.</p>
-          </div>
-          <div class="dash-search-wrap">
-            <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-            <input type="text" id="dash-search-input" class="dash-search-input" placeholder="Search tools..." />
-          </div>
-        </div>
-
-        <!-- 8 Pastel Tool Cards Grid -->
-        <div class="tools-grid" id="tools-grid">
-          <!-- 1. Edit PDF -->
-          <div class="tool-card card-coral" id="card-edit-pdf" tabindex="0" role="button">
-            <div class="tool-card-icon coral">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-              </svg>
+          <!-- Storage Card Widget -->
+          <div class="storage-widget card border-0 bg-light p-3 rounded-3 mt-4">
+            <div class="storage-text-row mb-2">
+              <span class="storage-label small fw-semibold text-secondary">2.4 GB of 10 GB used</span>
             </div>
-            <h3 class="tool-card-title">Edit PDF</h3>
-            <p class="tool-card-desc">Add text, images and more</p>
+            <div class="storage-meter progress mb-2" style="height: 6px;">
+              <div class="storage-meter-fill progress-bar bg-primary" role="progressbar" style="width: 24%" aria-valuenow="24" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+            <a href="#upgrade" class="storage-upgrade-link small fw-bold text-decoration-none text-primary" id="btn-storage-upgrade">Upgrade →</a>
+          </div>
+        </aside>
+
+        <!-- Main Tools Content -->
+        <main class="dashboard-main col-12 col-md-9 col-xl-10 p-4 p-md-5">
+          <div class="dash-top-bar d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-4">
+            <div class="dash-title-group">
+              <h1 class="dash-main-title h2 fw-bold mb-1">Tools for every PDF need</h1>
+              <p class="dash-main-sub text-muted mb-0">Simple tools. Powerful results.</p>
+            </div>
+            <div class="dash-search-wrap position-relative">
+              <svg class="search-icon position-absolute" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="top: 12px; left: 14px;"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+              <input type="text" id="dash-search-input" class="dash-search-input form-control rounded-pill ps-5 py-2" placeholder="Search tools..." />
+            </div>
           </div>
 
-          <!-- 2. Merge PDF -->
-          <div class="tool-card card-blue" id="card-merge-pdf" tabindex="0" role="button">
-            <div class="tool-card-icon blue">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4"/><polyline points="14 2 14 8 20 8"/><path d="M2 15h10M9 12l3 3-3 3"/>
-              </svg>
+          <!-- 8 Pastel Tool Cards Grid (Bootstrap Row & Cols) -->
+          <div class="row g-4 tools-grid" id="tools-grid">
+            <!-- 1. Edit PDF -->
+            <div class="col-12 col-sm-6 col-lg-3 tool-card-col">
+              <div class="tool-card card-coral card border-0 h-100 p-4 rounded-4 shadow-sm" id="card-edit-pdf" tabindex="0" role="button">
+                <div class="tool-card-icon coral mb-3">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                  </svg>
+                </div>
+                <h3 class="tool-card-title h5 fw-bold mb-1">Edit PDF</h3>
+                <p class="tool-card-desc text-muted small mb-0">Add text, images and more</p>
+              </div>
             </div>
-            <h3 class="tool-card-title">Merge PDF</h3>
-            <p class="tool-card-desc">Combine multiple files</p>
-          </div>
 
-          <!-- 3. Split PDF -->
-          <div class="tool-card card-green" id="card-split-pdf" tabindex="0" role="button">
-            <div class="tool-card-icon green">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/>
-              </svg>
+            <!-- 2. Merge PDF -->
+            <div class="col-12 col-sm-6 col-lg-3 tool-card-col">
+              <div class="tool-card card-blue card border-0 h-100 p-4 rounded-4 shadow-sm" id="card-merge-pdf" tabindex="0" role="button">
+                <div class="tool-card-icon blue mb-3">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4"/><polyline points="14 2 14 8 20 8"/><path d="M2 15h10M9 12l3 3-3 3"/>
+                  </svg>
+                </div>
+                <h3 class="tool-card-title h5 fw-bold mb-1">Merge PDF</h3>
+                <p class="tool-card-desc text-muted small mb-0">Combine multiple files</p>
+              </div>
             </div>
-            <h3 class="tool-card-title">Split PDF</h3>
-            <p class="tool-card-desc">Extract pages with ease</p>
-          </div>
 
-          <!-- 4. Compress PDF -->
-          <div class="tool-card card-peach" id="card-compress-pdf" tabindex="0" role="button">
-            <div class="tool-card-icon peach">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M4 14h6v6"/><path d="M20 10h-6V4"/><path d="M14 10l7-7"/><path d="M3 21l7-7"/>
-              </svg>
+            <!-- 3. Split PDF -->
+            <div class="col-12 col-sm-6 col-lg-3 tool-card-col">
+              <div class="tool-card card-green card border-0 h-100 p-4 rounded-4 shadow-sm" id="card-split-pdf" tabindex="0" role="button">
+                <div class="tool-card-icon green mb-3">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/>
+                  </svg>
+                </div>
+                <h3 class="tool-card-title h5 fw-bold mb-1">Split PDF</h3>
+                <p class="tool-card-desc text-muted small mb-0">Extract pages with ease</p>
+              </div>
             </div>
-            <h3 class="tool-card-title">Compress PDF</h3>
-            <p class="tool-card-desc">Reduce file size</p>
-          </div>
 
-          <!-- 5. PDF to Word -->
-          <div class="tool-card card-word" id="card-pdf-to-word" tabindex="0" role="button">
-            <div class="tool-card-icon word">
-              <span class="word-w">W</span>
+            <!-- 4. Compress PDF -->
+            <div class="col-12 col-sm-6 col-lg-3 tool-card-col">
+              <div class="tool-card card-peach card border-0 h-100 p-4 rounded-4 shadow-sm" id="card-compress-pdf" tabindex="0" role="button">
+                <div class="tool-card-icon peach mb-3">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 14h6v6"/><path d="M20 10h-6V4"/><path d="M14 10l7-7"/><path d="M3 21l7-7"/>
+                  </svg>
+                </div>
+                <h3 class="tool-card-title h5 fw-bold mb-1">Compress PDF</h3>
+                <p class="tool-card-desc text-muted small mb-0">Reduce file size</p>
+              </div>
             </div>
-            <h3 class="tool-card-title">PDF to Word</h3>
-            <p class="tool-card-desc">Convert to editable Word files</p>
-          </div>
 
-          <!-- 6. PDF to Image -->
-          <div class="tool-card card-purple" id="card-pdf-to-image" tabindex="0" role="button">
-            <div class="tool-card-icon purple">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9333ea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/>
-              </svg>
+            <!-- 5. PDF to Word -->
+            <div class="col-12 col-sm-6 col-lg-3 tool-card-col">
+              <div class="tool-card card-word card border-0 h-100 p-4 rounded-4 shadow-sm" id="card-pdf-to-word" tabindex="0" role="button">
+                <div class="tool-card-icon word mb-3">
+                  <span class="word-w">W</span>
+                </div>
+                <h3 class="tool-card-title h5 fw-bold mb-1">PDF to Word</h3>
+                <p class="tool-card-desc text-muted small mb-0">Convert to editable Word files</p>
+              </div>
             </div>
-            <h3 class="tool-card-title">PDF to Image</h3>
-            <p class="tool-card-desc">Convert to JPG, PNG and more</p>
-          </div>
 
-          <!-- 7. Image to PDF -->
-          <div class="tool-card card-emerald" id="card-image-to-pdf" tabindex="0" role="button">
-            <div class="tool-card-icon emerald">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/>
-              </svg>
+            <!-- 6. PDF to Image -->
+            <div class="col-12 col-sm-6 col-lg-3 tool-card-col">
+              <div class="tool-card card-purple card border-0 h-100 p-4 rounded-4 shadow-sm" id="card-pdf-to-image" tabindex="0" role="button">
+                <div class="tool-card-icon purple mb-3">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9333ea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/>
+                  </svg>
+                </div>
+                <h3 class="tool-card-title h5 fw-bold mb-1">PDF to Image</h3>
+                <p class="tool-card-desc text-muted small mb-0">Convert to JPG, PNG and more</p>
+              </div>
             </div>
-            <h3 class="tool-card-title">Image to PDF</h3>
-            <p class="tool-card-desc">Turn images into PDFs</p>
-          </div>
 
-          <!-- 8. Organize Pages -->
-          <div class="tool-card card-indigo" id="card-organize-pages" tabindex="0" role="button">
-            <div class="tool-card-icon indigo">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/>
-              </svg>
+            <!-- 7. Image to PDF -->
+            <div class="col-12 col-sm-6 col-lg-3 tool-card-col">
+              <div class="tool-card card-emerald card border-0 h-100 p-4 rounded-4 shadow-sm" id="card-image-to-pdf" tabindex="0" role="button">
+                <div class="tool-card-icon emerald mb-3">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/>
+                  </svg>
+                </div>
+                <h3 class="tool-card-title h5 fw-bold mb-1">Image to PDF</h3>
+                <p class="tool-card-desc text-muted small mb-0">Turn images into PDFs</p>
+              </div>
             </div>
-            <h3 class="tool-card-title">Organize Pages</h3>
-            <p class="tool-card-desc">Reorder, rotate, delete pages</p>
+
+            <!-- 8. Organize Pages -->
+            <div class="col-12 col-sm-6 col-lg-3 tool-card-col">
+              <div class="tool-card card-indigo card border-0 h-100 p-4 rounded-4 shadow-sm" id="card-organize-pages" tabindex="0" role="button">
+                <div class="tool-card-icon indigo mb-3">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/>
+                  </svg>
+                </div>
+                <h3 class="tool-card-title h5 fw-bold mb-1">Organize Pages</h3>
+                <p class="tool-card-desc text-muted small mb-0">Reorder, rotate, delete pages</p>
+              </div>
+            </div>
           </div>
-        </div>
-      </main>
+        </main>
+      </div>
     </div>
   </div>
 
   <!-- ─── SCREEN 4: DEDICATED TOOL SCREEN (COMPRESS PDF) ─────────── -->
   <div id="compress-screen" class="screen-view tool-action-screen hidden">
     <!-- Top Global Header -->
-    <header class="global-header tool-action-header">
-      <div class="header-left">
-        <a href="#" class="brand-logo" id="logo-home-compress">
-          <svg class="pdf-logo-icon" width="26" height="26" viewBox="0 0 24 24" fill="none">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" fill="#ef4444" fill-opacity="0.12" stroke="#ef4444" stroke-width="2" stroke-linejoin="round"/>
-            <path d="M14 2v6h6" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M9 13h2a1.5 1.5 0 0 0 0-3H9v6" stroke="#ef4444" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          <span class="brand-name">PDF Editor</span>
-        </a>
-        <nav class="nav-links">
-          <a href="#features" class="nav-link">Features</a>
-          <a href="#tools" class="nav-link" id="nav-compress-tools">Tools</a>
-          <a href="#pricing" class="nav-link">Pricing</a>
-          <a href="#resources" class="nav-link">Resources</a>
-        </nav>
-      </div>
-      <div class="header-right">
-        <button class="nav-btn-link" type="button">Sign In</button>
-        <button class="btn-pill-dark" type="button">Get Started</button>
+    <header class="global-header tool-action-header navbar navbar-expand border-bottom bg-white sticky-top">
+      <div class="container-fluid px-3 px-md-4 d-flex justify-content-between align-items-center">
+        <div class="header-left d-flex align-items-center gap-4">
+          <a href="#" class="brand-logo d-flex align-items-center gap-2 text-decoration-none" id="logo-home-compress">
+            <svg class="pdf-logo-icon" width="26" height="26" viewBox="0 0 24 24" fill="none">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" fill="#ef4444" fill-opacity="0.12" stroke="#ef4444" stroke-width="2" stroke-linejoin="round"/>
+              <path d="M14 2v6h6" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M9 13h2a1.5 1.5 0 0 0 0-3H9v6" stroke="#ef4444" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="brand-name">PDF Editor</span>
+          </a>
+          <nav class="nav-links d-none d-md-flex align-items-center gap-3">
+            <a href="#features" class="nav-link">Features</a>
+            <a href="#tools" class="nav-link" id="nav-compress-tools">Tools</a>
+            <a href="#pricing" class="nav-link">Pricing</a>
+            <a href="#resources" class="nav-link">Resources</a>
+          </nav>
+        </div>
+        <div class="header-right d-flex align-items-center gap-3">
+          <button class="nav-btn-link btn btn-link text-decoration-none text-muted" type="button">Sign In</button>
+          <button class="btn-pill-dark btn btn-dark rounded-pill px-3 py-2 fw-semibold" type="button">Get Started</button>
+        </div>
       </div>
     </header>
 
-    <div class="tool-action-body">
-      <div class="tool-action-header-row">
-        <button class="back-link-btn" id="btn-back-to-tools" type="button">
+    <div class="tool-action-body container py-5">
+      <div class="tool-action-header-row mb-4">
+        <button class="back-link-btn btn btn-link text-decoration-none text-muted p-0 mb-2 fw-semibold" id="btn-back-to-tools" type="button">
           ← All Tools
         </button>
-        <h1 class="tool-screen-title">Compress PDF</h1>
-        <p class="tool-screen-sub">Reduce file size, same quality.</p>
+        <h1 class="tool-screen-title h2 fw-bold mb-1">Compress PDF</h1>
+        <p class="tool-screen-sub text-muted">Reduce file size, same quality.</p>
       </div>
 
-      <!-- Dual Cards: Dropzone & Result Preview -->
-      <div class="compress-cards-row">
+      <!-- Dual Cards: Dropzone & Result Preview (Bootstrap Row) -->
+      <div class="row g-4 justify-content-center compress-cards-row">
         <!-- Left: Upload Card -->
-        <div class="compress-card-left" id="compress-drop-zone">
-          <div class="compress-upload-box">
-            <div class="compress-doc-icon">
-              <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
-              </svg>
+        <div class="col-12 col-lg-5">
+          <div class="compress-card-left card border-0 p-4 rounded-4 shadow-sm h-100" id="compress-drop-zone">
+            <div class="compress-upload-box d-flex flex-column align-items-center justify-content-center text-center p-4 border border-2 border-dashed rounded-4 h-100">
+              <div class="compress-doc-icon mb-3">
+                <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
+                </svg>
+              </div>
+              <p class="compress-primary-text fw-semibold mb-1">Drop your PDF here</p>
+              <p class="compress-sub-text text-muted small mb-3">or click to upload</p>
+              <button class="btn-pill-dark btn-choose-file btn btn-dark rounded-pill px-4 py-2 fw-semibold mb-3" id="btn-compress-choose" type="button">Choose File</button>
+              <span class="compress-limit-text text-muted" style="font-size: 11px;">Maximum file size: 500 MB</span>
+              <input type="file" id="compress-file-input" accept=".pdf" style="display:none" />
             </div>
-            <p class="compress-primary-text">Drop your PDF here</p>
-            <p class="compress-sub-text">or click to upload</p>
-            <button class="btn-pill-dark btn-choose-file" id="btn-compress-choose" type="button">Choose File</button>
-            <span class="compress-limit-text">Maximum file size: 500 MB</span>
-            <input type="file" id="compress-file-input" accept=".pdf" style="display:none" />
           </div>
         </div>
 
         <!-- Right: Status / Result Card -->
-        <div class="compress-card-right" id="compress-result-card">
-          <!-- Comparison Row -->
-          <div class="comparison-row">
-            <!-- Original File -->
-            <div class="comp-file-box">
-              <div class="comp-pdf-badge">PDF</div>
-              <span class="comp-file-label">Original</span>
-              <span class="comp-file-size" id="comp-original-size">12.4 MB</span>
+        <div class="col-12 col-lg-5">
+          <div class="compress-card-right card border-0 p-4 rounded-4 shadow-sm d-flex flex-column justify-content-between h-100" id="compress-result-card">
+            <!-- Comparison Row -->
+            <div class="comparison-row d-flex align-items-center justify-content-between gap-3 mb-4">
+              <!-- Original File -->
+              <div class="comp-file-box flex-fill p-3 border rounded-3 text-center">
+                <div class="comp-pdf-badge badge bg-secondary-subtle text-secondary mb-2">PDF</div>
+                <span class="comp-file-label d-block text-muted small">Original</span>
+                <span class="comp-file-size fw-bold text-dark" id="comp-original-size">12.4 MB</span>
+              </div>
+              <div class="comp-arrow fs-4 text-muted">→</div>
+              <!-- Compressed File -->
+              <div class="comp-file-box active flex-fill p-3 border border-primary-subtle rounded-3 text-center bg-primary-subtle">
+                <div class="comp-pdf-badge badge bg-primary text-white mb-2">PDF</div>
+                <span class="comp-file-label d-block text-primary small">Compressed</span>
+                <span class="comp-file-size active fw-bold text-primary" id="comp-reduced-size">2.1 MB</span>
+              </div>
             </div>
-            <div class="comp-arrow">→</div>
-            <!-- Compressed File -->
-            <div class="comp-file-box active">
-              <div class="comp-pdf-badge">PDF</div>
-              <span class="comp-file-label">Compressed</span>
-              <span class="comp-file-size active" id="comp-reduced-size">2.1 MB</span>
-            </div>
-          </div>
 
-          <!-- Green Callout Pill -->
-          <div class="percent-callout" id="comp-percent-pill">
-            <span class="check-circle-icon">✓</span>
-            <div class="callout-text">
-              <strong id="comp-savings-pct">70% smaller</strong>
-              <span>Same quality, less space.</span>
+            <!-- Green Callout Pill -->
+            <div class="percent-callout d-flex align-items-center gap-3 p-3 bg-success-subtle border border-success-subtle rounded-3 mb-4" id="comp-percent-pill">
+              <span class="check-circle-icon fs-5 text-success">✓</span>
+              <div class="callout-text">
+                <strong id="comp-savings-pct" class="d-block text-success fw-bold">70% smaller</strong>
+                <span class="text-success-emphasis small">Same quality, less space.</span>
+              </div>
             </div>
-          </div>
 
-          <!-- Download Action -->
-          <button class="btn-pill-dark btn-download-comp" id="btn-download-compressed" type="button">
-            Download PDF
-          </button>
-          <button class="btn-link-retry" id="btn-compress-retry" type="button">
-            Try another file
-          </button>
+            <!-- Download Action -->
+            <button class="btn-pill-dark btn-download-comp btn btn-dark rounded-pill w-100 py-3 fw-bold mb-2" id="btn-download-compressed" type="button">
+              Download PDF
+            </button>
+            <button class="btn-link-retry btn btn-link text-decoration-none text-muted text-center w-100 small" id="btn-compress-retry" type="button">
+              Try another file
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
   <!-- ─── SCREEN 3: EDITOR WORKSPACE VIEW (BOTTOM-LEFT IN REFERENCE) ─ -->
-  <div id="editor" class="screen-view editor-screen hidden">
+  <div id="editor" class="screen-view editor-screen d-flex flex-column vh-100 hidden">
     <!-- Topbar Header -->
-    <header class="editor-header" id="topbar">
-      <div class="editor-header-left">
-        <a href="#" class="brand-logo" id="editor-brand-logo">
+    <header class="editor-header navbar navbar-expand px-3 py-2 border-bottom bg-white sticky-top d-flex justify-content-between align-items-center" id="topbar">
+      <div class="editor-header-left d-flex align-items-center gap-3">
+        <a href="#" class="brand-logo d-flex align-items-center gap-2 text-decoration-none" id="editor-brand-logo">
           <svg class="pdf-logo-icon" width="22" height="22" viewBox="0 0 24 24" fill="none">
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" fill="#ef4444" fill-opacity="0.12" stroke="#ef4444" stroke-width="2" stroke-linejoin="round"/>
             <path d="M14 2v6h6" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -438,22 +469,22 @@
           </svg>
           <span class="brand-name">PDF Editor</span>
         </a>
-        <div class="editor-breadcrumbs">
-          <button class="breadcrumb-home" id="btn-back" title="Go back to Home">Home</button>
-          <span class="breadcrumb-sep">&gt;</span>
-          <span class="breadcrumb-doc-name" id="file-name-label">Edit PDF</span>
+        <div class="editor-breadcrumbs d-flex align-items-center gap-2">
+          <button class="breadcrumb-home btn btn-link p-0 text-decoration-none text-muted small fw-semibold" id="btn-back" title="Go back to Home">Home</button>
+          <span class="breadcrumb-sep text-muted small">&gt;</span>
+          <span class="breadcrumb-doc-name small fw-bold text-dark text-truncate" style="max-width: 200px;" id="file-name-label">Edit PDF</span>
         </div>
       </div>
 
-      <div class="editor-header-right">
+      <div class="editor-header-right d-flex align-items-center gap-2">
         <button id="btn-theme-toggle-editor" class="btn-icon-ghost" title="Toggle Theme" aria-label="Toggle theme">
           <span id="editor-theme-icon" class="theme-icon">🌙</span>
         </button>
-        <button class="btn-pill-ghost" id="btn-share" type="button" title="Share link">
+        <button class="btn-pill-ghost btn btn-outline-secondary rounded-pill px-3 py-1 btn-sm d-flex align-items-center gap-1" id="btn-share" type="button" title="Share link">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
           <span>Share</span>
         </button>
-        <button class="btn-pill-dark" id="btn-save" type="button" aria-label="Download edited PDF">
+        <button class="btn-pill-dark btn btn-dark rounded-pill px-3 py-1 btn-sm fw-bold d-flex align-items-center gap-1" id="btn-save" type="button" aria-label="Download edited PDF">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           <span>Download</span>
         </button>
@@ -461,7 +492,7 @@
     </header>
 
     <!-- Editor Main Layout: Left Tool Strip + Floating Canvas + Properties Panel -->
-    <div class="editor-layout">
+    <div class="editor-layout d-flex flex-grow-1 overflow-hidden position-relative">
       <!-- Left Vertical Tool Strip -->
       <aside class="editor-tool-strip" id="editor-tool-strip">
         <div class="strip-header">Edit</div>
@@ -1065,10 +1096,11 @@
   <div id="toast" class="toast hidden" role="alert" aria-live="polite"></div>
 
   <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
   <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
-  <script src="app.js?v=21"></script>
+  <script src="app.js?v=22"></script>
 
 </body>
 </html>

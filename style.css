@@ -674,6 +674,10 @@ body {
   display: flex;
   flex-direction: column;
 }
+.tool-card.card {
+  --bs-card-bg: transparent;
+  background-color: transparent;
+}
 .tool-card:hover {
   transform: translateY(-3px);
   box-shadow: 0 12px 28px -6px rgba(15, 23, 42, 0.08);
@@ -706,37 +710,40 @@ body {
 }
 
 /* Pastel Theme Card Variants */
-.card-coral   { background: #fff5f5; border: 1px solid #fee2e2; }
+.card-coral   { background: #fff5f5 !important; border: 1px solid #fee2e2 !important; }
 .card-coral .tool-card-icon { background: #fee2e2; }
 
-.card-blue    { background: #f0f7ff; border: 1px solid #dbeafe; }
+.card-blue    { background: #f0f7ff !important; border: 1px solid #dbeafe !important; }
 .card-blue .tool-card-icon { background: #dbeafe; }
 
-.card-green   { background: #f0fdf4; border: 1px solid #dcfce7; }
+.card-green   { background: #f0fdf4 !important; border: 1px solid #dcfce7 !important; }
 .card-green .tool-card-icon { background: #dcfce7; }
 
-.card-peach   { background: #fff7ed; border: 1px solid #ffedd5; }
+.card-peach   { background: #fff7ed !important; border: 1px solid #ffedd5 !important; }
 .card-peach .tool-card-icon { background: #ffedd5; }
 
-.card-word    { background: #eff6ff; border: 1px solid #dbeafe; }
+.card-word    { background: #eff6ff !important; border: 1px solid #dbeafe !important; }
 .card-word .tool-card-icon { background: #dbeafe; }
 
-.card-purple  { background: #faf5ff; border: 1px solid #f3e8ff; }
+.card-purple  { background: #faf5ff !important; border: 1px solid #f3e8ff !important; }
 .card-purple .tool-card-icon { background: #f3e8ff; }
 
-.card-emerald { background: #ecfdf5; border: 1px solid #d1fae5; }
+.card-emerald { background: #ecfdf5 !important; border: 1px solid #d1fae5 !important; }
 .card-emerald .tool-card-icon { background: #d1fae5; }
 
-.card-indigo  { background: #f5f3ff; border: 1px solid #ede9fe; }
+.card-indigo  { background: #f5f3ff !important; border: 1px solid #ede9fe !important; }
 .card-indigo .tool-card-icon { background: #ede9fe; }
 
 /* Dark mode adjustments for tool cards */
-[data-theme="dark"] .tool-card {
+[data-theme="dark"] .tool-card,
+[data-bs-theme="dark"] .tool-card {
   background: #1e293b !important;
   border-color: rgba(255, 255, 255, 0.08) !important;
 }
-[data-theme="dark"] .tool-card-title { color: #f8fafc; }
-[data-theme="dark"] .tool-card-desc { color: #94a3b8; }
+[data-theme="dark"] .tool-card-title,
+[data-bs-theme="dark"] .tool-card-title { color: #f8fafc !important; }
+[data-theme="dark"] .tool-card-desc,
+[data-bs-theme="dark"] .tool-card-desc { color: #94a3b8 !important; }
 
 /* ─── SCREEN 4: DEDICATED TOOL SCREEN (COMPRESS PDF) ─────────────────── */
 .tool-action-screen {
@@ -1628,7 +1635,7 @@ body {
 
 /* ─── TOAST ───────────────────────────────────────────────────────────── */
 .toast {
-  position: fixed; bottom: 24px; right: 24px; z-index: 300;
+  position: fixed; bottom: 24px; right: 24px; z-index: 1200;
   padding: 12px 20px;
   background: var(--bg-elevated);
   border: 1px solid var(--border);
@@ -1636,8 +1643,10 @@ body {
   font-size: 0.82rem; color: var(--text-primary);
   box-shadow: 0 8px 32px rgba(0,0,0,0.4);
   animation: slide-in 0.3s ease;
-  max-width: 300px;
+  max-width: 340px;
 }
+.toast:not(.hidden) { display: block !important; }
+.toast.hidden { display: none !important; }
 .toast.success { border-color: rgba(34,211,164,0.4); }
 .toast.error { border-color: rgba(247,95,107,0.4); }
 @keyframes slide-in {
@@ -2322,7 +2331,8 @@ body {
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 250;
+  z-index: 1050;
+  opacity: 1 !important;
   background: var(--modal-backdrop, rgba(8, 12, 24, 0.82));
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
@@ -2332,7 +2342,7 @@ body {
   animation: fadeIn 0.2s ease;
 }
 .modal-backdrop.hidden {
-  display: none;
+  display: none !important;
 }
 
 .modal-card {

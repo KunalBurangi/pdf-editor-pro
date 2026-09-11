@@ -271,10 +271,13 @@ const $btnReplaceAll   = $('btn-replace-all');
 let toastTimer = null;
 function showToast(msg, type = 'info', duration = 3000) {
   $toast.textContent = msg;
-  $toast.className = `toast ${type}`;
+  $toast.className = `toast show ${type}`;
   $toast.classList.remove('hidden');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => $toast.classList.add('hidden'), duration);
+  toastTimer = setTimeout(() => {
+    $toast.classList.add('hidden');
+    $toast.classList.remove('show');
+  }, duration);
 }
 
 // ─── LOADING ─────────────────────────────────────────────────────────────────
@@ -3837,6 +3840,7 @@ function getCurrentTheme() {
 function applyTheme(theme) {
   if (theme === 'light') {
     document.documentElement.setAttribute('data-theme', 'light');
+    document.documentElement.setAttribute('data-bs-theme', 'light');
     if ($btnThemeLanding) {
       const icon = $btnThemeLanding.querySelector('.theme-icon');
       const label = $btnThemeLanding.querySelector('.theme-label');
@@ -3855,6 +3859,7 @@ function applyTheme(theme) {
     }
   } else {
     document.documentElement.removeAttribute('data-theme');
+    document.documentElement.setAttribute('data-bs-theme', 'dark');
     if ($btnThemeLanding) {
       const icon = $btnThemeLanding.querySelector('.theme-icon');
       const label = $btnThemeLanding.querySelector('.theme-label');
@@ -4082,10 +4087,11 @@ function initDashboard() {
     const cards = document.querySelectorAll('.tool-card');
     cards.forEach(card => {
       const text = card.textContent.toLowerCase();
+      const col = card.closest('.tool-card-col') || card;
       if (!term || text.includes(term)) {
-        card.style.display = '';
+        col.style.display = '';
       } else {
-        card.style.display = 'none';
+        col.style.display = 'none';
       }
     });
   });
