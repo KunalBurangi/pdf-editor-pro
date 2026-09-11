@@ -3188,4 +3188,55 @@ body {
   color: var(--blue);
 }
 
+/* ─── APPLICATION FOOTER ─────────────────────────────────────────────────── */
+.app-footer {
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border) !important;
+}
+
+[data-theme="dark"] .app-footer,
+[data-bs-theme="dark"] .app-footer {
+  background: #0f172a !important;
+  border-top: 1px solid #334155 !important;
+}
+
+.app-footer .brand-name,
+.app-footer h6 {
+  color: var(--text-primary) !important;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+[data-theme="dark"] .app-footer .brand-name,
+[data-theme="dark"] .app-footer h6 {
+  color: #f8fafc !important;
+}
+
+.app-footer .footer-tool-link {
+  color: var(--text-secondary) !important;
+  transition: color 0.15s ease, transform 0.15s ease;
+  cursor: pointer;
+}
+
+.app-footer .footer-tool-link:hover {
+  color: var(--blue) !important;
+  transform: translateX(3px);
+}
+
+[data-theme="dark"] .app-footer .footer-tool-link {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .app-footer .footer-tool-link:hover {
+  color: #60a5fa !important;
+}
+
+[data-theme="dark"] .app-footer .border-bottom {
+  border-color: #334155 !important;
+}
+
+[data-theme="dark"] .app-footer .text-muted {
+  color: #94a3b8 !important;
+}
+
 

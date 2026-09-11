@@ -4209,6 +4209,10 @@ function initDashboard() {
     closeDashSidebar();
     showScreen('landing');
   });
+  $('dash-sidebar-open-btn')?.addEventListener('click', () => {
+    closeDashSidebar();
+    $fileInput.click();
+  });
   $dashNavRecent?.addEventListener('click', () => {
     closeDashSidebar();
     showToast('Recent files: ' + (state.fileName || 'No recent files in this session'), 'info', 2500);
@@ -4228,6 +4232,29 @@ function initDashboard() {
   $btnStorageUpgrade?.addEventListener('click', () => {
     closeDashSidebar();
     showToast('✨ Pro Edition unlocked — Unlimited local storage!', 'success', 3000);
+  });
+
+  // Footer brand logos & tool links
+  ['logo-footer-landing', 'logo-footer-dash', 'logo-footer-comp'].forEach(id => {
+    document.getElementById(id)?.addEventListener('click', (e) => {
+      e.preventDefault();
+      showScreen('landing');
+    });
+  });
+
+  document.querySelectorAll('.footer-tool-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const cardId = link.getAttribute('data-tool-card');
+      if (cardId) {
+        showScreen('dashboard');
+        const card = document.getElementById(cardId);
+        if (card) {
+          card.click();
+          card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }
+    });
   });
 
   // Category Pill Filter & Search Logic for 16 Tool Cards

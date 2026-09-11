@@ -10,7 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Dancing+Script:wght@600&family=Great+Vibes&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <!-- Bootstrap 5.3.3 CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
-  <link rel="stylesheet" href="style.css?v=26" />
+  <link rel="stylesheet" href="style.css?v=27" />
 </head>
 <body>
 
@@ -39,15 +39,15 @@
           <nav class="nav-links d-none d-md-flex align-items-center gap-3">
             <a href="#features" class="nav-link" id="nav-link-features">Features</a>
             <a href="#tools" class="nav-link" id="nav-link-tools">Tools</a>
-            <a href="#pricing" class="nav-link" id="nav-link-pricing">Pricing</a>
-            <a href="#resources" class="nav-link" id="nav-link-resources">Resources</a>
+            <a href="#pricing" class="nav-link d-none" id="nav-link-pricing">Pricing</a>
+            <a href="#resources" class="nav-link d-none" id="nav-link-resources">Resources</a>
           </nav>
         </div>
         <div class="header-right d-flex align-items-center gap-2 gap-md-3">
           <button id="btn-theme-toggle-landing" class="btn-icon-ghost" title="Toggle Theme" aria-label="Toggle theme">
             <span class="theme-icon">🌙</span>
           </button>
-          <button class="nav-btn-link btn btn-link text-decoration-none text-muted" id="btn-nav-signin" type="button">Sign In</button>
+          <button class="nav-btn-link btn btn-link text-decoration-none text-muted d-none" id="btn-nav-signin" type="button">Sign In</button>
           <button class="btn-pill-dark btn btn-dark rounded-pill px-3 py-2 fw-semibold" id="btn-nav-get-started" type="button">Get Started</button>
         </div>
       </div>
@@ -156,6 +156,99 @@
         </div>
       </div>
     </main>
+
+    <!-- ─── APPLICATION FOOTER (LANDING) ─────────────────────────── -->
+    <footer class="app-footer border-top mt-5 pt-5 pb-4">
+      <div class="container hero-container">
+        <div class="row g-4 pb-4 border-bottom">
+          <!-- Col 1: Brand & Privacy Mission -->
+          <div class="col-12 col-lg-4 mb-3 mb-lg-0">
+            <a href="#" class="brand-logo d-flex align-items-center gap-2 text-decoration-none mb-3" id="logo-footer-landing">
+              <svg class="pdf-logo-icon" width="28" height="28" viewBox="0 0 24 24" fill="none">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" fill="#ef4444" fill-opacity="0.12" stroke="#ef4444" stroke-width="2" stroke-linejoin="round"/>
+                <path d="M14 2v6h6" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M9 13h2a1.5 1.5 0 0 0 0-3H9v6" stroke="#ef4444" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span class="brand-name h5 fw-bold mb-0">PDF Editor</span>
+            </a>
+            <p class="text-muted small mb-3" style="max-width: 320px; line-height: 1.6;">
+              Every tool you need to edit, merge, split, encrypt, and convert PDFs directly in your browser. Fast, free, and strictly private.
+            </p>
+            <div class="d-flex flex-wrap gap-2">
+              <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-1 small">
+                🛡️ 100% Client-Side
+              </span>
+              <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-2 py-1 small">
+                🔒 Zero Server Uploads
+              </span>
+              <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle rounded-pill px-2 py-1 small">
+                ⚡ ISO 32000 Compliant
+              </span>
+            </div>
+          </div>
+
+          <!-- Col 2: Organize & Optimize -->
+          <div class="col-6 col-md-3 col-lg-2">
+            <h6 class="fw-bold text-dark mb-3">Organize &amp; Optimize</h6>
+            <ul class="list-unstyled d-flex flex-column gap-2 mb-0 small">
+              <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-merge-pdf">Merge PDF</a></li>
+              <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-split-pdf">Split PDF</a></li>
+              <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-compress-pdf">Compress PDF</a></li>
+              <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-organize-pages">Organize Pages</a></li>
+              <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-rotate-pdf">Rotate PDF</a></li>
+              <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-crop-pdf">Crop PDF</a></li>
+            </ul>
+          </div>
+
+          <!-- Col 3: Convert & Edit -->
+          <div class="col-6 col-md-3 col-lg-2">
+            <h6 class="fw-bold text-dark mb-3">Convert &amp; Edit</h6>
+            <ul class="list-unstyled d-flex flex-column gap-2 mb-0 small">
+              <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-edit-pdf">Edit PDF</a></li>
+              <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-pdf-to-word">PDF to Word</a></li>
+              <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-pdf-to-image">PDF to Image</a></li>
+              <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-image-to-pdf">Image to PDF</a></li>
+              <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-pdf-to-markdown">PDF to Markdown</a></li>
+              <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-watermark-pdf">Watermark PDF</a></li>
+            </ul>
+          </div>
+
+          <!-- Col 4: Security & AI -->
+          <div class="col-6 col-md-3 col-lg-2">
+            <h6 class="fw-bold text-dark mb-3">Security &amp; AI</h6>
+            <ul class="list-unstyled d-flex flex-column gap-2 mb-0 small">
+              <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-protect-pdf">Protect PDF 🔒</a></li>
+              <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-sign-pdf">Sign PDF ✍️</a></li>
+              <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-redact-pdf">Redact PDF 🛡️</a></li>
+              <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-ai-summarizer">AI Summarizer ✨</a></li>
+              <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-page-numbers">Page Numbers 🔢</a></li>
+            </ul>
+          </div>
+
+          <!-- Col 5: Privacy & Security Details -->
+          <div class="col-6 col-md-3 col-lg-2">
+            <h6 class="fw-bold text-dark mb-3">Privacy First</h6>
+            <ul class="list-unstyled d-flex flex-column gap-2 mb-0 small text-muted">
+              <li>🔒 No file uploads</li>
+              <li>⚡ 100% offline-ready</li>
+              <li>🛡️ RC4 128-bit encryption</li>
+              <li>🚀 WebAssembly speed</li>
+              <li>✨ Zero tracking / cookies</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Footer Bottom Bar -->
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center pt-3 gap-2">
+          <div class="small text-muted">
+            &copy; 2026 PDF Editor. All processing occurs locally in your web browser.
+          </div>
+          <div class="d-flex align-items-center gap-3 small">
+            <span class="text-muted">Simple. Fast. Private.</span>
+          </div>
+        </div>
+      </div>
+    </footer>
   </div>
 
   <!-- ─── SCREEN 2: TOOLS HUB / DASHBOARD VIEW ────────────────────── -->
@@ -181,8 +274,8 @@
           <nav class="nav-links d-none d-md-flex align-items-center gap-3">
             <a href="#features" class="nav-link" id="nav-dash-features">Features</a>
             <a href="#tools" class="nav-link active fw-bold text-primary" id="nav-dash-tools-top">Tools</a>
-            <a href="#pricing" class="nav-link">Pricing</a>
-            <a href="#resources" class="nav-link">Resources</a>
+            <a href="#pricing" class="nav-link d-none">Pricing</a>
+            <a href="#resources" class="nav-link d-none">Resources</a>
           </nav>
         </div>
         <div class="header-right d-flex align-items-center gap-3">
@@ -192,7 +285,7 @@
           <div class="header-search-icon d-none d-sm-block text-muted" title="Search">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
           </div>
-          <div class="user-avatar-circle d-flex align-items-center justify-content-center fw-bold" title="Kunal">K</div>
+          <div class="user-avatar-circle d-flex align-items-center justify-content-center fw-bold d-none" title="User">K</div>
         </div>
       </div>
     </header>
@@ -222,26 +315,30 @@
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
                 <span>All Tools</span>
               </button>
-              <button class="dash-nav-item btn text-start d-flex align-items-center gap-2 w-100" id="dash-nav-recent">
+              <button class="btn btn-outline-primary rounded-pill btn-sm py-2 px-3 mt-2 fw-semibold d-flex align-items-center justify-content-center gap-2" id="dash-sidebar-open-btn" type="button">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+                <span>Open PDF</span>
+              </button>
+              <button class="dash-nav-item btn text-start d-flex align-items-center gap-2 w-100 d-none" id="dash-nav-recent">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                 <span>Recent Files</span>
               </button>
-              <button class="dash-nav-item btn text-start d-flex align-items-center gap-2 w-100" id="dash-nav-starred">
+              <button class="dash-nav-item btn text-start d-flex align-items-center gap-2 w-100 d-none" id="dash-nav-starred">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                 <span>Starred</span>
               </button>
-              <button class="dash-nav-item btn text-start d-flex align-items-center gap-2 w-100" id="dash-nav-shared">
+              <button class="dash-nav-item btn text-start d-flex align-items-center gap-2 w-100 d-none" id="dash-nav-shared">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                 <span>Shared</span>
               </button>
-              <button class="dash-nav-item btn text-start d-flex align-items-center gap-2 w-100" id="dash-nav-trash">
+              <button class="dash-nav-item btn text-start d-flex align-items-center gap-2 w-100 d-none" id="dash-nav-trash">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
                 <span>Trash</span>
               </button>
             </nav>
 
             <!-- Storage Card Widget -->
-            <div class="storage-widget card border-0 bg-light p-3 rounded-3 mt-4">
+            <div class="storage-widget card border-0 bg-light p-3 rounded-3 mt-4 d-none">
               <div class="storage-text-row mb-2">
                 <span class="storage-label small fw-semibold text-secondary">2.4 GB of 10 GB used</span>
               </div>
@@ -515,6 +612,99 @@
               </div>
             </div>
           </div>
+
+          <!-- ─── APPLICATION FOOTER (DASHBOARD) ─────────────────────── -->
+          <footer class="app-footer border-top mt-5 pt-5 pb-4">
+            <div class="container-fluid px-0">
+              <div class="row g-4 pb-4 border-bottom">
+                <!-- Col 1: Brand & Privacy Mission -->
+                <div class="col-12 col-lg-4 mb-3 mb-lg-0">
+                  <a href="#" class="brand-logo d-flex align-items-center gap-2 text-decoration-none mb-3" id="logo-footer-dash">
+                    <svg class="pdf-logo-icon" width="28" height="28" viewBox="0 0 24 24" fill="none">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" fill="#ef4444" fill-opacity="0.12" stroke="#ef4444" stroke-width="2" stroke-linejoin="round"/>
+                      <path d="M14 2v6h6" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M9 13h2a1.5 1.5 0 0 0 0-3H9v6" stroke="#ef4444" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span class="brand-name h5 fw-bold mb-0">PDF Editor</span>
+                  </a>
+                  <p class="text-muted small mb-3" style="max-width: 320px; line-height: 1.6;">
+                    Every tool you need to edit, merge, split, encrypt, and convert PDFs directly in your browser. Fast, free, and strictly private.
+                  </p>
+                  <div class="d-flex flex-wrap gap-2">
+                    <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-1 small">
+                      🛡️ 100% Client-Side
+                    </span>
+                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-2 py-1 small">
+                      🔒 Zero Server Uploads
+                    </span>
+                    <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle rounded-pill px-2 py-1 small">
+                      ⚡ ISO 32000 Compliant
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Col 2: Organize & Optimize -->
+                <div class="col-6 col-md-3 col-lg-2">
+                  <h6 class="fw-bold text-dark mb-3">Organize &amp; Optimize</h6>
+                  <ul class="list-unstyled d-flex flex-column gap-2 mb-0 small">
+                    <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-merge-pdf">Merge PDF</a></li>
+                    <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-split-pdf">Split PDF</a></li>
+                    <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-compress-pdf">Compress PDF</a></li>
+                    <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-organize-pages">Organize Pages</a></li>
+                    <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-rotate-pdf">Rotate PDF</a></li>
+                    <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-crop-pdf">Crop PDF</a></li>
+                  </ul>
+                </div>
+
+                <!-- Col 3: Convert & Edit -->
+                <div class="col-6 col-md-3 col-lg-2">
+                  <h6 class="fw-bold text-dark mb-3">Convert &amp; Edit</h6>
+                  <ul class="list-unstyled d-flex flex-column gap-2 mb-0 small">
+                    <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-edit-pdf">Edit PDF</a></li>
+                    <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-pdf-to-word">PDF to Word</a></li>
+                    <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-pdf-to-image">PDF to Image</a></li>
+                    <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-image-to-pdf">Image to PDF</a></li>
+                    <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-pdf-to-markdown">PDF to Markdown</a></li>
+                    <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-watermark-pdf">Watermark PDF</a></li>
+                  </ul>
+                </div>
+
+                <!-- Col 4: Security & AI -->
+                <div class="col-6 col-md-3 col-lg-2">
+                  <h6 class="fw-bold text-dark mb-3">Security &amp; AI</h6>
+                  <ul class="list-unstyled d-flex flex-column gap-2 mb-0 small">
+                    <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-protect-pdf">Protect PDF 🔒</a></li>
+                    <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-sign-pdf">Sign PDF ✍️</a></li>
+                    <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-redact-pdf">Redact PDF 🛡️</a></li>
+                    <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-ai-summarizer">AI Summarizer ✨</a></li>
+                    <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-page-numbers">Page Numbers 🔢</a></li>
+                  </ul>
+                </div>
+
+                <!-- Col 5: Privacy & Security Details -->
+                <div class="col-6 col-md-3 col-lg-2">
+                  <h6 class="fw-bold text-dark mb-3">Privacy First</h6>
+                  <ul class="list-unstyled d-flex flex-column gap-2 mb-0 small text-muted">
+                    <li>🔒 No file uploads</li>
+                    <li>⚡ 100% offline-ready</li>
+                    <li>🛡️ RC4 128-bit encryption</li>
+                    <li>🚀 WebAssembly speed</li>
+                    <li>✨ Zero tracking / cookies</li>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- Footer Bottom Bar -->
+              <div class="d-flex flex-column flex-md-row justify-content-between align-items-center pt-3 gap-2">
+                <div class="small text-muted">
+                  &copy; 2026 PDF Editor. All processing occurs locally in your web browser.
+                </div>
+                <div class="d-flex align-items-center gap-3 small">
+                  <span class="text-muted">Simple. Fast. Private.</span>
+                </div>
+              </div>
+            </div>
+          </footer>
         </main>
       </div>
     </div>
@@ -537,12 +727,12 @@
           <nav class="nav-links d-none d-md-flex align-items-center gap-3">
             <a href="#features" class="nav-link">Features</a>
             <a href="#tools" class="nav-link" id="nav-compress-tools">Tools</a>
-            <a href="#pricing" class="nav-link">Pricing</a>
-            <a href="#resources" class="nav-link">Resources</a>
+            <a href="#pricing" class="nav-link d-none">Pricing</a>
+            <a href="#resources" class="nav-link d-none">Resources</a>
           </nav>
         </div>
         <div class="header-right d-flex align-items-center gap-3">
-          <button class="nav-btn-link btn btn-link text-decoration-none text-muted" type="button">Sign In</button>
+          <button class="nav-btn-link btn btn-link text-decoration-none text-muted d-none" type="button">Sign In</button>
           <button class="btn-pill-dark btn btn-dark rounded-pill px-3 py-2 fw-semibold" type="button">Get Started</button>
         </div>
       </div>
@@ -616,6 +806,99 @@
           </div>
         </div>
       </div>
+
+      <!-- ─── APPLICATION FOOTER (COMPRESS) ────────────────────────── -->
+      <footer class="app-footer border-top mt-5 pt-5 pb-4">
+        <div class="container px-0">
+          <div class="row g-4 pb-4 border-bottom">
+            <!-- Col 1: Brand & Privacy Mission -->
+            <div class="col-12 col-lg-4 mb-3 mb-lg-0">
+              <a href="#" class="brand-logo d-flex align-items-center gap-2 text-decoration-none mb-3" id="logo-footer-comp">
+                <svg class="pdf-logo-icon" width="28" height="28" viewBox="0 0 24 24" fill="none">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" fill="#ef4444" fill-opacity="0.12" stroke="#ef4444" stroke-width="2" stroke-linejoin="round"/>
+                  <path d="M14 2v6h6" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M9 13h2a1.5 1.5 0 0 0 0-3H9v6" stroke="#ef4444" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="brand-name h5 fw-bold mb-0">PDF Editor</span>
+              </a>
+              <p class="text-muted small mb-3" style="max-width: 320px; line-height: 1.6;">
+                Every tool you need to edit, merge, split, encrypt, and convert PDFs directly in your browser. Fast, free, and strictly private.
+              </p>
+              <div class="d-flex flex-wrap gap-2">
+                <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-1 small">
+                  🛡️ 100% Client-Side
+                </span>
+                <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-2 py-1 small">
+                  🔒 Zero Server Uploads
+                </span>
+                <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle rounded-pill px-2 py-1 small">
+                  ⚡ ISO 32000 Compliant
+                </span>
+              </div>
+            </div>
+
+            <!-- Col 2: Organize & Optimize -->
+            <div class="col-6 col-md-3 col-lg-2">
+              <h6 class="fw-bold text-dark mb-3">Organize &amp; Optimize</h6>
+              <ul class="list-unstyled d-flex flex-column gap-2 mb-0 small">
+                <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-merge-pdf">Merge PDF</a></li>
+                <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-split-pdf">Split PDF</a></li>
+                <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-compress-pdf">Compress PDF</a></li>
+                <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-organize-pages">Organize Pages</a></li>
+                <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-rotate-pdf">Rotate PDF</a></li>
+                <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-crop-pdf">Crop PDF</a></li>
+              </ul>
+            </div>
+
+            <!-- Col 3: Convert & Edit -->
+            <div class="col-6 col-md-3 col-lg-2">
+              <h6 class="fw-bold text-dark mb-3">Convert &amp; Edit</h6>
+              <ul class="list-unstyled d-flex flex-column gap-2 mb-0 small">
+                <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-edit-pdf">Edit PDF</a></li>
+                <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-pdf-to-word">PDF to Word</a></li>
+                <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-pdf-to-image">PDF to Image</a></li>
+                <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-image-to-pdf">Image to PDF</a></li>
+                <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-pdf-to-markdown">PDF to Markdown</a></li>
+                <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-watermark-pdf">Watermark PDF</a></li>
+              </ul>
+            </div>
+
+            <!-- Col 4: Security & AI -->
+            <div class="col-6 col-md-3 col-lg-2">
+              <h6 class="fw-bold text-dark mb-3">Security &amp; AI</h6>
+              <ul class="list-unstyled d-flex flex-column gap-2 mb-0 small">
+                <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-protect-pdf">Protect PDF 🔒</a></li>
+                <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-sign-pdf">Sign PDF ✍️</a></li>
+                <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-redact-pdf">Redact PDF 🛡️</a></li>
+                <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-ai-summarizer">AI Summarizer ✨</a></li>
+                <li><a href="#" class="footer-tool-link text-decoration-none text-muted" data-tool-card="card-page-numbers">Page Numbers 🔢</a></li>
+              </ul>
+            </div>
+
+            <!-- Col 5: Privacy & Security Details -->
+            <div class="col-6 col-md-3 col-lg-2">
+              <h6 class="fw-bold text-dark mb-3">Privacy First</h6>
+              <ul class="list-unstyled d-flex flex-column gap-2 mb-0 small text-muted">
+                <li>🔒 No file uploads</li>
+                <li>⚡ 100% offline-ready</li>
+                <li>🛡️ RC4 128-bit encryption</li>
+                <li>🚀 WebAssembly speed</li>
+                <li>✨ Zero tracking / cookies</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Footer Bottom Bar -->
+          <div class="d-flex flex-column flex-md-row justify-content-between align-items-center pt-3 gap-2">
+            <div class="small text-muted">
+              &copy; 2026 PDF Editor. All processing occurs locally in your web browser.
+            </div>
+            <div class="d-flex align-items-center gap-3 small">
+              <span class="text-muted">Simple. Fast. Private.</span>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   </div>
 
@@ -1677,7 +1960,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
   <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
   <script src="pdf-encrypt.js?v=1"></script>
-  <script src="app.js?v=27"></script>
+  <script src="app.js?v=28"></script>
 
 </body>
 </html>
