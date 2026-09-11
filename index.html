@@ -269,7 +269,7 @@
           <!-- Category Filter Bar (iLovePDF Style) -->
           <div class="dash-category-nav d-flex flex-wrap gap-2 mb-4" id="tools-category-nav" role="tablist">
             <button class="btn btn-sm rounded-pill px-3 py-2 fw-semibold category-pill active" data-category="all" type="button">
-              All Tools <span class="badge rounded-pill bg-light text-dark ms-1" id="badge-tool-count">16</span>
+              All Tools <span class="badge rounded-pill bg-light text-dark ms-1" id="badge-tool-count">17</span>
             </button>
             <button class="btn btn-sm rounded-pill px-3 py-2 fw-semibold category-pill" data-category="organize" type="button">
               Organize PDF
@@ -498,6 +498,20 @@
                 <span class="badge bg-warning-subtle text-warning-emphasis rounded-pill align-self-start mb-2 px-2 py-1 small">AI Smart</span>
                 <h3 class="tool-card-title h5 fw-bold mb-1">AI Summarizer</h3>
                 <p class="tool-card-desc text-muted small mb-0">Instant takeaways &amp; key points</p>
+              </div>
+            </div>
+
+            <!-- 17. Protect PDF -->
+            <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 tool-card-col" data-category="security" data-keywords="protect lock password encrypt security permission safe confidential private">
+              <div class="tool-card card-rose card border-0 h-100 p-4 rounded-4 shadow-sm" id="card-protect-pdf" tabindex="0" role="button">
+                <div class="tool-card-icon rose mb-3">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#e11d48" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                  </svg>
+                </div>
+                <span class="badge bg-danger-subtle text-danger rounded-pill align-self-start mb-2 px-2 py-1 small">Security</span>
+                <h3 class="tool-card-title h5 fw-bold mb-1">Protect PDF</h3>
+                <p class="tool-card-desc text-muted small mb-0">Lock PDF with secure password</p>
               </div>
             </div>
           </div>
@@ -1578,6 +1592,70 @@
     </div>
   </div>
 
+  <!-- ─── PROTECT PDF MODAL ─────────────────────────────────────────── -->
+  <div id="modal-protect-pdf" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="protect-modal-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="modal-icon">🔒</span>
+          <h3 id="protect-modal-title" class="modal-title">Protect PDF with Password</h3>
+        </div>
+        <button id="btn-close-protect-pdf" class="modal-close-btn" aria-label="Close modal">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="ai-file-notice p-2 px-3 rounded-3 bg-light border mb-3 d-flex justify-content-between align-items-center">
+          <div class="text-truncate me-2"><strong id="protect-doc-name">Current Document</strong> <span class="text-muted small" id="protect-doc-pages"></span></div>
+          <input type="file" id="protect-file-input" accept="application/pdf" class="d-none" />
+          <button type="button" class="btn btn-sm btn-outline-secondary flex-shrink-0" id="btn-change-protect-file">Choose Other PDF</button>
+        </div>
+
+        <div class="mb-3">
+          <label for="protect-user-password" class="modal-label small fw-semibold text-dark mb-1">Set Document Password <span class="text-danger">*</span></label>
+          <div class="input-group">
+            <input type="password" id="protect-user-password" class="form-control" placeholder="Enter password to encrypt" autocomplete="new-password" />
+            <button class="btn btn-outline-secondary" type="button" id="btn-toggle-protect-pwd" title="Show/Hide password">👁️</button>
+          </div>
+          <div class="progress mt-2" style="height: 5px;">
+            <div id="protect-pwd-strength-bar" class="progress-bar bg-danger" style="width: 0%"></div>
+          </div>
+          <div class="d-flex justify-content-between align-items-center mt-1">
+            <small class="text-muted" id="protect-pwd-strength-label" style="font-size: 11px;">Strength: Enter password</small>
+            <small class="text-muted" style="font-size: 11px;">Client-side RC4 128-bit</small>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="protect-confirm-password" class="modal-label small fw-semibold text-dark mb-1">Confirm Password <span class="text-danger">*</span></label>
+          <input type="password" id="protect-confirm-password" class="form-control" placeholder="Re-enter password" autocomplete="new-password" />
+          <div id="protect-pwd-match-msg" class="small text-danger mt-1 d-none">Passwords do not match</div>
+        </div>
+
+        <div class="p-3 bg-light rounded-3 border mb-3">
+          <div class="fw-semibold small text-dark mb-2">Permissions &amp; Restrictions</div>
+          <div class="form-check form-switch mb-2">
+            <input class="form-check-input" type="checkbox" id="protect-allow-print" checked />
+            <label class="form-check-label small" for="protect-allow-print">Allow document printing</label>
+          </div>
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="protect-allow-copy" checked />
+            <label class="form-check-label small" for="protect-allow-copy">Allow text &amp; content copying</label>
+          </div>
+        </div>
+
+        <div class="alert alert-warning py-2 px-3 small mb-0 d-flex align-items-start gap-2">
+          <span>⚠️</span>
+          <div><strong>Important:</strong> Encryption occurs 100% in your browser. Passwords are never sent to any server. Keep your password safe, as encrypted PDFs cannot be recovered without it.</div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button id="btn-cancel-protect" class="btn-secondary" type="button">Cancel</button>
+        <button id="btn-apply-protect" class="btn-primary" type="button" disabled>🔒 Encrypt &amp; Download</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ─── LOADING OVERLAY ───────────────────────────────────────── -->
   <div id="loading-overlay" class="loading-overlay hidden" role="status" aria-live="polite">
     <div class="loading-box">
@@ -1598,7 +1676,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
   <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
-  <script src="app.js?v=26"></script>
+  <script src="pdf-encrypt.js?v=1"></script>
+  <script src="app.js?v=27"></script>
 
 </body>
 </html>

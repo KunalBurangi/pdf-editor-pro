@@ -106,6 +106,7 @@ const $cardPdfToMarkdown = $('card-pdf-to-markdown');
 const $cardSignPdf     = $('card-sign-pdf');
 const $cardRedactPdf   = $('card-redact-pdf');
 const $cardAiSummarizer= $('card-ai-summarizer');
+const $cardProtectPdf  = $('card-protect-pdf');
 
 // Watermark Modal
 const $modalWatermark  = $('modal-watermark');
@@ -190,6 +191,24 @@ const $aiStatReadtime = $('ai-stat-readtime');
 const $aiStatSections = $('ai-stat-sections');
 const $aiExecSummary = $('ai-exec-summary');
 const $aiKeyPoints = $('ai-key-points');
+
+// Protect PDF Modal
+const $modalProtectPdf = $('modal-protect-pdf');
+const $btnCloseProtectPdf = $('btn-close-protect-pdf');
+const $btnCancelProtect = $('btn-cancel-protect');
+const $btnApplyProtect = $('btn-apply-protect');
+const $protectDocName = $('protect-doc-name');
+const $protectDocPages = $('protect-doc-pages');
+const $protectFileInput = $('protect-file-input');
+const $btnChangeProtectFile = $('btn-change-protect-file');
+const $protectUserPassword = $('protect-user-password');
+const $btnToggleProtectPwd = $('btn-toggle-protect-pwd');
+const $protectPwdStrengthBar = $('protect-pwd-strength-bar');
+const $protectPwdStrengthLabel = $('protect-pwd-strength-label');
+const $protectConfirmPassword = $('protect-confirm-password');
+const $protectPwdMatchMsg = $('protect-pwd-match-msg');
+const $protectAllowPrint = $('protect-allow-print');
+const $protectAllowCopy = $('protect-allow-copy');
 
 // Dedicated Compress Screen
 const $btnBackToTools  = $('btn-back-to-tools');
@@ -4653,6 +4672,15 @@ body { font-family: Calibri, Arial, sans-serif; font-size: 11pt; color: #0f172a;
       $aiFileInput?.click();
     }
   });
+
+  // 17. Protect PDF (Lock with Password)
+  $cardProtectPdf?.addEventListener('click', () => {
+    if (state.pages && state.pages.length > 0) {
+      openProtectModal();
+    } else {
+      $protectFileInput?.click();
+    }
+  });
 }
 
 // ─── 3. SPLIT PDF MODAL CONTROLLER ──────────────────────────────────────────
@@ -5549,6 +5577,200 @@ function initAiSummarizerModal() {
   });
 }
 
+// ─── 14. PROTECT PDF MODAL CONTROLLER ─────────────────────────────────────
+let protectCustomBuffer = null;
+let protectCustomFileName = null;
+
+function openProtectModal() {
+  const name = protectCustomFileName || state.fileName || 'document.pdf';
+  if ($protectDocName) $protectDocName.textContent = name;
+  const count = (protectCustomBuffer ? null : state.pages?.length) || null;
+  if ($protectDocPages) {
+    $protectDocPages.textContent = count ? `(${count} page${count > 1 ? 's' : ''})` : '';
+  }
+
+  // Reset inputs
+  if ($protectUserPassword) {
+    $protectUserPassword.value = '';
+    $protectUserPassword.type = 'password';
+  }
+  if ($protectConfirmPassword) {
+    $protectConfirmPassword.value = '';
+  }
+  if ($btnToggleProtectPwd) {
+    $btnToggleProtectPwd.textContent = '👁️';
+  }
+  if ($protectPwdMatchMsg) {
+    $protectPwdMatchMsg.classList.add('d-none');
+  }
+  updateProtectStrength('');
+  validateProtectForm();
+
+  $modalProtectPdf?.classList.remove('hidden');
+}
+
+function closeProtectModal() {
+  $modalProtectPdf?.classList.add('hidden');
+}
+
+function updateProtectStrength(pwd) {
+  if (!pwd) {
+    if ($protectPwdStrengthBar) {
+      $protectPwdStrengthBar.style.width = '0%';
+      $protectPwdStrengthBar.className = 'progress-bar bg-danger';
+    }
+    if ($protectPwdStrengthLabel) $protectPwdStrengthLabel.textContent = 'Strength: Enter password';
+    return 0;
+  }
+
+  let score = 0;
+  if (pwd.length >= 6) score += 1;
+  if (pwd.length >= 10) score += 1;
+  if (/[0-9]/.test(pwd)) score += 1;
+  if (/[A-Z]/.test(pwd) && /[a-z]/.test(pwd)) score += 1;
+  if (/[^A-Za-z0-9]/.test(pwd)) score += 1;
+
+  let width = '25%';
+  let barClass = 'progress-bar bg-danger';
+  let label = 'Weak';
+
+  if (score <= 1) {
+    width = '25%';
+    barClass = 'progress-bar bg-danger';
+    label = 'Weak';
+  } else if (score === 2 || score === 3) {
+    width = '60%';
+    barClass = 'progress-bar bg-warning';
+    label = 'Moderate';
+  } else {
+    width = '100%';
+    barClass = 'progress-bar bg-success';
+    label = 'Strong';
+  }
+
+  if ($protectPwdStrengthBar) {
+    $protectPwdStrengthBar.style.width = width;
+    $protectPwdStrengthBar.className = barClass;
+  }
+  if ($protectPwdStrengthLabel) {
+    $protectPwdStrengthLabel.textContent = `Strength: ${label}`;
+  }
+  return score;
+}
+
+function validateProtectForm() {
+  const pwd = $protectUserPassword?.value || '';
+  const confirm = $protectConfirmPassword?.value || '';
+
+  const match = pwd.length > 0 && pwd === confirm;
+  if (confirm.length > 0 && pwd !== confirm) {
+    $protectPwdMatchMsg?.classList.remove('d-none');
+  } else {
+    $protectPwdMatchMsg?.classList.add('d-none');
+  }
+
+  if ($btnApplyProtect) {
+    $btnApplyProtect.disabled = !match;
+  }
+  return match;
+}
+
+function initProtectModal() {
+  if (!$modalProtectPdf) return;
+
+  $btnCloseProtectPdf?.addEventListener('click', closeProtectModal);
+  $btnCancelProtect?.addEventListener('click', closeProtectModal);
+  $modalProtectPdf?.addEventListener('click', (e) => {
+    if (e.target === $modalProtectPdf) closeProtectModal();
+  });
+
+  $btnToggleProtectPwd?.addEventListener('click', () => {
+    if (!$protectUserPassword) return;
+    const isPass = $protectUserPassword.type === 'password';
+    $protectUserPassword.type = isPass ? 'text' : 'password';
+    $btnToggleProtectPwd.textContent = isPass ? '🔒' : '👁️';
+  });
+
+  $protectUserPassword?.addEventListener('input', () => {
+    updateProtectStrength($protectUserPassword.value);
+    validateProtectForm();
+  });
+
+  $protectConfirmPassword?.addEventListener('input', () => {
+    validateProtectForm();
+  });
+
+  $btnChangeProtectFile?.addEventListener('click', () => {
+    $protectFileInput?.click();
+  });
+
+  $protectFileInput?.addEventListener('change', async (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    try {
+      showLoading('Loading PDF…', 'Reading file bytes…', 40);
+      const buf = await file.arrayBuffer();
+      protectCustomBuffer = buf;
+      protectCustomFileName = file.name;
+      hideLoading();
+      openProtectModal();
+    } catch (err) {
+      hideLoading();
+      showToast('Error reading PDF: ' + err.message, 'error');
+    }
+    $protectFileInput.value = '';
+  });
+
+  $btnApplyProtect?.addEventListener('click', async () => {
+    const pwd = $protectUserPassword?.value || '';
+    if (!pwd) {
+      showToast('Please enter a password', 'error');
+      return;
+    }
+    if (pwd !== ($protectConfirmPassword?.value || '')) {
+      showToast('Passwords do not match', 'error');
+      return;
+    }
+
+    const sourceBytes = protectCustomBuffer || state.pdfData;
+    const fileName = protectCustomFileName || state.fileName || 'document.pdf';
+
+    if (!sourceBytes) {
+      showToast('Please choose or open a PDF first.', 'warning');
+      $protectFileInput?.click();
+      return;
+    }
+
+    closeProtectModal();
+    showLoading('Encrypting PDF…', 'Applying 128-bit RC4 standard security…', 50);
+
+    try {
+      if (typeof window.encryptPDF !== 'function') {
+        throw new Error('Encryption engine not found. Ensure pdf-encrypt.js is loaded.');
+      }
+
+      const allowPrint = $protectAllowPrint ? $protectAllowPrint.checked : true;
+      const allowCopy = $protectAllowCopy ? $protectAllowCopy.checked : true;
+
+      const encryptedBytes = await window.encryptPDF(sourceBytes, pwd, {
+        allowPrinting: allowPrint,
+        allowCopying: allowCopy
+      });
+
+      hideLoading();
+      const baseName = fileName.replace(/\.pdf$/i, '');
+      const blob = new Blob([encryptedBytes], { type: 'application/pdf' });
+      downloadFileBlob(blob, `${baseName}_protected.pdf`);
+
+      showToast('🔒 PDF protected & downloaded successfully!', 'success', 4000);
+    } catch (err) {
+      hideLoading();
+      console.error('Protect PDF error:', err);
+      showToast('Failed to protect PDF: ' + err.message, 'error');
+    }
+  });
+}
+
 // ─── EDITOR CONTROLS CONTROLLER ─────────────────────────────────────────────
 function initEditorHeaderAndControls() {
   $btnShare?.addEventListener('click', () => {
@@ -5563,12 +5785,17 @@ function initEditorHeaderAndControls() {
     }
   });
 
-  $pillPageBtn?.addEventListener('click', () => {
-    $sidebar?.classList.toggle('hidden');
+  $btnSelect?.addEventListener('click', () => setTool('select'));
+  $btnEdit?.addEventListener('click', () => setTool('edit'));
+
+  $btnAddPage?.addEventListener('click', () => {
+    if (state.pages && state.pages.length > 0) {
+      addNewBlankPage();
+    }
   });
 
   $btnDeletePage?.addEventListener('click', () => {
-    if (state.pages && state.pages.length > 0) {
+    if (state.pages && state.pages.length > 1) {
       deletePage(state.currentPage - 1);
     }
   });
@@ -5593,6 +5820,7 @@ function initEditorHeaderAndControls() {
   initPdfToMarkdownModal();
   initCropPdfModal();
   initAiSummarizerModal();
+  initProtectModal();
   initEditorHeaderAndControls();
 
   // Set up page scroll observer after a short delay
