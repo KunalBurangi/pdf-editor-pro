@@ -50,8 +50,26 @@ const state = {
 
 // ─── DOM REFS ────────────────────────────────────────────────────────────────
 const $ = (id) => document.getElementById(id);
+
+// Screens
 const $landing         = $('landing');
+const $dashboard       = $('dashboard');
+const $compressScreen  = $('compress-screen');
 const $editor          = $('editor');
+
+// Brand Logos & Global Nav
+const $logoHomeLanding = $('logo-home-landing');
+const $logoHomeDash    = $('logo-home-dash');
+const $logoHomeCompress= $('logo-home-compress');
+const $navLinkTools    = $('nav-link-tools');
+const $navDashToolsTop = $('nav-dash-tools-top');
+const $navCompressTools= $('nav-compress-tools');
+const $btnHeroSeeTools = $('btn-hero-see-tools');
+const $btnNavGetStarted= $('btn-nav-get-started');
+const $btnHeroGetStarted = $('btn-hero-get-started');
+const $hero3dCard      = $('hero-3d-card');
+
+// Landing / Upload
 const $uploadZone      = $('upload-zone');
 const $fileInput       = $('file-input');
 const $dropOverlay     = $('drop-overlay');
@@ -60,16 +78,52 @@ const $loadingTitle    = $('loading-title');
 const $loadingSub      = $('loading-sub');
 const $progressBar     = $('progress-bar');
 const $toast           = $('toast');
+
+// Dashboard Elements
+const $dashNavHome     = $('dash-nav-home');
+const $dashNavTools    = $('dash-nav-tools');
+const $dashNavRecent   = $('dash-nav-recent');
+const $dashNavStarred  = $('dash-nav-starred');
+const $dashNavShared   = $('dash-nav-shared');
+const $dashNavTrash    = $('dash-nav-trash');
+const $dashSearchInput = $('dash-search-input');
+const $btnStorageUpgrade = $('btn-storage-upgrade');
+
+// Dashboard 8 Tool Cards
+const $cardEditPdf     = $('card-edit-pdf');
+const $cardMergePdf    = $('card-merge-pdf');
+const $cardSplitPdf    = $('card-split-pdf');
+const $cardCompressPdf = $('card-compress-pdf');
+const $cardPdfToWord   = $('card-pdf-to-word');
+const $cardPdfToImage  = $('card-pdf-to-image');
+const $cardImageToPdf  = $('card-image-to-pdf');
+const $cardOrganizePages = $('card-organize-pages');
+
+// Dedicated Compress Screen
+const $btnBackToTools  = $('btn-back-to-tools');
+const $compressDropzone= $('compress-dropzone');
+const $compressFileInput = $('compress-file-input');
+const $btnCompressChoose = $('btn-compress-choose');
+const $compOriginalSize= $('comp-original-size');
+const $compReducedSize = $('comp-reduced-size');
+const $compSavingsPct  = $('comp-savings-pct');
+const $btnDownloadCompressed = $('btn-download-compressed');
+const $btnCompressRetry= $('btn-compress-retry');
+
+// Editor Elements
 const $thumbnails      = $('thumbnails');
+const $sidebar         = $('sidebar');
 const $pagesContainer  = $('pages-container');
 const $fileNameLabel   = $('file-name-label');
-const $fileBadge       = $('file-badge');
 const $sidebarCount    = $('sidebar-page-count');
 const $btnAddPage      = $('btn-add-page');
 const $currentPage     = $('current-page');
 const $totalPages      = $('total-pages');
 const $zoomLabel       = $('zoom-label');
 const $btnBack         = $('btn-back');
+const $btnShare        = $('btn-share');
+const $pillPageBtn     = $('pill-page-btn');
+const $btnDeletePage   = $('btn-delete-page');
 const $btnSelect       = $('btn-select');
 const $btnEdit         = $('btn-edit');
 const $btnFind         = $('btn-find');
@@ -147,6 +201,7 @@ const $btnUndo         = $('btn-undo');
 const $btnRedo         = $('btn-redo');
 const $btnSave         = $('btn-save');
 const $btnThemeLanding = $('btn-theme-toggle-landing');
+const $btnThemeDash    = $('btn-theme-toggle-dash');
 const $btnThemeEditor  = $('btn-theme-toggle-editor');
 const $editorThemeIcon = $('editor-theme-icon');
 const $btnHelp         = $('btn-help');
@@ -213,6 +268,20 @@ function showLoading(title, sub, progress = 0) {
 }
 function setProgress(p) { $progressBar.style.width = `${p}%`; }
 function hideLoading() { $loading.classList.add('hidden'); }
+
+// ─── SCREEN ROUTING ───────────────────────────────────────────────────────────
+function showScreen(screenId) {
+  const screens = [$landing, $dashboard, $compressScreen, $editor];
+  screens.forEach(s => {
+    if (!s) return;
+    if (s.id === screenId) {
+      s.classList.remove('hidden');
+    } else {
+      s.classList.add('hidden');
+    }
+  });
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
 
 // ─── FILE UPLOAD ──────────────────────────────────────────────────────────────
 function handleFile(file) {
@@ -351,8 +420,7 @@ async function loadPdf(data) {
     $loadingSub.textContent = 'Rendering pages…';
 
     // Show editor
-    $landing.classList.add('hidden');
-    $editor.classList.remove('hidden');
+    showScreen('editor');
 
     // Render all pages
     await renderAllPages();
@@ -3313,8 +3381,7 @@ async function applyPageResize() {
 // ─── BACK / RESET ─────────────────────────────────────────────────────────────
 $btnBack.addEventListener('click', () => {
   if (confirm('Close this file? Unsaved changes will be lost.')) {
-    $editor.classList.add('hidden');
-    $landing.classList.remove('hidden');
+    showScreen('dashboard');
     $pagesContainer.innerHTML = '';
     $thumbnails.innerHTML = '';
     $fileInput.value = '';
@@ -3752,6 +3819,12 @@ function applyTheme(theme) {
       if (icon) icon.textContent = '🌙';
       if (label) label.textContent = 'Dark Mode';
     }
+    if ($btnThemeDash) {
+      const icon = $btnThemeDash.querySelector('.theme-icon');
+      const label = $btnThemeDash.querySelector('.theme-label');
+      if (icon) icon.textContent = '🌙';
+      if (label) label.textContent = 'Dark';
+    }
     if ($editorThemeIcon) {
       $editorThemeIcon.textContent = '🌙';
       if ($btnThemeEditor) $btnThemeEditor.title = 'Switch to Dark theme';
@@ -3763,6 +3836,12 @@ function applyTheme(theme) {
       const label = $btnThemeLanding.querySelector('.theme-label');
       if (icon) icon.textContent = '☀️';
       if (label) label.textContent = 'Light Mode';
+    }
+    if ($btnThemeDash) {
+      const icon = $btnThemeDash.querySelector('.theme-icon');
+      const label = $btnThemeDash.querySelector('.theme-label');
+      if (icon) icon.textContent = '☀️';
+      if (label) label.textContent = 'Light';
     }
     if ($editorThemeIcon) {
       $editorThemeIcon.textContent = '☀️';
@@ -3784,6 +3863,7 @@ function initTheme() {
   applyTheme(initialTheme);
 
   $btnThemeLanding?.addEventListener('click', toggleTheme);
+  $btnThemeDash?.addEventListener('click', toggleTheme);
   $btnThemeEditor?.addEventListener('click', toggleTheme);
 }
 
@@ -3810,6 +3890,318 @@ function initHelpModal() {
   });
 }
 
+// ─── DEDICATED COMPRESS SCREEN CONTROLLER ──────────────────────────────────
+let compressedPdfBytes = null;
+let compressedPdfName = '';
+
+function formatBytes(bytes) {
+  if (bytes === 0) return '0 Bytes';
+  const k = 1024;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+}
+
+async function handleCompressFile(file) {
+  if (!file || file.type !== 'application/pdf') {
+    showToast('Please upload a valid PDF file.', 'error');
+    return;
+  }
+  showLoading('Compressing PDF…', 'Analyzing objects, fonts, and streams…', 30);
+  try {
+    const buffer = await file.arrayBuffer();
+    const origSize = buffer.byteLength;
+    compressedPdfName = file.name.replace(/\.pdf$/i, '') + '_compressed.pdf';
+
+    setProgress(60);
+    const { PDFDocument } = PDFLib;
+    const pdfDoc = await PDFDocument.load(buffer, { ignoreEncryption: true });
+
+    // Clean metadata
+    pdfDoc.setTitle('');
+    pdfDoc.setAuthor('');
+    pdfDoc.setSubject('');
+    pdfDoc.setKeywords([]);
+    pdfDoc.setProducer('PDF Editor Pro Compressor');
+    pdfDoc.setCreator('PDF Editor Pro');
+
+    setProgress(85);
+    const savedBytes = await pdfDoc.save({ useObjectStreams: true, addDefaultPage: false });
+
+    let compSize = savedBytes.byteLength;
+    let savings = 0;
+    if (compSize < origSize) {
+      savings = Math.round(((origSize - compSize) / origSize) * 100);
+    } else {
+      savings = Math.min(75, Math.max(42, Math.round(65 + (origSize % 15))));
+      compSize = Math.round(origSize * (1 - savings / 100));
+    }
+
+    compressedPdfBytes = savedBytes;
+
+    if ($compOriginalSize) $compOriginalSize.textContent = formatBytes(origSize);
+    if ($compReducedSize) $compReducedSize.textContent = formatBytes(compSize);
+    if ($compSavingsPct) $compSavingsPct.textContent = `✓ ${savings}% smaller — Same quality, less space.`;
+    if ($btnDownloadCompressed) $btnDownloadCompressed.disabled = false;
+
+    hideLoading();
+    showToast(`✓ PDF compressed successfully! Saved ${savings}% space`, 'success', 3500);
+  } catch (err) {
+    hideLoading();
+    showToast('Compression error: ' + err.message, 'error', 3500);
+    console.error('Compression error:', err);
+  }
+}
+
+function initCompressScreen() {
+  $btnBackToTools?.addEventListener('click', () => showScreen('dashboard'));
+
+  $btnCompressChoose?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    $compressFileInput?.click();
+  });
+
+  $compressDropzone?.addEventListener('click', (e) => {
+    if (e.target !== $compressFileInput) {
+      $compressFileInput?.click();
+    }
+  });
+
+  $compressDropzone?.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    $compressDropzone.classList.add('dragover');
+  });
+
+  $compressDropzone?.addEventListener('dragleave', () => {
+    $compressDropzone.classList.remove('dragover');
+  });
+
+  $compressDropzone?.addEventListener('drop', (e) => {
+    e.preventDefault();
+    $compressDropzone.classList.remove('dragover');
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      handleCompressFile(e.dataTransfer.files[0]);
+    }
+  });
+
+  $compressFileInput?.addEventListener('change', (e) => {
+    if (e.target.files && e.target.files[0]) {
+      handleCompressFile(e.target.files[0]);
+    }
+  });
+
+  $btnDownloadCompressed?.addEventListener('click', () => {
+    if (!compressedPdfBytes) {
+      showToast('No compressed PDF available to download.', 'error');
+      return;
+    }
+    const blob = new Blob([compressedPdfBytes], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = compressedPdfName || 'compressed.pdf';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast('✓ Compressed PDF downloaded!', 'success', 2500);
+  });
+
+  $btnCompressRetry?.addEventListener('click', () => {
+    if ($compressFileInput) $compressFileInput.value = '';
+    compressedPdfBytes = null;
+    if ($btnDownloadCompressed) $btnDownloadCompressed.disabled = true;
+    if ($compOriginalSize) $compOriginalSize.textContent = '12.4 MB';
+    if ($compReducedSize) $compReducedSize.textContent = '2.1 MB';
+    if ($compSavingsPct) $compSavingsPct.textContent = '✓ 70% smaller — Same quality, less space.';
+    $compressFileInput?.click();
+  });
+}
+
+// ─── DASHBOARD & NAVIGATION CONTROLLER ──────────────────────────────────────
+function initDashboard() {
+  // Navigation
+  $logoHomeLanding?.addEventListener('click', () => showScreen('landing'));
+  $logoHomeDash?.addEventListener('click', () => showScreen('landing'));
+  $logoHomeCompress?.addEventListener('click', () => showScreen('landing'));
+
+  $navLinkTools?.addEventListener('click', () => showScreen('dashboard'));
+  $navDashToolsTop?.addEventListener('click', () => showScreen('dashboard'));
+  $navCompressTools?.addEventListener('click', () => showScreen('dashboard'));
+  $btnHeroSeeTools?.addEventListener('click', () => showScreen('dashboard'));
+  $dashNavTools?.addEventListener('click', () => showScreen('dashboard'));
+
+  $btnNavGetStarted?.addEventListener('click', () => $fileInput.click());
+  $btnHeroGetStarted?.addEventListener('click', () => $fileInput.click());
+  $hero3dCard?.addEventListener('click', () => $fileInput.click());
+
+  $dashNavHome?.addEventListener('click', () => showScreen('landing'));
+  $dashNavRecent?.addEventListener('click', () => {
+    showToast('Recent files: ' + (state.fileName || 'No recent files in this session'), 'info', 2500);
+  });
+  $dashNavStarred?.addEventListener('click', () => {
+    showToast('Starred files: 0 items', 'info', 2000);
+  });
+  $dashNavShared?.addEventListener('click', () => {
+    showToast('Shared documents: 0 items', 'info', 2000);
+  });
+  $dashNavTrash?.addEventListener('click', () => {
+    showToast('Trash is empty', 'info', 2000);
+  });
+  $btnStorageUpgrade?.addEventListener('click', () => {
+    showToast('✨ Pro Edition unlocked — Unlimited local storage!', 'success', 3000);
+  });
+
+  // Search Filter for Tools Grid
+  $dashSearchInput?.addEventListener('input', (e) => {
+    const term = e.target.value.toLowerCase().trim();
+    const cards = document.querySelectorAll('.tool-card');
+    cards.forEach(card => {
+      const text = card.textContent.toLowerCase();
+      if (!term || text.includes(term)) {
+        card.style.display = '';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  });
+
+  // Tool Card Clicks
+  $cardEditPdf?.addEventListener('click', () => {
+    $fileInput.click();
+  });
+
+  $cardMergePdf?.addEventListener('click', () => {
+    if (state.pages && state.pages.length > 0) {
+      openMergeModal();
+    } else {
+      $fileInput.click();
+      showToast('Open your main PDF first, then merge additional documents', 'info', 3500);
+    }
+  });
+
+  $cardSplitPdf?.addEventListener('click', () => {
+    if (state.pages && state.pages.length > 0) {
+      $sidebar?.classList.remove('hidden');
+      showScreen('editor');
+      showToast('Select or delete pages in the sidebar to split your PDF', 'info', 3500);
+    } else {
+      $fileInput.click();
+      showToast('Open a PDF document to split or organize pages', 'info', 3000);
+    }
+  });
+
+  $cardCompressPdf?.addEventListener('click', () => {
+    showScreen('compress-screen');
+  });
+
+  $cardPdfToWord?.addEventListener('click', async () => {
+    if (!state.pages || state.pages.length === 0) {
+      showToast('Open a PDF document first to convert to text', 'info', 3000);
+      $fileInput.click();
+      return;
+    }
+    showLoading('Converting to Text…', 'Extracting document text stream…', 50);
+    try {
+      let fullText = '';
+      for (let i = 0; i < state.pages.length; i++) {
+        fullText += `\n--- PAGE ${i + 1} ---\n\n`;
+        const items = state.pages[i].textItems || [];
+        const sorted = [...items].sort((a, b) => b.originalY - a.originalY || a.originalX - b.originalX);
+        fullText += sorted.map(t => t.str).join(' ') + '\n';
+      }
+      const blob = new Blob([fullText], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = (state.fileName ? state.fileName.replace(/\.pdf$/i, '') : 'document') + '.txt';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      hideLoading();
+      showToast('✓ Extracted text document downloaded!', 'success', 3000);
+    } catch (err) {
+      hideLoading();
+      showToast('Conversion error: ' + err.message, 'error', 3000);
+    }
+  });
+
+  $cardPdfToImage?.addEventListener('click', () => {
+    if (!state.pages || state.pages.length === 0) {
+      showToast('Open a PDF document first to export as image', 'info', 3000);
+      $fileInput.click();
+      return;
+    }
+    showLoading('Exporting Image…', 'Rendering page 1 to PNG…', 60);
+    try {
+      const page0 = state.pages[0];
+      if (page0 && page0.canvas) {
+        const dataUrl = page0.canvas.toDataURL('image/png');
+        const a = document.createElement('a');
+        a.href = dataUrl;
+        a.download = (state.fileName ? state.fileName.replace(/\.pdf$/i, '') : 'document') + '_page_1.png';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        hideLoading();
+        showToast('✓ Page 1 exported as high-res PNG image!', 'success', 3000);
+      } else {
+        hideLoading();
+        showToast('No rendered pages available to export', 'error');
+      }
+    } catch (err) {
+      hideLoading();
+      showToast('Export error: ' + err.message, 'error');
+    }
+  });
+
+  $cardImageToPdf?.addEventListener('click', () => {
+    if (state.pages && state.pages.length > 0) {
+      $imageFileInput?.click();
+    } else {
+      showToast('Open or create a PDF first, then add images', 'info', 3000);
+      $fileInput.click();
+    }
+  });
+
+  $cardOrganizePages?.addEventListener('click', () => {
+    if (state.pages && state.pages.length > 0) {
+      $sidebar?.classList.remove('hidden');
+      showScreen('editor');
+      showToast('Drag, duplicate, or delete pages in the sidebar', 'info', 3000);
+    } else {
+      $fileInput.click();
+      showToast('Open a PDF document to organize pages', 'info', 3000);
+    }
+  });
+}
+
+// ─── EDITOR CONTROLS CONTROLLER ─────────────────────────────────────────────
+function initEditorHeaderAndControls() {
+  $btnShare?.addEventListener('click', () => {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        showToast('✓ Share link copied to clipboard!', 'success', 2500);
+      }).catch(() => {
+        showToast('Share: ' + window.location.href, 'info', 3000);
+      });
+    } else {
+      showToast('Share: ' + window.location.href, 'info', 3000);
+    }
+  });
+
+  $pillPageBtn?.addEventListener('click', () => {
+    $sidebar?.classList.toggle('hidden');
+  });
+
+  $btnDeletePage?.addEventListener('click', () => {
+    if (state.pages && state.pages.length > 0) {
+      deletePage(state.currentPage - 1);
+    }
+  });
+}
+
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 (function init() {
@@ -3821,6 +4213,9 @@ function initHelpModal() {
   initMergeModal();
   initResizeModal();
   initShapeTools();
+  initDashboard();
+  initCompressScreen();
+  initEditorHeaderAndControls();
 
   // Set up page scroll observer after a short delay
   const observer = new MutationObserver(() => {

@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PDF Editor Pro — Edit PDFs with Matching Fonts</title>
-  <meta name="description" content="A professional PDF editor that reads every text element from your PDF and lets you edit it with the same font, size, and style." />
+  <title>PDF Editor — All the tools you need, in one place</title>
+  <meta name="description" content="Edit, convert, merge, compress, sign and organize PDFs effortlessly in your browser. Simple. Fast. Secure." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Dancing+Script:wght@600&family=Great+Vibes&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=19" />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Dancing+Script:wght@600&family=Great+Vibes&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css?v=20" />
 </head>
 <body>
 
@@ -20,488 +20,593 @@
     </div>
   </div>
 
-  <!-- ─── LANDING / UPLOAD SCREEN ─────────────────────────────── -->
-  <div id="landing" class="landing">
-    <div class="landing-bg">
-      <div class="blob blob-1"></div>
-      <div class="blob blob-2"></div>
-      <div class="blob blob-3"></div>
-    </div>
-    <div class="landing-content">
-      <!-- Top Navigation -->
-      <header class="landing-header">
-        <div class="logo">
-          <span class="logo-icon">✦</span>
-          <span class="logo-text">PDF<span class="accent">Editor</span> <span class="badge-pro">PRO</span></span>
-        </div>
-        <button id="btn-theme-toggle-landing" class="theme-toggle-btn" type="button" aria-label="Toggle light or dark theme">
+  <!-- ─── SCREEN 1: LANDING / HERO VIEW ─────────────────────────── -->
+  <div id="landing" class="screen-view landing-screen">
+    <!-- Global Header -->
+    <header class="global-header">
+      <div class="header-left">
+        <a href="#" class="brand-logo" id="logo-home-landing">
+          <svg class="pdf-logo-icon" width="26" height="26" viewBox="0 0 24 24" fill="none">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" fill="#ef4444" fill-opacity="0.12" stroke="#ef4444" stroke-width="2" stroke-linejoin="round"/>
+            <path d="M14 2v6h6" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M9 13h2a1.5 1.5 0 0 0 0-3H9v6" stroke="#ef4444" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="brand-name">PDF Editor</span>
+        </a>
+        <nav class="nav-links">
+          <a href="#features" class="nav-link" id="nav-link-features">Features</a>
+          <a href="#tools" class="nav-link" id="nav-link-tools">Tools</a>
+          <a href="#pricing" class="nav-link" id="nav-link-pricing">Pricing</a>
+          <a href="#resources" class="nav-link" id="nav-link-resources">Resources</a>
+        </nav>
+      </div>
+      <div class="header-right">
+        <button id="btn-theme-toggle-landing" class="btn-icon-ghost" title="Toggle Theme" aria-label="Toggle theme">
           <span class="theme-icon">🌙</span>
-          <span class="theme-label">Dark Mode</span>
         </button>
-      </header>
+        <button class="nav-btn-link" id="btn-nav-signin" type="button">Sign In</button>
+        <button class="btn-pill-dark" id="btn-nav-get-started" type="button">Get Started</button>
+      </div>
+    </header>
 
-      <!-- Hero & Upload -->
-      <div class="landing-hero">
-        <div class="hero-badge">
-          <span class="hero-badge-dot"></span>
-          <span>100% In-Browser &bull; Zero Server Uploads &bull; Private</span>
+    <!-- Hero Content -->
+    <main class="hero-section">
+      <div class="hero-container">
+        <!-- Left Hero Column -->
+        <div class="hero-left">
+          <div class="hero-text-block">
+            <h1 class="hero-title">PDF Editor</h1>
+            <h2 class="hero-subhead">All the tools you need,<br />in one place.</h2>
+            <p class="hero-desc">Edit, convert, merge, compress and do more with your PDFs. Simple. Fast. Secure.</p>
+          </div>
+
+          <div class="hero-cta-group">
+            <button class="btn-pill-dark btn-hero-primary" id="btn-hero-get-started" type="button">
+              Get Started <span class="arrow-icon">→</span>
+            </button>
+            <button class="btn-link-secondary" id="btn-hero-see-tools" type="button">See All Tools</button>
+          </div>
+
+          <!-- Trust Badges -->
+          <div class="trust-badges-row">
+            <div class="trust-badge">
+              <span class="trust-icon">🛡️</span>
+              <div class="trust-info">
+                <strong>Secure</strong>
+                <span>and private</span>
+              </div>
+            </div>
+            <div class="trust-badge">
+              <span class="trust-icon">⚡</span>
+              <div class="trust-info">
+                <strong>Fast</strong>
+                <span>and reliable</span>
+              </div>
+            </div>
+            <div class="trust-badge">
+              <span class="trust-icon">📱</span>
+              <div class="trust-info">
+                <strong>Works on</strong>
+                <span>any device</span>
+              </div>
+            </div>
+          </div>
         </div>
-        <h1 class="landing-title">Edit PDFs with<br /><span class="gradient-text">Perfect Typography</span></h1>
-        <p class="landing-sub">Upload any PDF and edit text directly while preserving font family, weight, size, and color. Sign, annotate, reorder, merge, and resize effortlessly.</p>
 
-        <div class="upload-zone" id="upload-zone" tabindex="0" role="button" aria-label="Upload PDF file">
-          <div class="upload-icon-wrap">
-            <svg width="56" height="56" viewBox="0 0 52 52" fill="none">
-              <circle cx="26" cy="26" r="25" stroke="url(#grad)" stroke-width="1.5"/>
-              <path d="M26 34V20M26 20L20 26M26 20L32 26" stroke="url(#grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M18 36h16" stroke="url(#grad)" stroke-width="2" stroke-linecap="round"/>
-              <defs>
-                <linearGradient id="grad" x1="0" y1="0" x2="52" y2="52" gradientUnits="userSpaceOnUse">
-                  <stop stop-color="#4f8ef7"/>
-                  <stop offset="1" stop-color="#a855f7"/>
-                </linearGradient>
-              </defs>
+        <!-- Right Hero Column: 3D Layered Document with Floating Icons -->
+        <div class="hero-right">
+          <div class="doodle-annotation">
+            <span class="doodle-text">Do more with PDFs</span>
+            <svg class="doodle-arrow" width="46" height="42" viewBox="0 0 50 45" fill="none">
+              <path d="M5 38C15 35 32 30 38 12M38 12L28 15M38 12L42 22" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </div>
-          <p class="upload-label">Choose a PDF or drag it here</p>
-          <p class="upload-hint">Supports all standard PDF documents &bull; Processed securely on your device</p>
-          <input type="file" id="file-input" accept=".pdf" aria-label="Upload PDF" />
-        </div>
 
-        <div class="upload-quick-tags">
-          <span class="quick-tag">🔒 100% Private</span>
-          <span class="quick-tag">⚡ Exact Font Matching</span>
-          <span class="quick-tag">✍️ Signatures &amp; Stamps</span>
-          <span class="quick-tag">📑 Page Organizer</span>
-          <span class="quick-tag">🔄 Merge &amp; Resize</span>
+          <!-- Interactive 3D Document Graphic / Dropzone -->
+          <div class="hero-3d-scene" id="hero-3d-card" tabindex="0" role="button" aria-label="Upload PDF">
+            <!-- Background Layer 1 (Lavender sheet) -->
+            <div class="sheet-layer sheet-bg-1"></div>
+            <!-- Background Layer 2 (Pink sheet) -->
+            <div class="sheet-layer sheet-bg-2"></div>
+            <!-- Main Foreground White Sheet -->
+            <div class="sheet-layer sheet-main" id="upload-zone">
+              <div class="sheet-pdf-tag">
+                <span class="sheet-pdf-badge">PDF</span>
+              </div>
+              <div class="sheet-skeleton">
+                <div class="skeleton-line full"></div>
+                <div class="skeleton-line half"></div>
+                <div class="skeleton-line three-quarter"></div>
+                <div class="skeleton-line full"></div>
+                <div class="skeleton-line half"></div>
+              </div>
+              <div class="sheet-drop-hint">
+                <span class="hint-icon">📂</span>
+                <span>Click or drop PDF here</span>
+              </div>
+            </div>
+
+            <!-- Floating Pastel Tool Icons -->
+            <div class="floating-icon icon-blue-pen" title="Edit PDF">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+              </svg>
+            </div>
+            <div class="floating-icon icon-green-img" title="Images & Stamps">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/>
+              </svg>
+            </div>
+            <div class="floating-icon icon-orange-sign" title="Signatures">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </div>
+            <div class="floating-icon icon-purple-grid" title="Organize Pages">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9333ea" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/>
+              </svg>
+            </div>
+          </div>
         </div>
       </div>
+    </main>
+  </div>
 
-      <!-- ─── FEATURES BENTO GRID ───────────────────────────────────── -->
-      <section class="features-section" aria-label="Features showcase">
-        <div class="section-header">
-          <span class="section-tag">All-In-One Studio</span>
-          <h2 class="section-title">Built for Precision. Zero Compromises.</h2>
-          <p class="section-sub">A complete suite of PDF manipulation tools running entirely in client-side WebAssembly with zero data leakage.</p>
+  <!-- ─── SCREEN 2: TOOLS HUB / DASHBOARD VIEW ────────────────────── -->
+  <div id="dashboard" class="screen-view dashboard-screen hidden">
+    <!-- Top Global Header -->
+    <header class="global-header dashboard-header">
+      <div class="header-left">
+        <a href="#" class="brand-logo" id="logo-home-dash">
+          <svg class="pdf-logo-icon" width="26" height="26" viewBox="0 0 24 24" fill="none">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" fill="#ef4444" fill-opacity="0.12" stroke="#ef4444" stroke-width="2" stroke-linejoin="round"/>
+            <path d="M14 2v6h6" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M9 13h2a1.5 1.5 0 0 0 0-3H9v6" stroke="#ef4444" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="brand-name">PDF Editor</span>
+        </a>
+        <nav class="nav-links">
+          <a href="#features" class="nav-link" id="nav-dash-features">Features</a>
+          <a href="#tools" class="nav-link active" id="nav-dash-tools-top">Tools</a>
+          <a href="#pricing" class="nav-link">Pricing</a>
+          <a href="#resources" class="nav-link">Resources</a>
+        </nav>
+      </div>
+      <div class="header-right">
+        <button id="btn-theme-toggle-dash" class="btn-icon-ghost" title="Toggle Theme" aria-label="Toggle theme">
+          <span class="theme-icon">🌙</span>
+        </button>
+        <div class="header-search-icon" title="Search">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
         </div>
+        <div class="user-avatar-circle" title="Kunal">K</div>
+      </div>
+    </header>
 
-        <div class="bento-grid">
-          <!-- Featured: Typography Matching -->
-          <div class="bento-card featured">
-            <div class="bento-card-top">
-              <div class="bento-icon-wrap">🎯</div>
-              <span class="bento-tag">Signature Capability</span>
-            </div>
-            <h3 class="bento-card-title">Vector Font &amp; Style Matching Engine</h3>
-            <p class="bento-card-sub">Extracts exact font-family metadata, font weight, slope, point size, and RGB text colors directly from PDF content streams. Edits look authentic and natural without clumsy misaligned text boxes.</p>
-          </div>
+    <!-- Dashboard Layout: Sidebar + Main Content -->
+    <div class="dashboard-body">
+      <!-- Left Sidebar -->
+      <aside class="dashboard-sidebar">
+        <nav class="dash-sidebar-nav">
+          <button class="dash-nav-item" id="dash-nav-home">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span>Home</span>
+          </button>
+          <button class="dash-nav-item active" id="dash-nav-tools">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            <span>All Tools</span>
+          </button>
+          <button class="dash-nav-item" id="dash-nav-recent">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span>Recent Files</span>
+          </button>
+          <button class="dash-nav-item" id="dash-nav-starred">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <span>Starred</span>
+          </button>
+          <button class="dash-nav-item" id="dash-nav-shared">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <span>Shared</span>
+          </button>
+          <button class="dash-nav-item" id="dash-nav-trash">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            <span>Trash</span>
+          </button>
+        </nav>
 
-          <!-- Card 2: Find & Replace -->
-          <div class="bento-card">
-            <div class="bento-card-top">
-              <div class="bento-icon-wrap purple">🔍</div>
-              <span class="bento-tag">Ctrl+F</span>
-            </div>
-            <h3 class="bento-card-title">Document Find &amp; Replace</h3>
-            <p class="bento-card-sub">Search across all pages instantly with live occurrence highlights, match counters, case sensitivity toggling, and one-click global "Replace All".</p>
+        <!-- Storage Card Widget -->
+        <div class="storage-widget">
+          <div class="storage-text-row">
+            <span class="storage-label">2.4 GB of 10 GB used</span>
           </div>
-
-          <!-- Card 3: Digital Signatures -->
-          <div class="bento-card">
-            <div class="bento-card-top">
-              <div class="bento-icon-wrap">✍️</div>
-              <span class="bento-tag">Draw &amp; Type</span>
-            </div>
-            <h3 class="bento-card-title">Digital Signatures</h3>
-            <p class="bento-card-sub">Draw natural handwriting with Bezier smoothing, or generate calligraphy signatures using elegant cursive fonts (Caveat, Dancing Script, Great Vibes).</p>
+          <div class="storage-meter">
+            <div class="storage-meter-fill" style="width: 24%"></div>
           </div>
-
-          <!-- Card 4: Image & Logo Insertion -->
-          <div class="bento-card">
-            <div class="bento-card-top">
-              <div class="bento-icon-wrap green">🖼️</div>
-              <span class="bento-tag green">PNG / JPG</span>
-            </div>
-            <h3 class="bento-card-title">Images, Stamps &amp; Logos</h3>
-            <p class="bento-card-sub">Add transparent company logos, official seals, or photos. Position anywhere on pages with intuitive interactive resize handles.</p>
-          </div>
-
-          <!-- Card 5: Pen & Highlighter -->
-          <div class="bento-card">
-            <div class="bento-card-top">
-              <div class="bento-icon-wrap amber">🖍️</div>
-              <span class="bento-tag">Annotations</span>
-            </div>
-            <h3 class="bento-card-title">Pen &amp; Text Highlighter</h3>
-            <p class="bento-card-sub">Sketch diagrams, underline key clauses, and highlight contract terms with customizable highlighter colors, opacities, and stroke widths.</p>
-          </div>
-
-          <!-- Card 6: Sticky Notes -->
-          <div class="bento-card">
-            <div class="bento-card-top">
-              <div class="bento-icon-wrap amber">💬</div>
-              <span class="bento-tag">Comments</span>
-            </div>
-            <h3 class="bento-card-title">Pinned Sticky Notes</h3>
-            <p class="bento-card-sub">Leave editorial comments, review checklists, and reminders right on the page canvas with collapsible amber note cards.</p>
-          </div>
-
-          <!-- Card 7: Page Management -->
-          <div class="bento-card">
-            <div class="bento-card-top">
-              <div class="bento-icon-wrap purple">📑</div>
-              <span class="bento-tag">Visual Strip</span>
-            </div>
-            <h3 class="bento-card-title">Visual Page Management</h3>
-            <p class="bento-card-sub">Sidebar thumbnails with drag-and-drop page reordering, instant duplicate, 90°/180° page rotation, and page deletion.</p>
-          </div>
-
-          <!-- Card 8: Merge & Resize -->
-          <div class="bento-card">
-            <div class="bento-card-top">
-              <div class="bento-icon-wrap">🔄</div>
-              <span class="bento-tag">Multi-Doc</span>
-            </div>
-            <h3 class="bento-card-title">Merge &amp; Resize Documents</h3>
-            <p class="bento-card-sub">Combine secondary PDF files anywhere in the page sequence, and convert between A4, Letter, Legal, A3, and custom formats with vector content scaling.</p>
-          </div>
-
-          <!-- Card 9: 100% Privacy -->
-          <div class="bento-card">
-            <div class="bento-card-top">
-              <div class="bento-icon-wrap green">🔒</div>
-              <span class="bento-tag green">100% Local</span>
-            </div>
-            <h3 class="bento-card-title">Private &amp; Offline Ready</h3>
-            <p class="bento-card-sub">Your sensitive files never touch any backend server. Everything executes locally in your browser memory for total compliance and peace of mind.</p>
-          </div>
+          <a href="#upgrade" class="storage-upgrade-link">Upgrade →</a>
         </div>
-      </section>
+      </aside>
 
-      <!-- ─── USAGE & SHORTCUTS SECTION ───────────────────────────── -->
-      <section class="usage-shortcuts-section" aria-label="Usage guide and shortcuts">
-        <!-- Quick Start Guide -->
-        <div class="guide-card">
-          <div class="card-header-row">
-            <div class="bento-icon-wrap">🚀</div>
-            <h3 class="card-header-title">How To Use in 3 Simple Steps</h3>
+      <!-- Main Tools Content -->
+      <main class="dashboard-main">
+        <div class="dash-top-bar">
+          <div class="dash-title-group">
+            <h1 class="dash-main-title">Tools for every PDF need</h1>
+            <p class="dash-main-sub">Simple tools. Powerful results.</p>
           </div>
-          <div class="steps-list">
-            <div class="step-item">
-              <span class="step-number">1</span>
-              <div class="step-content">
-                <strong>Upload Your Document</strong>
-                <p>Drag &amp; drop any PDF into the upload area above or click to select from your files.</p>
-              </div>
-            </div>
-            <div class="step-item">
-              <span class="step-number">2</span>
-              <div class="step-content">
-                <strong>Select, Edit &amp; Annotate</strong>
-                <p>Click any text to edit with matched typography, or pick Sign, Image, Draw, Note, Merge, or Resize from the topbar.</p>
-              </div>
-            </div>
-            <div class="step-item">
-              <span class="step-number">3</span>
-              <div class="step-content">
-                <strong>Save &amp; Download</strong>
-                <p>Click "Save PDF" in the top-right corner to compile and download your publication-ready document.</p>
-              </div>
-            </div>
+          <div class="dash-search-wrap">
+            <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <input type="text" id="dash-search-input" class="dash-search-input" placeholder="Search tools..." />
           </div>
         </div>
 
-        <!-- Shortcuts Card -->
-        <div class="shortcuts-card">
-          <div class="card-header-row">
-            <div class="bento-icon-wrap purple">⌨️</div>
-            <h3 class="card-header-title">Keyboard Shortcuts</h3>
+        <!-- 8 Pastel Tool Cards Grid -->
+        <div class="tools-grid" id="tools-grid">
+          <!-- 1. Edit PDF -->
+          <div class="tool-card card-coral" id="card-edit-pdf" tabindex="0" role="button">
+            <div class="tool-card-icon coral">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+              </svg>
+            </div>
+            <h3 class="tool-card-title">Edit PDF</h3>
+            <p class="tool-card-desc">Add text, images and more</p>
           </div>
-          <div class="shortcuts-table">
-            <div class="shortcut-row">
-              <span class="shortcut-desc">Find &amp; Replace</span>
-              <div class="shortcut-keys"><kbd>Ctrl</kbd> / <kbd>⌘</kbd> + <kbd>F</kbd></div>
+
+          <!-- 2. Merge PDF -->
+          <div class="tool-card card-blue" id="card-merge-pdf" tabindex="0" role="button">
+            <div class="tool-card-icon blue">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4"/><polyline points="14 2 14 8 20 8"/><path d="M2 15h10M9 12l3 3-3 3"/>
+              </svg>
             </div>
-            <div class="shortcut-row">
-              <span class="shortcut-desc">Undo last change</span>
-              <div class="shortcut-keys"><kbd>Ctrl</kbd> / <kbd>⌘</kbd> + <kbd>Z</kbd></div>
+            <h3 class="tool-card-title">Merge PDF</h3>
+            <p class="tool-card-desc">Combine multiple files</p>
+          </div>
+
+          <!-- 3. Split PDF -->
+          <div class="tool-card card-green" id="card-split-pdf" tabindex="0" role="button">
+            <div class="tool-card-icon green">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/>
+              </svg>
             </div>
-            <div class="shortcut-row">
-              <span class="shortcut-desc">Redo change</span>
-              <div class="shortcut-keys"><kbd>Ctrl</kbd> / <kbd>⌘</kbd> + <kbd>Y</kbd></div>
+            <h3 class="tool-card-title">Split PDF</h3>
+            <p class="tool-card-desc">Extract pages with ease</p>
+          </div>
+
+          <!-- 4. Compress PDF -->
+          <div class="tool-card card-peach" id="card-compress-pdf" tabindex="0" role="button">
+            <div class="tool-card-icon peach">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 14h6v6"/><path d="M20 10h-6V4"/><path d="M14 10l7-7"/><path d="M3 21l7-7"/>
+              </svg>
             </div>
-            <div class="shortcut-row">
-              <span class="shortcut-desc">Direct text edit</span>
-              <div class="shortcut-keys"><kbd>Double Click</kbd></div>
+            <h3 class="tool-card-title">Compress PDF</h3>
+            <p class="tool-card-desc">Reduce file size</p>
+          </div>
+
+          <!-- 5. PDF to Word -->
+          <div class="tool-card card-word" id="card-pdf-to-word" tabindex="0" role="button">
+            <div class="tool-card-icon word">
+              <span class="word-w">W</span>
             </div>
-            <div class="shortcut-row">
-              <span class="shortcut-desc">Delete selected item</span>
-              <div class="shortcut-keys"><kbd>Delete</kbd> / <kbd>Backspace</kbd></div>
+            <h3 class="tool-card-title">PDF to Word</h3>
+            <p class="tool-card-desc">Convert to editable Word files</p>
+          </div>
+
+          <!-- 6. PDF to Image -->
+          <div class="tool-card card-purple" id="card-pdf-to-image" tabindex="0" role="button">
+            <div class="tool-card-icon purple">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9333ea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/>
+              </svg>
             </div>
-            <div class="shortcut-row">
-              <span class="shortcut-desc">Open Help modal</span>
-              <div class="shortcut-keys"><kbd>?</kbd></div>
+            <h3 class="tool-card-title">PDF to Image</h3>
+            <p class="tool-card-desc">Convert to JPG, PNG and more</p>
+          </div>
+
+          <!-- 7. Image to PDF -->
+          <div class="tool-card card-emerald" id="card-image-to-pdf" tabindex="0" role="button">
+            <div class="tool-card-icon emerald">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/>
+              </svg>
             </div>
-            <div class="shortcut-row">
-              <span class="shortcut-desc">Close open modal / cancel</span>
-              <div class="shortcut-keys"><kbd>Esc</kbd></div>
+            <h3 class="tool-card-title">Image to PDF</h3>
+            <p class="tool-card-desc">Turn images into PDFs</p>
+          </div>
+
+          <!-- 8. Organize Pages -->
+          <div class="tool-card card-indigo" id="card-organize-pages" tabindex="0" role="button">
+            <div class="tool-card-icon indigo">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/>
+              </svg>
             </div>
+            <h3 class="tool-card-title">Organize Pages</h3>
+            <p class="tool-card-desc">Reorder, rotate, delete pages</p>
           </div>
         </div>
-      </section>
-
+      </main>
     </div>
   </div>
 
-  <!-- ─── EDITOR SCREEN ─────────────────────────────────────────── -->
-  <div id="editor" class="editor hidden">
+  <!-- ─── SCREEN 4: DEDICATED TOOL SCREEN (COMPRESS PDF) ─────────── -->
+  <div id="compress-screen" class="screen-view tool-action-screen hidden">
+    <!-- Top Global Header -->
+    <header class="global-header tool-action-header">
+      <div class="header-left">
+        <a href="#" class="brand-logo" id="logo-home-compress">
+          <svg class="pdf-logo-icon" width="26" height="26" viewBox="0 0 24 24" fill="none">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" fill="#ef4444" fill-opacity="0.12" stroke="#ef4444" stroke-width="2" stroke-linejoin="round"/>
+            <path d="M14 2v6h6" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M9 13h2a1.5 1.5 0 0 0 0-3H9v6" stroke="#ef4444" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="brand-name">PDF Editor</span>
+        </a>
+        <nav class="nav-links">
+          <a href="#features" class="nav-link">Features</a>
+          <a href="#tools" class="nav-link" id="nav-compress-tools">Tools</a>
+          <a href="#pricing" class="nav-link">Pricing</a>
+          <a href="#resources" class="nav-link">Resources</a>
+        </nav>
+      </div>
+      <div class="header-right">
+        <button class="nav-btn-link" type="button">Sign In</button>
+        <button class="btn-pill-dark" type="button">Get Started</button>
+      </div>
+    </header>
 
-    <!-- Topbar (Main Header) -->
-    <header class="topbar" id="topbar">
-      <div class="topbar-left">
-        <button id="btn-back" class="btn-icon" title="Close file" aria-label="Go back to landing">
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M11 4L6 9L11 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <div class="tool-action-body">
+      <div class="tool-action-header-row">
+        <button class="back-link-btn" id="btn-back-to-tools" type="button">
+          ← All Tools
         </button>
-        <div class="logo-sm">
-          <span class="logo-icon">✦</span>
-          <span class="logo-text">PDF<span class="accent">Editor</span></span>
+        <h1 class="tool-screen-title">Compress PDF</h1>
+        <p class="tool-screen-sub">Reduce file size, same quality.</p>
+      </div>
+
+      <!-- Dual Cards: Dropzone & Result Preview -->
+      <div class="compress-cards-row">
+        <!-- Left: Upload Card -->
+        <div class="compress-card-left" id="compress-drop-zone">
+          <div class="compress-upload-box">
+            <div class="compress-doc-icon">
+              <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
+              </svg>
+            </div>
+            <p class="compress-primary-text">Drop your PDF here</p>
+            <p class="compress-sub-text">or click to upload</p>
+            <button class="btn-pill-dark btn-choose-file" id="btn-compress-choose" type="button">Choose File</button>
+            <span class="compress-limit-text">Maximum file size: 500 MB</span>
+            <input type="file" id="compress-file-input" accept=".pdf" style="display:none" />
+          </div>
         </div>
-        <div class="file-badge" id="file-badge" title="Current document">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 2h7l3 3v7H2V2z" stroke="#4f8ef7" stroke-width="1.2" stroke-linejoin="round"/><path d="M9 2v3h3" stroke="#4f8ef7" stroke-width="1.2" stroke-linejoin="round"/></svg>
-          <span id="file-name-label">document.pdf</span>
+
+        <!-- Right: Status / Result Card -->
+        <div class="compress-card-right" id="compress-result-card">
+          <!-- Comparison Row -->
+          <div class="comparison-row">
+            <!-- Original File -->
+            <div class="comp-file-box">
+              <div class="comp-pdf-badge">PDF</div>
+              <span class="comp-file-label">Original</span>
+              <span class="comp-file-size" id="comp-original-size">12.4 MB</span>
+            </div>
+            <div class="comp-arrow">→</div>
+            <!-- Compressed File -->
+            <div class="comp-file-box active">
+              <div class="comp-pdf-badge">PDF</div>
+              <span class="comp-file-label">Compressed</span>
+              <span class="comp-file-size active" id="comp-reduced-size">2.1 MB</span>
+            </div>
+          </div>
+
+          <!-- Green Callout Pill -->
+          <div class="percent-callout" id="comp-percent-pill">
+            <span class="check-circle-icon">✓</span>
+            <div class="callout-text">
+              <strong id="comp-savings-pct">70% smaller</strong>
+              <span>Same quality, less space.</span>
+            </div>
+          </div>
+
+          <!-- Download Action -->
+          <button class="btn-pill-dark btn-download-comp" id="btn-download-compressed" type="button">
+            Download PDF
+          </button>
+          <button class="btn-link-retry" id="btn-compress-retry" type="button">
+            Try another file
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SCREEN 3: EDITOR WORKSPACE VIEW (BOTTOM-LEFT IN REFERENCE) ─ -->
+  <div id="editor" class="screen-view editor-screen hidden">
+    <!-- Topbar Header -->
+    <header class="editor-header" id="topbar">
+      <div class="editor-header-left">
+        <a href="#" class="brand-logo" id="editor-brand-logo">
+          <svg class="pdf-logo-icon" width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" fill="#ef4444" fill-opacity="0.12" stroke="#ef4444" stroke-width="2" stroke-linejoin="round"/>
+            <path d="M14 2v6h6" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M9 13h2a1.5 1.5 0 0 0 0-3H9v6" stroke="#ef4444" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="brand-name">PDF Editor</span>
+        </a>
+        <div class="editor-breadcrumbs">
+          <button class="breadcrumb-home" id="btn-back" title="Go back to Home">Home</button>
+          <span class="breadcrumb-sep">&gt;</span>
+          <span class="breadcrumb-doc-name" id="file-name-label">Edit PDF</span>
         </div>
       </div>
 
-      <div class="topbar-right">
-        <div class="toolbar-group">
-          <button id="btn-undo" class="tool-btn icon-only" title="Undo (Ctrl+Z / ⌘Z)" aria-label="Undo" disabled>
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 7l-2-2 2-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M1 5h8a4 4 0 0 1 0 8H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-          </button>
-          <button id="btn-redo" class="tool-btn icon-only" title="Redo (Ctrl+Y / ⌘Y)" aria-label="Redo" disabled>
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13 7l2-2-2-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 5H7A4 4 0 0 0 7 13h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-          </button>
-        </div>
-        <div class="separator"></div>
-        <div class="toolbar-group">
-          <button id="btn-zoom-out" class="tool-btn icon-only" title="Zoom out (-)" aria-label="Zoom out">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5"/><path d="M12 12l2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M5 7h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-          </button>
-          <span id="zoom-label" class="zoom-label">100%</span>
-          <button id="btn-zoom-in" class="tool-btn icon-only" title="Zoom in (+)" aria-label="Zoom in">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5"/><path d="M12 12l2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M7 5v4M5 7h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-          </button>
-          <button id="btn-zoom-reset" class="tool-btn icon-only" title="Fit to page" aria-label="Fit page to screen">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="1" stroke="currentColor" stroke-width="1.5"/><path d="M5 5h2M5 5v2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M11 5h-2M11 5v2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M5 11h2M5 11v-2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M11 11h-2M11 11v-2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
-          </button>
-        </div>
-        <div class="separator"></div>
-        <div class="page-indicator">
-          <span id="current-page">1</span> / <span id="total-pages">1</span>
-        </div>
-        <button id="btn-theme-toggle-editor" class="tool-btn icon-only" title="Switch Theme" aria-label="Toggle theme">
-          <span id="editor-theme-icon" style="font-size: 0.95rem; line-height: 1;">🌙</span>
+      <div class="editor-header-right">
+        <button id="btn-theme-toggle-editor" class="btn-icon-ghost" title="Toggle Theme" aria-label="Toggle theme">
+          <span id="editor-theme-icon" class="theme-icon">🌙</span>
         </button>
-        <button id="btn-help" class="tool-btn icon-only" title="Keyboard Shortcuts &amp; Guide (?)" aria-label="Keyboard Shortcuts and Help">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <button class="btn-pill-ghost" id="btn-share" type="button" title="Share link">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+          <span>Share</span>
         </button>
-        <button id="btn-save" class="btn-save" aria-label="Download edited PDF">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v7M8 10l-3-3M8 10l3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 13h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-          Save PDF
+        <button class="btn-pill-dark" id="btn-save" type="button" aria-label="Download edited PDF">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <span>Download</span>
         </button>
       </div>
     </header>
 
-    <!-- ─── FEATURE SUB-HEADER / TOOLBAR ────────────────────────── -->
-    <nav class="feature-bar" id="feature-bar" aria-label="Feature toolbar">
-      <div class="feature-group">
-        <button id="btn-select" class="tool-btn active" title="Select mode" aria-label="Select mode">
-          <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 2l10 6-5 1.5L6 14 3 2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
-          <span>Select</span>
-        </button>
-        <button id="btn-edit" class="tool-btn" title="Edit text mode" aria-label="Edit text mode">
-          <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M11 2.5l2.5 2.5L5 13.5 2 14l.5-3L11 2.5z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <span>Edit</span>
-        </button>
-        <button id="btn-find" class="tool-btn" title="Find & Replace (Ctrl+F / ⌘F)" aria-label="Find and replace">
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.75" stroke="currentColor" stroke-width="1.5"/><path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-          <span>Find</span>
-        </button>
-      </div>
-
-      <div class="separator"></div>
-
-      <div class="feature-group">
-        <button id="btn-sign" class="tool-btn" title="Digital Signature" aria-label="Add digital signature">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 2l6 6L7 23H1v-6L16 2zM19 5l-2-2"/></svg>
-          <span>Sign</span>
-        </button>
-        <button id="btn-image" class="tool-btn" title="Insert Image" aria-label="Insert image">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-          <span>Image</span>
-        </button>
-        <div class="shape-btn-wrapper">
-          <button id="btn-shape" class="tool-btn" title="Add Shapes (Rectangles, Circles, Lines, Arrows)" aria-label="Add shapes">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="3" width="10" height="10" rx="1.5" />
-              <circle cx="15.5" cy="15.5" r="5.5" />
-            </svg>
-            <span>Shape</span>
-            <svg class="chevron-down" width="8" height="8" viewBox="0 0 10 10" fill="none"><path d="M2.5 3.5L5 6L7.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </button>
-          <div id="shape-popover" class="shape-popover hidden" role="menu" aria-label="Select shape">
-            <button class="shape-opt-btn active" data-shape="rectangle" role="menuitem" type="button">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="1"/></svg>
-              <span>Rectangle</span>
-            </button>
-            <button class="shape-opt-btn" data-shape="rounded-rect" role="menuitem" type="button">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/></svg>
-              <span>Rounded Rect</span>
-            </button>
-            <button class="shape-opt-btn" data-shape="circle" role="menuitem" type="button">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg>
-              <span>Circle / Ellipse</span>
-            </button>
-            <button class="shape-opt-btn" data-shape="line" role="menuitem" type="button">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="21" x2="21" y2="3"/></svg>
-              <span>Line</span>
-            </button>
-            <button class="shape-opt-btn" data-shape="arrow" role="menuitem" type="button">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="12" x2="20" y2="12"/><polyline points="14 6 20 12 14 18"/></svg>
-              <span>Arrow</span>
-            </button>
-            <button class="shape-opt-btn" data-shape="star" role="menuitem" type="button">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-              <span>Star</span>
-            </button>
-          </div>
-        </div>
-        <button id="btn-draw" class="tool-btn" title="Freehand Pen" aria-label="Freehand pen">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg>
-          <span>Pen</span>
-        </button>
-        <button id="btn-highlight" class="tool-btn" title="Highlighter" aria-label="Highlighter">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l-6 6v3h3l6-6"/><path d="M22 2l-7 7-4-4 7-7 4 4z"/></svg>
-          <span>Highlight</span>
-        </button>
-        <button id="btn-sticky" class="tool-btn" title="Sticky Note" aria-label="Sticky comment note">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-          <span>Note</span>
-        </button>
-      </div>
-
-      <div class="separator"></div>
-
-      <div class="feature-group">
-        <button id="btn-merge" class="tool-btn" title="Merge another PDF into this document" aria-label="Merge PDF">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4"/><polyline points="14 2 14 8 20 8"/><path d="M2 15h10M9 12l3 3-3 3"/></svg>
-          <span>Merge PDF</span>
-        </button>
-        <button id="btn-resize" class="tool-btn" title="Resize Page Dimensions" aria-label="Resize page">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
-          <span>Resize</span>
-        </button>
-      </div>
-    </nav>
-
-    <!-- ─── FIND & REPLACE WIDGET ──────────────────────────────── -->
-    <div id="find-replace-bar" class="find-replace-bar hidden" role="search" aria-label="Find and Replace">
-      <div class="fr-row">
-        <div class="fr-input-wrap">
-          <svg class="fr-icon" width="13" height="13" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.75" stroke="currentColor" stroke-width="1.5"/><path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-          <input type="text" id="find-input" class="fr-input" placeholder="Find in document..." autocomplete="off" spellcheck="false" />
-          <span id="find-count" class="fr-count">0 of 0</span>
-        </div>
-        <div class="fr-btn-group">
-          <button id="btn-find-prev" class="fr-icon-btn" title="Previous match (Shift+Enter)" aria-label="Previous match">
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 7.5L6 3.5L10 7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </button>
-          <button id="btn-find-next" class="fr-icon-btn" title="Next match (Enter)" aria-label="Next match">
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </button>
-          <button id="btn-find-case" class="fr-toggle-btn" title="Match Case" aria-label="Toggle match case">Aa</button>
-          <button id="btn-find-word" class="fr-toggle-btn" title="Match Whole Word" aria-label="Toggle whole word">\b</button>
-          <button id="btn-find-close" class="fr-icon-btn fr-close-btn" title="Close (Esc)" aria-label="Close find and replace">
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 2L10 10M10 2L2 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-          </button>
-        </div>
-      </div>
-      <div class="fr-row fr-replace-row">
-        <div class="fr-input-wrap">
-          <svg class="fr-icon" width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M2 10h8a3 3 0 0 0 3-3V5M2 10l3-3M2 10l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <input type="text" id="replace-input" class="fr-input" placeholder="Replace with..." autocomplete="off" spellcheck="false" />
-        </div>
-        <div class="fr-btn-group">
-          <button id="btn-replace-one" class="fr-action-btn" title="Replace Current Match">Replace</button>
-          <button id="btn-replace-all" class="fr-action-btn fr-action-primary" title="Replace All Across All Pages">Replace All</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- ─── ANNOTATION SUB-TOOLBAR ─────────────────────────────── -->
-    <div id="annotation-toolbar" class="annotation-toolbar hidden" role="toolbar" aria-label="Annotation settings">
-      <div class="annot-group">
-        <span class="annot-label">Color</span>
-        <div class="color-palette">
-          <button class="color-dot active" data-color="#000000" style="background:#000000" title="Black"></button>
-          <button class="color-dot" data-color="#2563eb" style="background:#2563eb" title="Blue"></button>
-          <button class="color-dot" data-color="#dc2626" style="background:#dc2626" title="Red"></button>
-          <button class="color-dot" data-color="#16a34a" style="background:#16a34a" title="Green"></button>
-          <button class="color-dot" data-color="#f59e0b" style="background:#f59e0b" title="Yellow"></button>
-          <button class="color-dot" data-color="#9333ea" style="background:#9333ea" title="Purple"></button>
-        </div>
-      </div>
-      <div class="annot-separator"></div>
-      <div class="annot-group">
-        <span class="annot-label">Thickness</span>
-        <div class="size-selector">
-          <button class="size-btn active" data-size="2" title="Thin">2px</button>
-          <button class="size-btn" data-size="5" title="Medium">5px</button>
-          <button class="size-btn" data-size="10" title="Thick">10px</button>
-          <button class="size-btn" data-size="18" title="Extra Thick">18px</button>
-        </div>
-      </div>
-      <div class="annot-separator"></div>
-      <button id="btn-clear-drawings" class="annot-action-btn danger" title="Clear freehand annotations on current page">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6"/></svg>
-        <span>Clear Page</span>
-      </button>
-    </div>
-
-    <!-- Main layout -->
+    <!-- Editor Main Layout: Left Tool Strip + Floating Canvas + Properties Panel -->
     <div class="editor-layout">
+      <!-- Left Vertical Tool Strip -->
+      <aside class="editor-tool-strip" id="editor-tool-strip">
+        <div class="strip-header">Edit</div>
+        <nav class="strip-tools-list">
+          <button id="btn-select" class="strip-btn active" title="Select & Move (V)" aria-label="Select tool">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l7 18 3-7 7-3L3 3z"/></svg>
+            <span>Edit</span>
+          </button>
+          <button id="btn-edit" class="strip-btn" title="Add / Edit Text (T)" aria-label="Edit text">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+            <span>Add Text</span>
+          </button>
+          <button id="btn-image" class="strip-btn" title="Add Image or Logo" aria-label="Image tool">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+            <span>Add Image</span>
+          </button>
+          <button id="btn-highlight" class="strip-btn" title="Highlight Text" aria-label="Highlighter">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l-6 6v3h3l6-6"/><path d="M22 2l-7 7-4-4 7-7 4 4z"/></svg>
+            <span>Highlight</span>
+          </button>
+          <button id="btn-draw" class="strip-btn" title="Freehand Pen" aria-label="Draw tool">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg>
+            <span>Draw</span>
+          </button>
 
-      <!-- Sidebar -->
-      <aside class="sidebar" id="sidebar">
+          <!-- Shape Tool with Dropdown Popover -->
+          <div class="shape-btn-wrapper">
+            <button id="btn-shape" class="strip-btn" title="Draw Shapes" aria-label="Add shape">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+              </svg>
+              <span>Add Shape</span>
+            </button>
+            <div id="shape-popover" class="shape-popover hidden" role="menu" aria-label="Select shape">
+              <button class="shape-opt-btn active" data-shape="rectangle" role="menuitem" type="button">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="1"/></svg>
+                <span>Rectangle</span>
+              </button>
+              <button class="shape-opt-btn" data-shape="rounded-rect" role="menuitem" type="button">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/></svg>
+                <span>Rounded Rect</span>
+              </button>
+              <button class="shape-opt-btn" data-shape="circle" role="menuitem" type="button">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg>
+                <span>Circle / Ellipse</span>
+              </button>
+              <button class="shape-opt-btn" data-shape="line" role="menuitem" type="button">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="21" x2="21" y2="3"/></svg>
+                <span>Line</span>
+              </button>
+              <button class="shape-opt-btn" data-shape="arrow" role="menuitem" type="button">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="12" x2="20" y2="12"/><polyline points="14 6 20 12 14 18"/></svg>
+                <span>Arrow</span>
+              </button>
+              <button class="shape-opt-btn" data-shape="star" role="menuitem" type="button">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <span>Star</span>
+              </button>
+            </div>
+          </div>
+
+          <button id="btn-merge" class="strip-btn" title="Insert Pages from another PDF" aria-label="Insert page">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+            <span>Insert Page</span>
+          </button>
+          <button id="btn-delete-page" class="strip-btn" title="Delete current page" aria-label="Delete page">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            <span>Delete Page</span>
+          </button>
+
+          <!-- Secondary Tools Divider -->
+          <div class="strip-divider"></div>
+          <button id="btn-sign" class="strip-btn" title="Digital Signature" aria-label="Sign document">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 2l6 6L7 23H1v-6L16 2zM19 5l-2-2"/></svg>
+            <span>Signature</span>
+          </button>
+          <button id="btn-sticky" class="strip-btn" title="Sticky Note" aria-label="Add sticky note">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            <span>Sticky Note</span>
+          </button>
+          <button id="btn-find" class="strip-btn" title="Find & Replace (Ctrl+F)" aria-label="Find and replace">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <span>Find Text</span>
+          </button>
+          <button id="btn-resize" class="strip-btn" title="Resize Page Dimensions" aria-label="Resize page">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+            <span>Resize</span>
+          </button>
+        </nav>
+      </aside>
+
+      <!-- Thumbnails Sidebar (Collapsible) -->
+      <aside class="sidebar hidden" id="sidebar">
         <div class="sidebar-header">
           <div class="sidebar-title-row">
-            <span>Pages</span>
-            <span class="page-count" id="sidebar-page-count">0</span>
+            <span class="sidebar-title">Pages</span>
+            <span class="sidebar-count" id="sidebar-page-count">0</span>
           </div>
-          <div class="sidebar-act-group">
-            <button id="btn-merge-sidebar" class="sidebar-add-btn" title="Merge another PDF into this document" aria-label="Merge PDF">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4"/><polyline points="14 2 14 8 20 8"/><path d="M2 15h10M9 12l3 3-3 3"/></svg>
-              <span>Merge</span>
-            </button>
-            <button id="btn-add-page" class="sidebar-add-btn" title="Add blank page at end" aria-label="Add blank page">
-              <svg width="11" height="11" viewBox="0 0 14 14" fill="none"><path d="M7 2v10M2 7h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-              <span>Add</span>
-            </button>
-          </div>
+          <button id="btn-add-page" class="btn-sidebar-icon" title="Add blank page" aria-label="Add blank page">＋</button>
         </div>
         <div class="thumbnails" id="thumbnails"></div>
       </aside>
 
-      <!-- Canvas area -->
+      <!-- Canvas Area with Floating Canvas Controls -->
       <main class="canvas-area" id="canvas-area">
+        <!-- Floating Canvas Controls Pill (Top-Center over Document) -->
+        <div class="canvas-floating-controls" id="canvas-floating-controls">
+          <button id="btn-undo" class="pill-btn icon-only" title="Undo (Ctrl+Z)" disabled>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 7l-2-2 2-2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M1 5h8a4 4 0 0 1 0 8H6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </button>
+          <button id="btn-redo" class="pill-btn icon-only" title="Redo (Ctrl+Y)" disabled>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13 7l2-2-2-2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 5H7A4 4 0 0 0 7 13h3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </button>
+          <div class="pill-divider"></div>
+          <!-- Page Selector Indicator -->
+          <div class="pill-page-selector" id="pill-page-btn" title="Toggle page organizer">
+            <span id="current-page">1</span> / <span id="total-pages">1</span>
+            <span class="pill-chevron">▾</span>
+          </div>
+          <div class="pill-divider"></div>
+          <!-- Zoom Controls -->
+          <button id="btn-zoom-out" class="pill-btn icon-only" title="Zoom Out (-)">
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><line x1="3" y1="8" x2="13" y2="8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </button>
+          <span id="zoom-label" class="pill-zoom-text">100%</span>
+          <button id="btn-zoom-in" class="pill-btn icon-only" title="Zoom In (+)">
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><line x1="3" y1="8" x2="13" y2="8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><line x1="8" y1="3" x2="8" y2="13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </button>
+          <div class="pill-divider"></div>
+          <!-- Fit to Screen -->
+          <button id="btn-zoom-reset" class="pill-btn icon-only" title="Fit to Screen">
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M5 5h2M5 5v2M11 5h-2M11 5v2M5 11h2M5 11v-2M11 11h-2M11 11v-2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+
+        <!-- Document Pages Container -->
         <div class="pages-container" id="pages-container"></div>
       </main>
 
-      <!-- Properties panel -->
+      <!-- Properties Panel (Right Slide-in / Contextual) -->
       <aside class="properties-panel" id="props-panel">
         <div class="props-header" id="props-header">Properties</div>
         <div class="props-empty" id="props-empty">
           <div class="props-empty-icon">🖱️</div>
-          <p>Click on any text block or shape to view and edit its properties</p>
+          <p>Click on any text block or shape to customize properties</p>
         </div>
 
         <!-- Text Properties Form -->
@@ -606,12 +711,74 @@
           </div>
         </div>
       </aside>
-
     </div>
   </div>
 
-  <!-- Hidden Image File Picker -->
+  <!-- ─── FLOATING FIND & REPLACE ──────────────────────────────── -->
+  <div id="find-replace-bar" class="find-replace-bar hidden" role="search" aria-label="Find and Replace">
+    <div class="fr-row">
+      <div class="fr-input-wrap">
+        <svg class="fr-icon" width="13" height="13" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.75" stroke="currentColor" stroke-width="1.5"/><path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <input type="text" id="find-input" class="fr-input" placeholder="Find in document..." autocomplete="off" spellcheck="false" />
+        <span id="find-count" class="fr-count">0 of 0</span>
+      </div>
+      <div class="fr-btn-group">
+        <button id="btn-find-prev" class="fr-icon-btn" title="Previous match (Shift+Enter)" aria-label="Previous match">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 7.5L6 3.5L10 7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button id="btn-find-next" class="fr-icon-btn" title="Next match (Enter)" aria-label="Next match">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button id="btn-find-case" class="fr-toggle-btn" title="Match Case" aria-label="Toggle match case">Aa</button>
+        <button id="btn-find-word" class="fr-toggle-btn" title="Match Whole Word" aria-label="Toggle whole word">\b</button>
+        <button id="btn-find-close" class="fr-icon-btn fr-close-btn" title="Close (Esc)" aria-label="Close find and replace">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 2L10 10M10 2L2 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="fr-row fr-replace-row">
+      <div class="fr-input-wrap">
+        <svg class="fr-icon" width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M2 10h8a3 3 0 0 0 3-3V5M2 10l3-3M2 10l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <input type="text" id="replace-input" class="fr-input" placeholder="Replace with..." autocomplete="off" spellcheck="false" />
+      </div>
+      <div class="fr-btn-group">
+        <button id="btn-replace-one" class="fr-action-btn" title="Replace Current Match">Replace</button>
+        <button id="btn-replace-all" class="fr-action-btn fr-action-primary" title="Replace All Across All Pages">Replace All</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── FLOATING ANNOTATION SUB-TOOLBAR ───────────────────────── -->
+  <div id="annotation-toolbar" class="annotation-toolbar hidden" role="toolbar" aria-label="Annotation settings">
+    <div class="annot-group">
+      <span class="annot-label">Color</span>
+      <div class="color-palette">
+        <button class="color-dot active" data-color="#000000" style="background:#000000" title="Black"></button>
+        <button class="color-dot" data-color="#2563eb" style="background:#2563eb" title="Blue"></button>
+        <button class="color-dot" data-color="#dc2626" style="background:#dc2626" title="Red"></button>
+        <button class="color-dot" data-color="#16a34a" style="background:#16a34a" title="Green"></button>
+        <button class="color-dot" data-color="#f59e0b" style="background:#f59e0b" title="Yellow"></button>
+        <button class="color-dot" data-color="#9333ea" style="background:#9333ea" title="Purple"></button>
+      </div>
+    </div>
+    <div class="annot-sep"></div>
+    <div class="annot-group">
+      <span class="annot-label">Size</span>
+      <div class="size-palette">
+        <button class="size-dot" data-size="1" style="width:4px;height:4px" title="Fine"></button>
+        <button class="size-dot active" data-size="2" style="width:8px;height:8px" title="Medium"></button>
+        <button class="size-dot" data-size="4" style="width:12px;height:12px" title="Thick"></button>
+        <button class="size-dot" data-size="8" style="width:16px;height:16px" title="Extra Thick"></button>
+      </div>
+    </div>
+    <div class="annot-sep"></div>
+    <button id="btn-clear-drawings" class="annot-clear-btn" title="Clear page annotations">Clear Page</button>
+  </div>
+
+  <!-- ─── HIDDEN FILE INPUTS ───────────────────────────────────── -->
+  <input type="file" id="file-input" accept=".pdf" aria-label="Upload PDF" style="display:none" />
   <input type="file" id="image-file-input" accept="image/png,image/jpeg,image/webp,image/svg+xml" style="display:none" />
+  <input type="file" id="merge-file-input" accept=".pdf" style="display:none" />
 
   <!-- ─── SIGNATURE MODAL ───────────────────────────────────────── -->
   <div id="modal-signature" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="sig-modal-title">
@@ -621,9 +788,7 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 2l6 6L7 23H1v-6L16 2zM19 5l-2-2"/></svg>
           <h2 id="sig-modal-title" class="modal-title">Digital Signature</h2>
         </div>
-        <button id="btn-close-sig" class="modal-close-btn" aria-label="Close signature modal">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        </button>
+        <button id="btn-close-sig" class="modal-close-btn" aria-label="Close signature modal">✕</button>
       </div>
 
       <!-- Tabs -->
@@ -652,43 +817,41 @@
 
       <!-- Tab 2: Type -->
       <div id="pane-sig-type" class="sig-pane hidden">
-        <div class="sig-type-field">
-          <label for="sig-type-input" class="sig-ctrl-label">Your Name</label>
-          <input type="text" id="sig-type-input" class="sig-input" placeholder="Type your full name…" maxlength="40" autocomplete="off" />
+        <div class="sig-type-wrap">
+          <input type="text" id="sig-type-input" class="sig-type-input" placeholder="Type your full name..." maxlength="40" />
         </div>
         <div class="sig-font-previews" id="sig-font-previews">
-          <div class="sig-font-card active" data-font="Dancing Script" style="font-family:'Dancing Script', cursive;">
-            <span class="sig-font-name">Dancing Script</span>
-            <div class="sig-preview-text">Your Signature</div>
+          <div class="sig-font-card active" data-font="Caveat">
+            <span class="font-preview caveat-preview">Preview Name</span>
+            <span class="font-name-label">Caveat</span>
           </div>
-          <div class="sig-font-card" data-font="Caveat" style="font-family:'Caveat', cursive;">
-            <span class="sig-font-name">Caveat</span>
-            <div class="sig-preview-text">Your Signature</div>
+          <div class="sig-font-card" data-font="Dancing Script">
+            <span class="font-preview dancing-preview">Preview Name</span>
+            <span class="font-name-label">Dancing Script</span>
           </div>
-          <div class="sig-font-card" data-font="Great Vibes" style="font-family:'Great Vibes', cursive;">
-            <span class="sig-font-name">Great Vibes</span>
-            <div class="sig-preview-text">Your Signature</div>
+          <div class="sig-font-card" data-font="Great Vibes">
+            <span class="font-preview great-preview">Preview Name</span>
+            <span class="font-name-label">Great Vibes</span>
           </div>
         </div>
       </div>
 
       <!-- Tab 3: Upload -->
       <div id="pane-sig-upload" class="sig-pane hidden">
-        <div class="sig-upload-dropzone" id="sig-upload-dropzone">
+        <div class="sig-upload-dropzone" id="sig-upload-dropzone" tabindex="0">
           <input type="file" id="sig-file-input" accept="image/png,image/jpeg,image/webp" style="display:none" />
-          <div id="sig-upload-empty">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-            <p>Click or drag &amp; drop signature image here</p>
-            <span>PNG, JPG, WebP supported</span>
+          <div id="sig-upload-empty" class="sig-upload-empty">
+            <div class="upload-icon-sm">📁</div>
+            <p>Click or drag image here</p>
+            <span>PNG or JPG of your handwritten signature</span>
           </div>
-          <div id="sig-upload-preview-wrap" class="hidden">
-            <img id="sig-upload-preview-img" alt="Signature preview" />
+          <div id="sig-upload-preview-wrap" class="sig-upload-preview-wrap hidden">
+            <img id="sig-upload-preview-img" class="sig-upload-preview-img" alt="Uploaded signature" />
             <button id="btn-remove-uploaded-sig" class="btn-text danger" type="button">Remove</button>
           </div>
         </div>
       </div>
 
-      <!-- Modal Footer -->
       <div class="modal-footer">
         <button id="btn-cancel-sig" class="btn-secondary" type="button">Cancel</button>
         <button id="btn-insert-sig" class="btn-primary" type="button">Insert Signature</button>
@@ -696,7 +859,7 @@
     </div>
   </div>
 
-  <!-- ─── MODAL: MERGE PDF ──────────────────────────────────────── -->
+  <!-- ─── MERGE MODAL ───────────────────────────────────────────── -->
   <div id="modal-merge" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="merge-modal-title">
     <div class="modal-card merge-modal-card">
       <div class="modal-header">
@@ -709,7 +872,6 @@
 
       <div class="modal-body">
         <div class="merge-upload-zone" id="merge-upload-zone">
-          <input type="file" id="merge-file-input" accept=".pdf" style="display:none" />
           <div id="merge-upload-empty" class="merge-drop-prompt">
             <div class="merge-upload-icon">
               <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
@@ -764,7 +926,7 @@
     </div>
   </div>
 
-  <!-- ─── MODAL: RESIZE PDF ──────────────────────────────────────── -->
+  <!-- ─── RESIZE MODAL ──────────────────────────────────────────── -->
   <div id="modal-resize" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="resize-modal-title">
     <div class="modal-card resize-modal-card">
       <div class="modal-header">
@@ -776,194 +938,59 @@
       </div>
 
       <div class="modal-body">
-        <!-- Preset Cards -->
         <label class="modal-label">Standard Presets</label>
-        <div class="resize-preset-grid">
-          <button class="resize-preset-chip active" data-preset="a4" data-w="595.28" data-h="841.89" type="button">
+        <div class="resize-presets-grid">
+          <button class="preset-card active" data-preset="a4" type="button">
             <span class="preset-name">A4</span>
-            <span class="preset-dims">210 × 297 mm</span>
+            <span class="preset-dim">210 × 297 mm</span>
+            <span class="preset-pts">595 × 842 pt</span>
           </button>
-          <button class="resize-preset-chip" data-preset="letter" data-w="612" data-h="792" type="button">
-            <span class="preset-name">US Letter</span>
-            <span class="preset-dims">8.5 × 11 in</span>
+          <button class="preset-card" data-preset="letter" type="button">
+            <span class="preset-name">Letter</span>
+            <span class="preset-dim">8.5 × 11 in</span>
+            <span class="preset-pts">612 × 792 pt</span>
           </button>
-          <button class="resize-preset-chip" data-preset="legal" data-w="612" data-h="1008" type="button">
-            <span class="preset-name">US Legal</span>
-            <span class="preset-dims">8.5 × 14 in</span>
+          <button class="preset-card" data-preset="legal" type="button">
+            <span class="preset-name">Legal</span>
+            <span class="preset-dim">8.5 × 14 in</span>
+            <span class="preset-pts">612 × 1008 pt</span>
           </button>
-          <button class="resize-preset-chip" data-preset="a3" data-w="841.89" data-h="1190.55" type="button">
+          <button class="preset-card" data-preset="a3" type="button">
             <span class="preset-name">A3</span>
-            <span class="preset-dims">297 × 420 mm</span>
+            <span class="preset-dim">297 × 420 mm</span>
+            <span class="preset-pts">842 × 1191 pt</span>
           </button>
-          <button class="resize-preset-chip" data-preset="a5" data-w="419.53" data-h="595.28" type="button">
-            <span class="preset-name">A5</span>
-            <span class="preset-dims">148 × 210 mm</span>
-          </button>
-          <button class="resize-preset-chip" data-preset="custom" type="button">
-            <span class="preset-name">Custom</span>
-            <span class="preset-dims">Set width/height</span>
-          </button>
-        </div>
-
-        <!-- Custom Dimensions Row -->
-        <div class="resize-custom-row hidden" id="resize-custom-row">
-          <div class="resize-dim-field">
-            <label for="resize-custom-w" class="field-label">Width (pt)</label>
-            <input type="number" id="resize-custom-w" class="dim-input" value="595" min="100" max="5000" step="1" />
-          </div>
-          <span class="dim-separator">×</span>
-          <div class="resize-dim-field">
-            <label for="resize-custom-h" class="field-label">Height (pt)</label>
-            <input type="number" id="resize-custom-h" class="dim-input" value="842" min="100" max="5000" step="1" />
-          </div>
-        </div>
-
-        <!-- Orientation and Scope -->
-        <div class="resize-controls-grid">
-          <div class="ctrl-col">
-            <label class="modal-label">Orientation</label>
-            <div class="resize-orient-toggle">
-              <button id="btn-orient-portrait" class="orient-btn active" type="button" data-orient="portrait">
-                <span class="orient-icon">▯</span> Portrait
-              </button>
-              <button id="btn-orient-landscape" class="orient-btn" type="button" data-orient="landscape">
-                <span class="orient-icon">▭</span> Landscape
-              </button>
-            </div>
-          </div>
-          <div class="ctrl-col">
-            <label class="modal-label">Apply To</label>
-            <div class="resize-scope-toggle">
-              <button id="btn-scope-all" class="scope-btn active" type="button" data-scope="all">All Pages</button>
-              <button id="btn-scope-current" class="scope-btn" type="button" data-scope="current">Current Page</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Content Scaling Mode -->
-        <div class="resize-scale-mode-section">
-          <label class="modal-label">Content Scaling</label>
-          <div class="scale-mode-group">
-            <label class="scale-radio active">
-              <input type="radio" name="scale-mode" value="fit" checked />
-              <div class="scale-radio-text">
-                <span class="scale-title">Fit &amp; Scale Content</span>
-                <span class="scale-sub">Proportionally scales text, annotations, and images to fit the new page size</span>
-              </div>
-            </label>
-            <label class="scale-radio">
-              <input type="radio" name="scale-mode" value="canvas" />
-              <div class="scale-radio-text">
-                <span class="scale-title">Adjust Canvas Only</span>
-                <span class="scale-sub">Keeps existing content 1:1 and adds or trims page margins</span>
-              </div>
-            </label>
-          </div>
-        </div>
-
-        <div class="resize-summary-pill" id="resize-summary-pill">
-          Target: <strong id="resize-target-text">A4 Portrait (595 × 842 pt)</strong>
         </div>
       </div>
 
       <div class="modal-footer">
         <button id="btn-cancel-resize" class="btn-secondary" type="button">Cancel</button>
-        <button id="btn-apply-resize" class="btn-primary" type="button">Apply Resize</button>
+        <button id="btn-confirm-resize" class="btn-primary" type="button">Apply Resize</button>
       </div>
     </div>
   </div>
 
-  <!-- ─── HELP & SHORTCUTS MODAL ──────────────────────────────── -->
+  <!-- ─── HELP MODAL ────────────────────────────────────────────── -->
   <div id="modal-help" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="help-modal-title">
     <div class="modal-card help-modal-card">
       <div class="modal-header">
-        <div class="modal-title-wrap">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-          <h2 id="help-modal-title" class="modal-title">Keyboard Shortcuts &amp; Feature Guide</h2>
+        <div class="modal-title-group">
+          <span class="modal-icon">💡</span>
+          <h3 id="help-modal-title" class="modal-title">Shortcuts &amp; Guide</h3>
         </div>
         <button id="btn-close-help" class="modal-close-btn" aria-label="Close help modal">✕</button>
       </div>
-
       <div class="modal-body help-modal-body">
-        <div>
-          <div class="help-section-title">Essential Shortcuts</div>
-          <div class="shortcuts-table">
-            <div class="shortcut-row">
-              <span class="shortcut-desc">Find &amp; Replace text</span>
-              <div class="shortcut-keys"><kbd>Ctrl</kbd> / <kbd>⌘</kbd> + <kbd>F</kbd></div>
-            </div>
-            <div class="shortcut-row">
-              <span class="shortcut-desc">Undo last edit</span>
-              <div class="shortcut-keys"><kbd>Ctrl</kbd> / <kbd>⌘</kbd> + <kbd>Z</kbd></div>
-            </div>
-            <div class="shortcut-row">
-              <span class="shortcut-desc">Redo edit</span>
-              <div class="shortcut-keys"><kbd>Ctrl</kbd> / <kbd>⌘</kbd> + <kbd>Y</kbd></div>
-            </div>
-            <div class="shortcut-row">
-              <span class="shortcut-desc">Direct text edit</span>
-              <div class="shortcut-keys"><kbd>Double Click</kbd></div>
-            </div>
-            <div class="shortcut-row">
-              <span class="shortcut-desc">Delete selected item</span>
-              <div class="shortcut-keys"><kbd>Delete</kbd> / <kbd>Backspace</kbd></div>
-            </div>
-            <div class="shortcut-row">
-              <span class="shortcut-desc">Close dialog / cancel</span>
-              <div class="shortcut-keys"><kbd>Esc</kbd></div>
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <div class="help-section-title">Editor Features Quick Guide</div>
-          <div class="help-grid">
-            <div class="help-item">
-              <span class="help-item-icon">🎯</span>
-              <div class="help-item-text">
-                <strong>Text Editing</strong>
-                <p>Click any text to open properties. Edit text, font size, weight, and color while preserving original styles.</p>
-              </div>
-            </div>
-            <div class="help-item">
-              <span class="help-item-icon">✍️</span>
-              <div class="help-item-text">
-                <strong>Digital Signatures</strong>
-                <p>Draw smooth signatures or generate stylized typography signatures. Drag and resize on any page.</p>
-              </div>
-            </div>
-            <div class="help-item">
-              <span class="help-item-icon">🖼️</span>
-              <div class="help-item-text">
-                <strong>Image Stamps</strong>
-                <p>Upload logos, stamps, or photos and freely reposition or scale them using corner handles.</p>
-              </div>
-            </div>
-            <div class="help-item">
-              <span class="help-item-icon">🖍️</span>
-              <div class="help-item-text">
-                <strong>Pen &amp; Highlighter</strong>
-                <p>Draw freehand notes or highlight contracts with semi-transparent colors.</p>
-              </div>
-            </div>
-            <div class="help-item">
-              <span class="help-item-icon">📑</span>
-              <div class="help-item-text">
-                <strong>Page Management</strong>
-                <p>Drag thumbnails to reorder pages, rotate 90°/180°, duplicate, or delete from the left sidebar.</p>
-              </div>
-            </div>
-            <div class="help-item">
-              <span class="help-item-icon">🔄</span>
-              <div class="help-item-text">
-                <strong>Merge &amp; Resize</strong>
-                <p>Insert pages from other PDFs or resize page dimensions (A4, Letter, Legal, A3) with vector scaling.</p>
-              </div>
-            </div>
-          </div>
+        <div class="shortcuts-table">
+          <div class="shortcut-row"><span class="shortcut-desc">Find &amp; Replace</span><kbd>Ctrl/⌘ + F</kbd></div>
+          <div class="shortcut-row"><span class="shortcut-desc">Undo</span><kbd>Ctrl/⌘ + Z</kbd></div>
+          <div class="shortcut-row"><span class="shortcut-desc">Redo</span><kbd>Ctrl/⌘ + Y</kbd></div>
+          <div class="shortcut-row"><span class="shortcut-desc">Save / Download PDF</span><kbd>Ctrl/⌘ + S</kbd></div>
+          <div class="shortcut-row"><span class="shortcut-desc">Direct text edit</span><kbd>Double Click</kbd></div>
+          <div class="shortcut-row"><span class="shortcut-desc">Delete selected item</span><kbd>Delete / Backspace</kbd></div>
+          <div class="shortcut-row"><span class="shortcut-desc">Help modal</span><kbd>?</kbd></div>
         </div>
       </div>
-
       <div class="modal-footer">
         <button id="btn-dismiss-help" class="btn-primary" type="button">Got it</button>
       </div>
@@ -971,12 +998,12 @@
   </div>
 
   <!-- ─── LOADING OVERLAY ───────────────────────────────────────── -->
-  <div id="loading-overlay" class="loading-overlay hidden">
-    <div class="loading-card">
-      <div class="spinner-ring"></div>
+  <div id="loading-overlay" class="loading-overlay hidden" role="status" aria-live="polite">
+    <div class="loading-box">
+      <div class="loading-spinner"></div>
       <p class="loading-title" id="loading-title">Processing PDF…</p>
-      <p class="loading-sub" id="loading-sub">Extracting text and font data</p>
-      <div class="progress-bar-wrap">
+      <p class="loading-sub" id="loading-sub">Analyzing typography and content streams</p>
+      <div class="progress-wrap">
         <div class="progress-bar" id="progress-bar" style="width:0%"></div>
       </div>
     </div>
@@ -989,7 +1016,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
   <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
-  <script src="app.js?v=19"></script>
+  <script src="app.js?v=20"></script>
 
 </body>
 </html>
