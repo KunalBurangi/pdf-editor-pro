@@ -485,12 +485,11 @@ body {
 
 /* ─── SCREEN 2: DASHBOARD / TOOLS HUB VIEW ───────────────────────────── */
 .dashboard-screen {
-  position: fixed;
-  inset: 0;
+  min-height: 100vh;
   background: var(--bg-surface);
   display: flex;
   flex-direction: column;
-  z-index: 20;
+  position: relative;
 }
 .user-avatar-circle {
   width: 34px;
@@ -512,18 +511,19 @@ body {
 }
 .dashboard-body {
   flex: 1;
-  display: flex;
-  overflow: hidden;
 }
 .dashboard-sidebar {
-  width: 230px;
-  border-right: 1px solid var(--border);
   background: var(--bg-surface);
-  padding: 24px 16px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  flex-shrink: 0;
+  border-right: 1px solid var(--border);
+  z-index: 1040;
+}
+@media (min-width: 768px) {
+  .dashboard-sidebar {
+    position: sticky;
+    top: 57px;
+    height: calc(100vh - 57px);
+    overflow-y: auto;
+  }
 }
 .dash-sidebar-nav {
   display: flex;
@@ -600,16 +600,7 @@ body {
 
 /* Dashboard Main */
 .dashboard-main {
-  flex: 1;
-  padding: 36px 48px;
-  overflow-y: auto;
   background: var(--bg-base);
-}
-.dash-top-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 28px;
 }
 .dash-main-title {
   font-size: 1.85rem;
@@ -624,11 +615,11 @@ body {
 }
 .dash-search-wrap {
   position: relative;
-  width: 250px;
+  min-width: 240px;
 }
 .dash-search-wrap .search-icon {
   position: absolute;
-  left: 12px;
+  left: 14px;
   top: 50%;
   transform: translateY(-50%);
   color: var(--text-muted);
@@ -636,34 +627,18 @@ body {
 }
 .dash-search-input {
   width: 100%;
-  padding: 8px 14px 8px 36px;
+  padding: 9px 16px 9px 40px;
   border-radius: 9999px;
   border: 1px solid var(--border);
   background: var(--bg-surface);
   color: var(--text-primary);
-  font-size: 0.86rem;
+  font-size: 0.88rem;
   outline: none;
   transition: all var(--transition);
 }
 .dash-search-input:focus {
   border-color: var(--blue);
   box-shadow: 0 0 0 3px var(--blue-dim);
-}
-
-/* 8 Pastel Tool Cards Grid */
-.tools-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-}
-@media (max-width: 1200px) {
-  .tools-grid { grid-template-columns: repeat(3, 1fr); }
-}
-@media (max-width: 900px) {
-  .tools-grid { grid-template-columns: repeat(2, 1fr); }
-}
-@media (max-width: 600px) {
-  .tools-grid { grid-template-columns: 1fr; }
 }
 
 .tool-card {

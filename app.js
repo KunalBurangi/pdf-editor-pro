@@ -4049,6 +4049,14 @@ function initCompressScreen() {
 
 // ─── DASHBOARD & NAVIGATION CONTROLLER ──────────────────────────────────────
 function initDashboard() {
+  function closeDashSidebar() {
+    const el = document.getElementById('dashSidebarOffcanvas');
+    if (el && window.bootstrap?.Offcanvas) {
+      const instance = bootstrap.Offcanvas.getInstance(el);
+      if (instance) instance.hide();
+    }
+  }
+
   // Navigation
   $logoHomeLanding?.addEventListener('click', () => showScreen('landing'));
   $logoHomeDash?.addEventListener('click', () => showScreen('landing'));
@@ -4058,26 +4066,37 @@ function initDashboard() {
   $navDashToolsTop?.addEventListener('click', () => showScreen('dashboard'));
   $navCompressTools?.addEventListener('click', () => showScreen('dashboard'));
   $btnHeroSeeTools?.addEventListener('click', () => showScreen('dashboard'));
-  $dashNavTools?.addEventListener('click', () => showScreen('dashboard'));
+  $dashNavTools?.addEventListener('click', () => {
+    closeDashSidebar();
+    showScreen('dashboard');
+  });
 
   $btnNavGetStarted?.addEventListener('click', () => $fileInput.click());
   $btnHeroGetStarted?.addEventListener('click', () => $fileInput.click());
   $hero3dCard?.addEventListener('click', () => $fileInput.click());
 
-  $dashNavHome?.addEventListener('click', () => showScreen('landing'));
+  $dashNavHome?.addEventListener('click', () => {
+    closeDashSidebar();
+    showScreen('landing');
+  });
   $dashNavRecent?.addEventListener('click', () => {
+    closeDashSidebar();
     showToast('Recent files: ' + (state.fileName || 'No recent files in this session'), 'info', 2500);
   });
   $dashNavStarred?.addEventListener('click', () => {
+    closeDashSidebar();
     showToast('Starred files: 0 items', 'info', 2000);
   });
   $dashNavShared?.addEventListener('click', () => {
+    closeDashSidebar();
     showToast('Shared documents: 0 items', 'info', 2000);
   });
   $dashNavTrash?.addEventListener('click', () => {
+    closeDashSidebar();
     showToast('Trash is empty', 'info', 2000);
   });
   $btnStorageUpgrade?.addEventListener('click', () => {
+    closeDashSidebar();
     showToast('✨ Pro Edition unlocked — Unlimited local storage!', 'success', 3000);
   });
 
