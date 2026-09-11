@@ -10,7 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Dancing+Script:wght@600&family=Great+Vibes&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <!-- Bootstrap 5.3.3 CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
-  <link rel="stylesheet" href="style.css?v=24" />
+  <link rel="stylesheet" href="style.css?v=25" />
 </head>
 <body>
 
@@ -266,10 +266,32 @@
             </div>
           </div>
 
-          <!-- 8 Pastel Tool Cards Grid (Pure Bootstrap Row & Responsive Cols) -->
+          <!-- Category Filter Bar (iLovePDF Style) -->
+          <div class="dash-category-nav d-flex flex-wrap gap-2 mb-4" id="tools-category-nav" role="tablist">
+            <button class="btn btn-sm rounded-pill px-3 py-2 fw-semibold category-pill active" data-category="all" type="button">
+              All Tools <span class="badge rounded-pill bg-light text-dark ms-1" id="badge-tool-count">16</span>
+            </button>
+            <button class="btn btn-sm rounded-pill px-3 py-2 fw-semibold category-pill" data-category="organize" type="button">
+              Organize PDF
+            </button>
+            <button class="btn btn-sm rounded-pill px-3 py-2 fw-semibold category-pill" data-category="optimize" type="button">
+              Optimize PDF
+            </button>
+            <button class="btn btn-sm rounded-pill px-3 py-2 fw-semibold category-pill" data-category="convert" type="button">
+              Convert PDF
+            </button>
+            <button class="btn btn-sm rounded-pill px-3 py-2 fw-semibold category-pill" data-category="edit" type="button">
+              Edit &amp; Annotate
+            </button>
+            <button class="btn btn-sm rounded-pill px-3 py-2 fw-semibold category-pill" data-category="security" type="button">
+              Security &amp; AI
+            </button>
+          </div>
+
+          <!-- 16 Pastel Tool Cards Grid (Pure Bootstrap Row & Responsive Cols) -->
           <div class="row g-3 g-md-4" id="tools-grid">
             <!-- 1. Edit PDF -->
-            <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 tool-card-col">
+            <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 tool-card-col" data-category="edit" data-keywords="edit annotate draw text shapes write pen highlight">
               <div class="tool-card card-coral card border-0 h-100 p-4 rounded-4 shadow-sm" id="card-edit-pdf" tabindex="0" role="button">
                 <div class="tool-card-icon coral mb-3">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -277,12 +299,12 @@
                   </svg>
                 </div>
                 <h3 class="tool-card-title h5 fw-bold mb-1">Edit PDF</h3>
-                <p class="tool-card-desc text-muted small mb-0">Add text, images and more</p>
+                <p class="tool-card-desc text-muted small mb-0">Add text, images and shapes</p>
               </div>
             </div>
 
             <!-- 2. Merge PDF -->
-            <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 tool-card-col">
+            <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 tool-card-col" data-category="organize" data-keywords="merge combine join unite files assemble">
               <div class="tool-card card-blue card border-0 h-100 p-4 rounded-4 shadow-sm" id="card-merge-pdf" tabindex="0" role="button">
                 <div class="tool-card-icon blue mb-3">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -290,12 +312,12 @@
                   </svg>
                 </div>
                 <h3 class="tool-card-title h5 fw-bold mb-1">Merge PDF</h3>
-                <p class="tool-card-desc text-muted small mb-0">Combine multiple files</p>
+                <p class="tool-card-desc text-muted small mb-0">Combine multiple files in order</p>
               </div>
             </div>
 
             <!-- 3. Split PDF -->
-            <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 tool-card-col">
+            <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 tool-card-col" data-category="organize" data-keywords="split extract separate cut pages partition">
               <div class="tool-card card-green card border-0 h-100 p-4 rounded-4 shadow-sm" id="card-split-pdf" tabindex="0" role="button">
                 <div class="tool-card-icon green mb-3">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -308,7 +330,7 @@
             </div>
 
             <!-- 4. Compress PDF -->
-            <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 tool-card-col">
+            <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 tool-card-col" data-category="optimize" data-keywords="compress reduce size shrink optimize lightweight">
               <div class="tool-card card-peach card border-0 h-100 p-4 rounded-4 shadow-sm" id="card-compress-pdf" tabindex="0" role="button">
                 <div class="tool-card-icon peach mb-3">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -316,12 +338,12 @@
                   </svg>
                 </div>
                 <h3 class="tool-card-title h5 fw-bold mb-1">Compress PDF</h3>
-                <p class="tool-card-desc text-muted small mb-0">Reduce file size</p>
+                <p class="tool-card-desc text-muted small mb-0">Reduce file size, same quality</p>
               </div>
             </div>
 
             <!-- 5. PDF to Word -->
-            <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 tool-card-col">
+            <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 tool-card-col" data-category="convert" data-keywords="word doc docx convert editable text">
               <div class="tool-card card-word card border-0 h-100 p-4 rounded-4 shadow-sm" id="card-pdf-to-word" tabindex="0" role="button">
                 <div class="tool-card-icon word mb-3">
                   <span class="word-w">W</span>
@@ -332,7 +354,7 @@
             </div>
 
             <!-- 6. PDF to Image -->
-            <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 tool-card-col">
+            <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 tool-card-col" data-category="convert" data-keywords="image jpg png convert extract pictures">
               <div class="tool-card card-purple card border-0 h-100 p-4 rounded-4 shadow-sm" id="card-pdf-to-image" tabindex="0" role="button">
                 <div class="tool-card-icon purple mb-3">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9333ea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -345,7 +367,7 @@
             </div>
 
             <!-- 7. Image to PDF -->
-            <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 tool-card-col">
+            <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 tool-card-col" data-category="convert" data-keywords="image jpg png photo pictures to pdf">
               <div class="tool-card card-emerald card border-0 h-100 p-4 rounded-4 shadow-sm" id="card-image-to-pdf" tabindex="0" role="button">
                 <div class="tool-card-icon emerald mb-3">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -353,12 +375,12 @@
                   </svg>
                 </div>
                 <h3 class="tool-card-title h5 fw-bold mb-1">Image to PDF</h3>
-                <p class="tool-card-desc text-muted small mb-0">Turn images into PDFs</p>
+                <p class="tool-card-desc text-muted small mb-0">Turn images into crisp PDFs</p>
               </div>
             </div>
 
             <!-- 8. Organize Pages -->
-            <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 tool-card-col">
+            <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 tool-card-col" data-category="organize" data-keywords="organize reorder sort delete duplicate rearrange">
               <div class="tool-card card-indigo card border-0 h-100 p-4 rounded-4 shadow-sm" id="card-organize-pages" tabindex="0" role="button">
                 <div class="tool-card-icon indigo mb-3">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -366,7 +388,116 @@
                   </svg>
                 </div>
                 <h3 class="tool-card-title h5 fw-bold mb-1">Organize Pages</h3>
-                <p class="tool-card-desc text-muted small mb-0">Reorder, rotate, delete pages</p>
+                <p class="tool-card-desc text-muted small mb-0">Reorder, duplicate, delete pages</p>
+              </div>
+            </div>
+
+            <!-- 9. Rotate PDF -->
+            <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 tool-card-col" data-category="organize" data-keywords="rotate orientation turn landscape portrait angle">
+              <div class="tool-card card-cyan card border-0 h-100 p-4 rounded-4 shadow-sm" id="card-rotate-pdf" tabindex="0" role="button">
+                <div class="tool-card-icon cyan mb-3">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0891b2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+                  </svg>
+                </div>
+                <h3 class="tool-card-title h5 fw-bold mb-1">Rotate PDF</h3>
+                <p class="tool-card-desc text-muted small mb-0">Rotate pages clockwise or counter</p>
+              </div>
+            </div>
+
+            <!-- 10. Crop PDF -->
+            <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 tool-card-col" data-category="organize" data-keywords="crop trim margins cutout size border remove">
+              <div class="tool-card card-teal card border-0 h-100 p-4 rounded-4 shadow-sm" id="card-crop-pdf" tabindex="0" role="button">
+                <div class="tool-card-icon teal mb-3">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0d9488" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 2v14a2 2 0 0 0 2 2h14"/><path d="M18 22V8a2 2 0 0 0-2-2H2"/>
+                  </svg>
+                </div>
+                <span class="badge bg-success-subtle text-success rounded-pill align-self-start mb-2 px-2 py-1 small">New</span>
+                <h3 class="tool-card-title h5 fw-bold mb-1">Crop PDF</h3>
+                <p class="tool-card-desc text-muted small mb-0">Trim margins &amp; adjust page bounds</p>
+              </div>
+            </div>
+
+            <!-- 11. Watermark PDF -->
+            <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 tool-card-col" data-category="edit" data-keywords="watermark stamp text logo copyright draft confidential brand">
+              <div class="tool-card card-amber card border-0 h-100 p-4 rounded-4 shadow-sm" id="card-watermark-pdf" tabindex="0" role="button">
+                <div class="tool-card-icon amber mb-3">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                  </svg>
+                </div>
+                <span class="badge bg-primary-subtle text-primary rounded-pill align-self-start mb-2 px-2 py-1 small">Popular</span>
+                <h3 class="tool-card-title h5 fw-bold mb-1">Watermark</h3>
+                <p class="tool-card-desc text-muted small mb-0">Stamp text or logo with opacity</p>
+              </div>
+            </div>
+
+            <!-- 12. Page Numbers -->
+            <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 tool-card-col" data-category="edit" data-keywords="page numbers footer header numbering pagination format count">
+              <div class="tool-card card-rose card border-0 h-100 p-4 rounded-4 shadow-sm" id="card-page-numbers" tabindex="0" role="button">
+                <div class="tool-card-icon rose mb-3">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#e11d48" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="12" y1="11" x2="12" y2="15"/>
+                  </svg>
+                </div>
+                <span class="badge bg-success-subtle text-success rounded-pill align-self-start mb-2 px-2 py-1 small">New</span>
+                <h3 class="tool-card-title h5 fw-bold mb-1">Page Numbers</h3>
+                <p class="tool-card-desc text-muted small mb-0">Add headers, footers &amp; numbering</p>
+              </div>
+            </div>
+
+            <!-- 13. PDF to Markdown -->
+            <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 tool-card-col" data-category="convert" data-keywords="markdown md text llm ai chatgpt notes extract content">
+              <div class="tool-card card-violet card border-0 h-100 p-4 rounded-4 shadow-sm" id="card-pdf-to-markdown" tabindex="0" role="button">
+                <div class="tool-card-icon violet mb-3">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="4" width="20" height="16" rx="2"/><path d="M7 15V9l3.5 4 3.5-4v6"/><path d="M18 12l-2-2v6"/>
+                  </svg>
+                </div>
+                <span class="badge bg-info-subtle text-info-emphasis rounded-pill align-self-start mb-2 px-2 py-1 small">AI Ready</span>
+                <h3 class="tool-card-title h5 fw-bold mb-1">PDF to Markdown</h3>
+                <p class="tool-card-desc text-muted small mb-0">Extract clean text &amp; headings for LLMs</p>
+              </div>
+            </div>
+
+            <!-- 14. Sign PDF -->
+            <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 tool-card-col" data-category="security" data-keywords="sign signature digital signature contract e-sign draw type">
+              <div class="tool-card card-sky card border-0 h-100 p-4 rounded-4 shadow-sm" id="card-sign-pdf" tabindex="0" role="button">
+                <div class="tool-card-icon sky mb-3">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 19.5a2.5 2.5 0 0 1-2.5 2.5H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h12"/><path d="M18 2l4 4-10 10H8v-4L18 2z"/>
+                  </svg>
+                </div>
+                <h3 class="tool-card-title h5 fw-bold mb-1">Sign PDF</h3>
+                <p class="tool-card-desc text-muted small mb-0">Draw, type, or stamp signatures</p>
+              </div>
+            </div>
+
+            <!-- 15. Redact PDF -->
+            <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 tool-card-col" data-category="security" data-keywords="redact black out sanitize sensitive hide privacy confidentiality">
+              <div class="tool-card card-dark-mode card border-0 h-100 p-4 rounded-4 shadow-sm" id="card-redact-pdf" tabindex="0" role="button">
+                <div class="tool-card-icon dark mb-3">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#334155" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                  </svg>
+                </div>
+                <h3 class="tool-card-title h5 fw-bold mb-1">Redact PDF</h3>
+                <p class="tool-card-desc text-muted small mb-0">Permanently black out sensitive info</p>
+              </div>
+            </div>
+
+            <!-- 16. AI Summarizer -->
+            <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 tool-card-col" data-category="security" data-keywords="ai summarize summary key takeaways reading bullets analyze intelligence">
+              <div class="tool-card card-fuchsia card border-0 h-100 p-4 rounded-4 shadow-sm" id="card-ai-summarizer" tabindex="0" role="button">
+                <div class="tool-card-icon fuchsia mb-3">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c026d3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                  </svg>
+                </div>
+                <span class="badge bg-warning-subtle text-warning-emphasis rounded-pill align-self-start mb-2 px-2 py-1 small">AI Smart</span>
+                <h3 class="tool-card-title h5 fw-bold mb-1">AI Summarizer</h3>
+                <p class="tool-card-desc text-muted small mb-0">Instant takeaways &amp; key points</p>
               </div>
             </div>
           </div>
@@ -1101,6 +1232,352 @@
     </div>
   </div>
 
+  <!-- ─── WATERMARK MODAL ─────────────────────────────────────────── -->
+  <div id="modal-watermark" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="watermark-modal-title">
+    <div class="modal-card modal-lg-card">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="modal-icon">💧</span>
+          <h3 id="watermark-modal-title" class="modal-title">Add Watermark to PDF</h3>
+        </div>
+        <button id="btn-close-watermark" class="modal-close-btn" aria-label="Close modal">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="watermark-file-notice p-2 px-3 rounded-3 bg-light border mb-3 d-flex justify-content-between align-items-center">
+          <div><strong id="watermark-doc-name">Current Document</strong> <span class="text-muted small" id="watermark-doc-pages"></span></div>
+          <input type="file" id="watermark-file-input" accept="application/pdf" class="d-none" />
+          <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-change-watermark-file">Change File</button>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-12 col-md-7">
+            <div class="mb-3">
+              <label class="modal-label fw-bold mb-1" for="watermark-text-input">Watermark Text</label>
+              <input type="text" id="watermark-text-input" class="form-control" value="CONFIDENTIAL" placeholder="e.g. CONFIDENTIAL, DRAFT, COPY" />
+            </div>
+
+            <div class="row g-2 mb-3">
+              <div class="col-6">
+                <label class="modal-label fw-semibold small mb-1">Rotation Angle</label>
+                <select id="watermark-angle-select" class="form-select">
+                  <option value="45" selected>Diagonal (45°)</option>
+                  <option value="0">Horizontal (0°)</option>
+                  <option value="90">Vertical (90°)</option>
+                  <option value="-45">Diagonal (-45°)</option>
+                </select>
+              </div>
+              <div class="col-6">
+                <label class="modal-label fw-semibold small mb-1">Font Size (<span id="val-watermark-size">54</span>px)</label>
+                <input type="range" id="watermark-size-slider" class="form-range" min="18" max="96" step="2" value="54" />
+              </div>
+            </div>
+
+            <div class="row g-2 mb-3">
+              <div class="col-6">
+                <label class="modal-label fw-semibold small mb-1">Opacity (<span id="val-watermark-opacity">30</span>%)</label>
+                <input type="range" id="watermark-opacity-slider" class="form-range" min="10" max="90" step="5" value="30" />
+              </div>
+              <div class="col-6">
+                <label class="modal-label fw-semibold small mb-1">Color</label>
+                <div class="d-flex align-items-center gap-2">
+                  <input type="color" id="watermark-color-input" class="form-control form-control-color" value="#ef4444" title="Choose color" />
+                  <span class="small text-muted" id="watermark-color-hex">#ef4444</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-2">
+              <label class="modal-label fw-semibold small mb-1">Apply to Pages</label>
+              <select id="watermark-pages-select" class="form-select">
+                <option value="all" selected>All Pages</option>
+                <option value="first">First Page Only</option>
+                <option value="custom">Custom Page Range</option>
+              </select>
+              <input type="text" id="watermark-custom-pages" class="form-control mt-2 hidden" placeholder="e.g. 1-3, 5" />
+            </div>
+          </div>
+
+          <div class="col-12 col-md-5 d-flex flex-column align-items-center justify-content-center bg-light rounded-3 p-3 border">
+            <span class="small fw-semibold text-muted mb-2">Live Stamp Preview</span>
+            <div id="watermark-preview-box" class="position-relative bg-white border shadow-sm rounded-2 d-flex align-items-center justify-content-center overflow-hidden" style="width: 170px; height: 230px;">
+              <div class="watermark-preview-lines position-absolute w-100 h-100 p-2 opacity-25">
+                <div class="bg-secondary mb-2" style="height: 6px; width: 60%;"></div>
+                <div class="bg-secondary mb-1" style="height: 4px; width: 90%;"></div>
+                <div class="bg-secondary mb-1" style="height: 4px; width: 85%;"></div>
+                <div class="bg-secondary mb-1" style="height: 4px; width: 75%;"></div>
+                <div class="bg-secondary mb-2" style="height: 6px; width: 50%;"></div>
+                <div class="bg-secondary mb-1" style="height: 4px; width: 95%;"></div>
+                <div class="bg-secondary mb-1" style="height: 4px; width: 80%;"></div>
+              </div>
+              <span id="watermark-preview-text" style="transform: rotate(45deg); font-weight: 800; font-size: 20px; color: #ef4444; opacity: 0.3; user-select: none; pointer-events: none; text-align: center; line-height: 1.2;">CONFIDENTIAL</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button id="btn-cancel-watermark" class="btn-secondary" type="button">Cancel</button>
+        <button id="btn-apply-watermark" class="btn-primary" type="button">Apply Watermark &amp; Download</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── PAGE NUMBERS MODAL ───────────────────────────────────────── -->
+  <div id="modal-page-numbers" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="page-numbers-modal-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="modal-icon">🔢</span>
+          <h3 id="page-numbers-modal-title" class="modal-title">Add Page Numbers</h3>
+        </div>
+        <button id="btn-close-page-numbers" class="modal-close-btn" aria-label="Close modal">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="page-numbers-file-notice p-2 px-3 rounded-3 bg-light border mb-3 d-flex justify-content-between align-items-center">
+          <div><strong id="page-numbers-doc-name">Current Document</strong> <span class="text-muted small" id="page-numbers-doc-pages"></span></div>
+          <input type="file" id="page-numbers-file-input" accept="application/pdf" class="d-none" />
+          <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-change-page-numbers-file">Change File</button>
+        </div>
+
+        <div class="mb-3">
+          <label class="modal-label fw-bold mb-1">Numbering Format</label>
+          <select id="page-numbers-format" class="form-select">
+            <option value="Page {n} of {total}" selected>Page {n} of {total} (e.g. Page 1 of 10)</option>
+            <option value="{n} / {total}">{n} / {total} (e.g. 1 / 10)</option>
+            <option value="Page {n}">Page {n} (e.g. Page 1)</option>
+            <option value="{n}">{n} (Single Number)</option>
+            <option value="- {n} -">- {n} -</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="modal-label fw-bold mb-2">Position on Page</label>
+          <div class="page-pos-grid d-grid gap-2" style="grid-template-columns: repeat(3, 1fr);">
+            <label class="pos-radio-box border rounded-2 p-2 text-center cursor-pointer">
+              <input type="radio" name="page-num-pos" value="top-left" class="d-none" />
+              <div class="small fw-semibold">Top Left</div>
+            </label>
+            <label class="pos-radio-box border rounded-2 p-2 text-center cursor-pointer">
+              <input type="radio" name="page-num-pos" value="top-center" class="d-none" />
+              <div class="small fw-semibold">Top Center</div>
+            </label>
+            <label class="pos-radio-box border rounded-2 p-2 text-center cursor-pointer">
+              <input type="radio" name="page-num-pos" value="top-right" class="d-none" />
+              <div class="small fw-semibold">Top Right</div>
+            </label>
+            <label class="pos-radio-box border rounded-2 p-2 text-center cursor-pointer">
+              <input type="radio" name="page-num-pos" value="bottom-left" class="d-none" />
+              <div class="small fw-semibold">Bottom Left</div>
+            </label>
+            <label class="pos-radio-box border rounded-2 p-2 text-center cursor-pointer active">
+              <input type="radio" name="page-num-pos" value="bottom-center" checked class="d-none" />
+              <div class="small fw-semibold">Bottom Center</div>
+            </label>
+            <label class="pos-radio-box border rounded-2 p-2 text-center cursor-pointer">
+              <input type="radio" name="page-num-pos" value="bottom-right" class="d-none" />
+              <div class="small fw-semibold">Bottom Right</div>
+            </label>
+          </div>
+        </div>
+
+        <div class="row g-2 mb-3">
+          <div class="col-6">
+            <label class="modal-label fw-semibold small mb-1">Start from number</label>
+            <input type="number" id="page-num-start" class="form-control" value="1" min="1" />
+          </div>
+          <div class="col-6">
+            <label class="modal-label fw-semibold small mb-1">Font Size</label>
+            <select id="page-num-size" class="form-select">
+              <option value="9">Small (9 pt)</option>
+              <option value="11" selected>Medium (11 pt)</option>
+              <option value="13">Large (13 pt)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-check form-switch mb-2">
+          <input class="form-check-input" type="checkbox" id="page-num-skip-first" />
+          <label class="form-check-label small" for="page-num-skip-first">Skip first page (Cover page)</label>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button id="btn-cancel-page-numbers" class="btn-secondary" type="button">Cancel</button>
+        <button id="btn-apply-page-numbers" class="btn-primary" type="button">Add Numbers &amp; Download</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── PDF TO MARKDOWN MODAL ────────────────────────────────────── -->
+  <div id="modal-pdf-to-markdown" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="md-modal-title">
+    <div class="modal-card modal-lg-card">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="modal-icon">📝</span>
+          <h3 id="md-modal-title" class="modal-title">PDF to Markdown Converter</h3>
+        </div>
+        <button id="btn-close-markdown" class="modal-close-btn" aria-label="Close modal">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="md-file-notice p-2 px-3 rounded-3 bg-light border mb-3 d-flex justify-content-between align-items-center">
+          <div><strong id="md-doc-name">Current Document</strong> <span class="text-muted small" id="md-doc-stats"></span></div>
+          <input type="file" id="md-file-input" accept="application/pdf" class="d-none" />
+          <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-change-md-file">Load Different PDF</button>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <div class="d-flex align-items-center gap-2">
+            <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-1" id="md-heading-count">0 Headings</span>
+            <span class="badge bg-secondary-subtle text-secondary rounded-pill px-3 py-1" id="md-word-count">0 Words</span>
+          </div>
+          <button type="button" class="btn btn-sm btn-outline-primary" id="btn-copy-markdown">
+            📋 Copy Markdown
+          </button>
+        </div>
+
+        <div class="position-relative">
+          <textarea id="markdown-output" class="form-control font-monospace" style="height: 320px; font-size: 13px; line-height: 1.6;" placeholder="Extracting formatted markdown from PDF document..."></textarea>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button id="btn-cancel-markdown" class="btn-secondary" type="button">Close</button>
+        <button id="btn-download-markdown" class="btn-primary" type="button">📥 Download .md File</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── CROP PDF MODAL ───────────────────────────────────────────── -->
+  <div id="modal-crop-pdf" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="crop-modal-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="modal-icon">✂️</span>
+          <h3 id="crop-modal-title" class="modal-title">Crop PDF Margins</h3>
+        </div>
+        <button id="btn-close-crop" class="modal-close-btn" aria-label="Close modal">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="crop-file-notice p-2 px-3 rounded-3 bg-light border mb-3 d-flex justify-content-between align-items-center">
+          <div><strong id="crop-doc-name">Current Document</strong> <span class="text-muted small" id="crop-doc-pages"></span></div>
+          <input type="file" id="crop-file-input" accept="application/pdf" class="d-none" />
+          <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-change-crop-file">Change File</button>
+        </div>
+
+        <label class="modal-label fw-bold mb-2">Trim Margins (points / ~0.35mm)</label>
+        <div class="row g-2 mb-3">
+          <div class="col-6">
+            <label class="modal-label small text-muted">Top Trim</label>
+            <input type="number" id="crop-top" class="form-control" value="25" min="0" max="200" />
+          </div>
+          <div class="col-6">
+            <label class="modal-label small text-muted">Bottom Trim</label>
+            <input type="number" id="crop-bottom" class="form-control" value="25" min="0" max="200" />
+          </div>
+          <div class="col-6">
+            <label class="modal-label small text-muted">Left Trim</label>
+            <input type="number" id="crop-left" class="form-control" value="20" min="0" max="200" />
+          </div>
+          <div class="col-6">
+            <label class="modal-label small text-muted">Right Trim</label>
+            <input type="number" id="crop-right" class="form-control" value="20" min="0" max="200" />
+          </div>
+        </div>
+
+        <div class="d-flex gap-2 mb-3">
+          <button type="button" class="btn btn-sm btn-light border flex-grow-1" id="crop-preset-slight">Slight (10pt)</button>
+          <button type="button" class="btn btn-sm btn-light border flex-grow-1" id="crop-preset-medium">Medium (25pt)</button>
+          <button type="button" class="btn btn-sm btn-light border flex-grow-1" id="crop-preset-large">Large (50pt)</button>
+        </div>
+
+        <div class="mb-2">
+          <label class="modal-label small text-muted">Apply To</label>
+          <select id="crop-pages-select" class="form-select">
+            <option value="all" selected>All Pages</option>
+            <option value="current">Current Page Only</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button id="btn-cancel-crop" class="btn-secondary" type="button">Cancel</button>
+        <button id="btn-apply-crop" class="btn-primary" type="button">Apply Crop &amp; Download</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── AI SUMMARIZER MODAL ──────────────────────────────────────── -->
+  <div id="modal-ai-summarizer" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="ai-modal-title">
+    <div class="modal-card modal-lg-card">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="modal-icon">✨</span>
+          <h3 id="ai-modal-title" class="modal-title">Smart Document Summarizer</h3>
+        </div>
+        <button id="btn-close-ai-summarizer" class="modal-close-btn" aria-label="Close modal">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="ai-file-notice p-2 px-3 rounded-3 bg-light border mb-3 d-flex justify-content-between align-items-center">
+          <div><strong id="ai-doc-name">Current Document</strong> <span class="text-muted small" id="ai-doc-pages"></span></div>
+          <input type="file" id="ai-file-input" accept="application/pdf" class="d-none" />
+          <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-change-ai-file">Analyze Different PDF</button>
+        </div>
+
+        <div class="row g-2 mb-3 text-center" id="ai-metrics-row">
+          <div class="col-3">
+            <div class="p-2 rounded-3 bg-light border">
+              <div class="h5 fw-bold mb-0 text-primary" id="ai-stat-pages">0</div>
+              <div class="text-muted" style="font-size: 11px;">Pages</div>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="p-2 rounded-3 bg-light border">
+              <div class="h5 fw-bold mb-0 text-success" id="ai-stat-words">0</div>
+              <div class="text-muted" style="font-size: 11px;">Total Words</div>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="p-2 rounded-3 bg-light border">
+              <div class="h5 fw-bold mb-0 text-info" id="ai-stat-readtime">0 min</div>
+              <div class="text-muted" style="font-size: 11px;">Reading Time</div>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="p-2 rounded-3 bg-light border">
+              <div class="h5 fw-bold mb-0 text-warning" id="ai-stat-sections">0</div>
+              <div class="text-muted" style="font-size: 11px;">Key Sections</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card border-0 bg-light p-3 rounded-3 mb-3">
+          <h6 class="fw-bold mb-2 text-dark">📋 Executive Summary</h6>
+          <p class="small mb-0 text-secondary" id="ai-exec-summary" style="line-height: 1.6;">
+            Extracting core narrative and context from document streams...
+          </p>
+        </div>
+
+        <div>
+          <h6 class="fw-bold mb-2 text-dark">💡 Key Takeaways &amp; Highlights</h6>
+          <div id="ai-key-points" class="d-flex flex-column gap-2" style="max-height: 180px; overflow-y: auto;">
+            <!-- Generated dynamically -->
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button id="btn-cancel-ai" class="btn-secondary" type="button">Close</button>
+        <button id="btn-copy-ai-summary" class="btn-outline-primary" type="button">📋 Copy Summary</button>
+        <button id="btn-download-ai-summary" class="btn-primary" type="button">📥 Export Summary (.txt)</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ─── LOADING OVERLAY ───────────────────────────────────────── -->
   <div id="loading-overlay" class="loading-overlay hidden" role="status" aria-live="polite">
     <div class="loading-box">
@@ -1121,7 +1598,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
   <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
-  <script src="app.js?v=24"></script>
+  <script src="app.js?v=25"></script>
 
 </body>
 </html>

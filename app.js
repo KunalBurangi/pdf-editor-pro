@@ -89,7 +89,7 @@ const $dashNavTrash    = $('dash-nav-trash');
 const $dashSearchInput = $('dash-search-input');
 const $btnStorageUpgrade = $('btn-storage-upgrade');
 
-// Dashboard 8 Tool Cards
+// Dashboard 16 Tool Cards
 const $cardEditPdf     = $('card-edit-pdf');
 const $cardMergePdf    = $('card-merge-pdf');
 const $cardSplitPdf    = $('card-split-pdf');
@@ -98,6 +98,98 @@ const $cardPdfToWord   = $('card-pdf-to-word');
 const $cardPdfToImage  = $('card-pdf-to-image');
 const $cardImageToPdf  = $('card-image-to-pdf');
 const $cardOrganizePages = $('card-organize-pages');
+const $cardRotatePdf   = $('card-rotate-pdf');
+const $cardCropPdf     = $('card-crop-pdf');
+const $cardWatermarkPdf= $('card-watermark-pdf');
+const $cardPageNumbers = $('card-page-numbers');
+const $cardPdfToMarkdown = $('card-pdf-to-markdown');
+const $cardSignPdf     = $('card-sign-pdf');
+const $cardRedactPdf   = $('card-redact-pdf');
+const $cardAiSummarizer= $('card-ai-summarizer');
+
+// Watermark Modal
+const $modalWatermark  = $('modal-watermark');
+const $btnCloseWatermark = $('btn-close-watermark');
+const $btnCancelWatermark = $('btn-cancel-watermark');
+const $btnApplyWatermark = $('btn-apply-watermark');
+const $watermarkTextInput = $('watermark-text-input');
+const $watermarkAngleSelect = $('watermark-angle-select');
+const $watermarkSizeSlider = $('watermark-size-slider');
+const $valWatermarkSize = $('val-watermark-size');
+const $watermarkOpacitySlider = $('watermark-opacity-slider');
+const $valWatermarkOpacity = $('val-watermark-opacity');
+const $watermarkColorInput = $('watermark-color-input');
+const $watermarkColorHex = $('watermark-color-hex');
+const $watermarkPagesSelect = $('watermark-pages-select');
+const $watermarkCustomPages = $('watermark-custom-pages');
+const $watermarkPreviewText = $('watermark-preview-text');
+const $btnChangeWatermarkFile = $('btn-change-watermark-file');
+const $watermarkFileInput = $('watermark-file-input');
+const $watermarkDocName = $('watermark-doc-name');
+const $watermarkDocPages = $('watermark-doc-pages');
+
+// Page Numbers Modal
+const $modalPageNumbers = $('modal-page-numbers');
+const $btnClosePageNumbers = $('btn-close-page-numbers');
+const $btnCancelPageNumbers = $('btn-cancel-page-numbers');
+const $btnApplyPageNumbers = $('btn-apply-page-numbers');
+const $pageNumbersFormat = $('page-numbers-format');
+const $pageNumStart = $('page-num-start');
+const $pageNumSize = $('page-num-size');
+const $pageNumSkipFirst = $('page-num-skip-first');
+const $btnChangePageNumbersFile = $('btn-change-page-numbers-file');
+const $pageNumbersFileInput = $('page-numbers-file-input');
+const $pageNumbersDocName = $('page-numbers-doc-name');
+const $pageNumbersDocPages = $('page-numbers-doc-pages');
+
+// PDF to Markdown Modal
+const $modalPdfToMarkdown = $('modal-pdf-to-markdown');
+const $btnCloseMarkdown = $('btn-close-markdown');
+const $btnCancelMarkdown = $('btn-cancel-markdown');
+const $btnDownloadMarkdown = $('btn-download-markdown');
+const $btnCopyMarkdown = $('btn-copy-markdown');
+const $markdownOutput = $('markdown-output');
+const $mdHeadingCount = $('md-heading-count');
+const $mdWordCount = $('md-word-count');
+const $btnChangeMdFile = $('btn-change-md-file');
+const $mdFileInput = $('md-file-input');
+const $mdDocName = $('md-doc-name');
+const $mdDocStats = $('md-doc-stats');
+
+// Crop Modal
+const $modalCropPdf = $('modal-crop-pdf');
+const $btnCloseCrop = $('btn-close-crop');
+const $btnCancelCrop = $('btn-cancel-crop');
+const $btnApplyCrop = $('btn-apply-crop');
+const $cropTop = $('crop-top');
+const $cropBottom = $('crop-bottom');
+const $cropLeft = $('crop-left');
+const $cropRight = $('crop-right');
+const $cropPresetSlight = $('crop-preset-slight');
+const $cropPresetMedium = $('crop-preset-medium');
+const $cropPresetLarge = $('crop-preset-large');
+const $cropPagesSelect = $('crop-pages-select');
+const $btnChangeCropFile = $('btn-change-crop-file');
+const $cropFileInput = $('crop-file-input');
+const $cropDocName = $('crop-doc-name');
+const $cropDocPages = $('crop-doc-pages');
+
+// AI Summarizer Modal
+const $modalAiSummarizer = $('modal-ai-summarizer');
+const $btnCloseAiSummarizer = $('btn-close-ai-summarizer');
+const $btnCancelAi = $('btn-cancel-ai');
+const $btnCopyAiSummary = $('btn-copy-ai-summary');
+const $btnDownloadAiSummary = $('btn-download-ai-summary');
+const $btnChangeAiFile = $('btn-change-ai-file');
+const $aiFileInput = $('ai-file-input');
+const $aiDocName = $('ai-doc-name');
+const $aiDocPages = $('ai-doc-pages');
+const $aiStatPages = $('ai-stat-pages');
+const $aiStatWords = $('ai-stat-words');
+const $aiStatReadtime = $('ai-stat-readtime');
+const $aiStatSections = $('ai-stat-sections');
+const $aiExecSummary = $('ai-exec-summary');
+const $aiKeyPoints = $('ai-key-points');
 
 // Dedicated Compress Screen
 const $btnBackToTools  = $('btn-back-to-tools');
@@ -452,6 +544,16 @@ async function loadPdf(data) {
       $sidebar?.classList.remove('hidden');
       state.openSidebarOnLoad = false;
       showToast('Page Organizer: Drag to reorder, click ↻ to rotate, or ✕ to delete', 'info', 3500);
+    } else if (state.openSignOnLoad) {
+      state.openSignOnLoad = false;
+      setTimeout(() => openSignatureModal(), 400);
+    } else if (state.openRedactOnLoad) {
+      state.openRedactOnLoad = false;
+      setActiveTool('shape');
+      state.shapeType = 'rectangle';
+      state.shapeFill = '#000000';
+      state.shapeStroke = '#000000';
+      showToast('🛡️ Redaction Mode: Drag to draw black boxes over sensitive content to redact it', 'info', 4000);
     } else {
       showToast(`✓ Loaded ${numPages} pages with ${state.pages.reduce((a, p) => a + p.textItems.length, 0)} text blocks`, 'success');
     }
@@ -4100,20 +4202,46 @@ function initDashboard() {
     showToast('✨ Pro Edition unlocked — Unlimited local storage!', 'success', 3000);
   });
 
-  // Search Filter for Tools Grid
-  $dashSearchInput?.addEventListener('input', (e) => {
-    const term = e.target.value.toLowerCase().trim();
-    const cards = document.querySelectorAll('.tool-card');
-    cards.forEach(card => {
-      const text = card.textContent.toLowerCase();
-      const col = card.closest('.tool-card-col') || card;
-      if (!term || text.includes(term)) {
+  // Category Pill Filter & Search Logic for 16 Tool Cards
+  let activeCategory = 'all';
+
+  function filterToolCards() {
+    const term = ($dashSearchInput?.value || '').toLowerCase().trim();
+    const cols = document.querySelectorAll('.tool-card-col');
+    let visibleCount = 0;
+    cols.forEach(col => {
+      const cat = col.getAttribute('data-category') || '';
+      const keywords = col.getAttribute('data-keywords') || '';
+      const text = col.textContent.toLowerCase() + ' ' + keywords.toLowerCase();
+
+      const matchesCategory = (activeCategory === 'all' || cat === activeCategory);
+      const matchesSearch = (!term || text.includes(term));
+
+      if (matchesCategory && matchesSearch) {
         col.style.display = '';
+        visibleCount++;
       } else {
         col.style.display = 'none';
       }
     });
+
+    const badge = document.getElementById('badge-tool-count');
+    if (badge && activeCategory === 'all' && !term) {
+      badge.textContent = visibleCount;
+    }
+  }
+
+  const categoryPills = document.querySelectorAll('.category-pill');
+  categoryPills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      categoryPills.forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      activeCategory = pill.getAttribute('data-category') || 'all';
+      filterToolCards();
+    });
   });
+
+  $dashSearchInput?.addEventListener('input', filterToolCards);
 
   // Helper: HTML escaping for Word output
   function escapeHtml(str) {
@@ -4429,6 +4557,88 @@ body { font-family: Calibri, Arial, sans-serif; font-size: 11pt; color: #0f172a;
       $fileInput.click();
     }
   });
+
+  // 9. Rotate PDF
+  $cardRotatePdf?.addEventListener('click', () => {
+    if (state.pages && state.pages.length > 0) {
+      rotatePage(state.currentPage - 1, 90);
+      showScreen('editor');
+      showToast('✓ Page rotated 90° clockwise', 'success', 2500);
+    } else {
+      $fileInput.click();
+    }
+  });
+
+  // 10. Crop PDF
+  $cardCropPdf?.addEventListener('click', () => {
+    if (state.pages && state.pages.length > 0) {
+      openCropModal();
+    } else {
+      $cropFileInput?.click();
+    }
+  });
+
+  // 11. Watermark PDF
+  $cardWatermarkPdf?.addEventListener('click', () => {
+    if (state.pages && state.pages.length > 0) {
+      openWatermarkModal();
+    } else {
+      $watermarkFileInput?.click();
+    }
+  });
+
+  // 12. Page Numbers
+  $cardPageNumbers?.addEventListener('click', () => {
+    if (state.pages && state.pages.length > 0) {
+      openPageNumbersModal();
+    } else {
+      $pageNumbersFileInput?.click();
+    }
+  });
+
+  // 13. PDF to Markdown
+  $cardPdfToMarkdown?.addEventListener('click', () => {
+    if (state.pages && state.pages.length > 0) {
+      openMarkdownModal();
+    } else {
+      $mdFileInput?.click();
+    }
+  });
+
+  // 14. Sign PDF
+  $cardSignPdf?.addEventListener('click', () => {
+    if (state.pages && state.pages.length > 0) {
+      showScreen('editor');
+      openSignatureModal();
+    } else {
+      state.openSignOnLoad = true;
+      $fileInput.click();
+    }
+  });
+
+  // 15. Redact PDF
+  $cardRedactPdf?.addEventListener('click', () => {
+    if (state.pages && state.pages.length > 0) {
+      showScreen('editor');
+      setActiveTool('shape');
+      state.shapeType = 'rectangle';
+      state.shapeFill = '#000000';
+      state.shapeStroke = '#000000';
+      showToast('🛡️ Redaction Mode: Drag to draw black boxes over sensitive content to redact it', 'info', 4000);
+    } else {
+      state.openRedactOnLoad = true;
+      $fileInput.click();
+    }
+  });
+
+  // 16. AI Summarizer
+  $cardAiSummarizer?.addEventListener('click', () => {
+    if (state.pages && state.pages.length > 0) {
+      openAiSummarizerModal();
+    } else {
+      $aiFileInput?.click();
+    }
+  });
 }
 
 // ─── 3. SPLIT PDF MODAL CONTROLLER ──────────────────────────────────────────
@@ -4572,6 +4782,759 @@ function initSplitModal() {
   });
 }
 
+// ─── FILE DOWNLOAD HELPER ───────────────────────────────────────────────────
+function downloadFileBlob(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+// ─── 9. WATERMARK MODAL CONTROLLER ──────────────────────────────────────────
+let watermarkCustomBuffer = null;
+let watermarkCustomFileName = null;
+
+function openWatermarkModal() {
+  const name = watermarkCustomFileName || state.fileName || 'document.pdf';
+  const pageCount = (state.pages && state.pages.length) || (state.numPages) || 1;
+  if ($watermarkDocName) $watermarkDocName.textContent = name;
+  if ($watermarkDocPages) $watermarkDocPages.textContent = `(${pageCount} page${pageCount > 1 ? 's' : ''})`;
+  updateWatermarkPreview();
+  $modalWatermark?.classList.remove('hidden');
+}
+
+function closeWatermarkModal() {
+  $modalWatermark?.classList.add('hidden');
+}
+
+function updateWatermarkPreview() {
+  if (!$watermarkPreviewText) return;
+  const text = ($watermarkTextInput?.value || '').trim() || 'CONFIDENTIAL';
+  const angle = $watermarkAngleSelect?.value || '45';
+  const size = $watermarkSizeSlider?.value || '54';
+  const opacity = ($watermarkOpacitySlider?.value || '30') / 100;
+  const color = $watermarkColorInput?.value || '#ef4444';
+
+  if ($valWatermarkSize) $valWatermarkSize.textContent = size;
+  if ($valWatermarkOpacity) $valWatermarkOpacity.textContent = Math.round(opacity * 100);
+  if ($watermarkColorHex) $watermarkColorHex.textContent = color;
+
+  $watermarkPreviewText.textContent = text;
+  $watermarkPreviewText.style.transform = `rotate(${angle}deg)`;
+  $watermarkPreviewText.style.fontSize = `${Math.round(size * 0.35)}px`;
+  $watermarkPreviewText.style.opacity = opacity;
+  $watermarkPreviewText.style.color = color;
+}
+
+function initWatermarkModal() {
+  if (!$modalWatermark) return;
+
+  $btnCloseWatermark?.addEventListener('click', closeWatermarkModal);
+  $btnCancelWatermark?.addEventListener('click', closeWatermarkModal);
+  $modalWatermark?.addEventListener('click', (e) => {
+    if (e.target === $modalWatermark) closeWatermarkModal();
+  });
+
+  $watermarkTextInput?.addEventListener('input', updateWatermarkPreview);
+  $watermarkAngleSelect?.addEventListener('change', updateWatermarkPreview);
+  $watermarkSizeSlider?.addEventListener('input', updateWatermarkPreview);
+  $watermarkOpacitySlider?.addEventListener('input', updateWatermarkPreview);
+  $watermarkColorInput?.addEventListener('input', updateWatermarkPreview);
+
+  $watermarkPagesSelect?.addEventListener('change', (e) => {
+    if ($watermarkCustomPages) {
+      $watermarkCustomPages.classList.toggle('hidden', e.target.value !== 'custom');
+    }
+  });
+
+  $btnChangeWatermarkFile?.addEventListener('click', () => {
+    $watermarkFileInput?.click();
+  });
+
+  $watermarkFileInput?.addEventListener('change', async (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    try {
+      showLoading('Loading PDF…', 'Reading file bytes…', 40);
+      const buf = await file.arrayBuffer();
+      watermarkCustomBuffer = buf;
+      watermarkCustomFileName = file.name;
+      if ($watermarkDocName) $watermarkDocName.textContent = file.name;
+      const { PDFDocument } = PDFLib;
+      const doc = await PDFDocument.load(buf, { ignoreEncryption: true });
+      const count = doc.getPageCount();
+      if ($watermarkDocPages) $watermarkDocPages.textContent = `(${count} page${count > 1 ? 's' : ''})`;
+      hideLoading();
+      openWatermarkModal();
+    } catch (err) {
+      hideLoading();
+      showToast('Error reading PDF: ' + err.message, 'error');
+    }
+    $watermarkFileInput.value = '';
+  });
+
+  $btnApplyWatermark?.addEventListener('click', async () => {
+    const bytes = watermarkCustomBuffer || state.pdfData;
+    if (!bytes) {
+      showToast('Please select or open a PDF first.', 'warning');
+      $watermarkFileInput?.click();
+      return;
+    }
+
+    const baseName = (watermarkCustomFileName || state.fileName || 'document').replace(/\.pdf$/i, '');
+    const text = ($watermarkTextInput?.value || '').trim() || 'CONFIDENTIAL';
+    const angle = parseInt($watermarkAngleSelect?.value || '45', 10);
+    const fontSize = parseInt($watermarkSizeSlider?.value || '54', 10);
+    const opacityVal = ($watermarkOpacitySlider?.value || 30) / 100;
+    const hexColor = $watermarkColorInput?.value || '#ef4444';
+    const pageScope = $watermarkPagesSelect?.value || 'all';
+
+    const r = parseInt(hexColor.slice(1, 3), 16) / 255;
+    const g = parseInt(hexColor.slice(3, 5), 16) / 255;
+    const b = parseInt(hexColor.slice(5, 7), 16) / 255;
+
+    closeWatermarkModal();
+    showLoading('Applying Watermark…', 'Stamping PDF pages…', 45);
+
+    try {
+      const { PDFDocument, rgb, StandardFonts, degrees } = PDFLib;
+      const pdfDoc = await PDFDocument.load(bytes, { ignoreEncryption: true });
+      const font = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+      const total = pdfDoc.getPageCount();
+
+      let targetPages = [];
+      if (pageScope === 'first') {
+        targetPages = [0];
+      } else if (pageScope === 'custom' && $watermarkCustomPages?.value) {
+        targetPages = parsePageRanges($watermarkCustomPages.value, total);
+      } else {
+        targetPages = Array.from({ length: total }, (_, i) => i);
+      }
+
+      const rad = (angle * Math.PI) / 180;
+      targetPages.forEach(pIdx => {
+        if (pIdx < 0 || pIdx >= total) return;
+        const page = pdfDoc.getPage(pIdx);
+        const { width, height } = page.getSize();
+        const textWidth = font.widthOfTextAtSize(text, fontSize);
+        const textHeight = font.heightAtSize(fontSize);
+
+        const x = (width - textWidth * Math.cos(rad) + textHeight * Math.sin(rad)) / 2;
+        const y = (height - textWidth * Math.sin(rad) - textHeight * Math.cos(rad)) / 2;
+
+        page.drawText(text, {
+          x,
+          y,
+          size: fontSize,
+          font,
+          color: rgb(r, g, b),
+          opacity: opacityVal,
+          rotate: degrees(angle)
+        });
+      });
+
+      setProgress(85);
+      const watermarkedBytes = await pdfDoc.save();
+      downloadFileBlob(new Blob([watermarkedBytes], { type: 'application/pdf' }), `${baseName}_watermarked.pdf`);
+      hideLoading();
+      showToast('✓ Watermarked PDF successfully downloaded!', 'success', 3500);
+    } catch (err) {
+      hideLoading();
+      showToast('Failed to apply watermark: ' + err.message, 'error', 3500);
+      console.error(err);
+    }
+  });
+}
+
+// ─── 10. PAGE NUMBERS MODAL CONTROLLER ──────────────────────────────────────
+let pageNumbersCustomBuffer = null;
+let pageNumbersCustomFileName = null;
+
+function openPageNumbersModal() {
+  const name = pageNumbersCustomFileName || state.fileName || 'document.pdf';
+  const pageCount = (state.pages && state.pages.length) || (state.numPages) || 1;
+  if ($pageNumbersDocName) $pageNumbersDocName.textContent = name;
+  if ($pageNumbersDocPages) $pageNumbersDocPages.textContent = `(${pageCount} page${pageCount > 1 ? 's' : ''})`;
+  $modalPageNumbers?.classList.remove('hidden');
+}
+
+function closePageNumbersModal() {
+  $modalPageNumbers?.classList.add('hidden');
+}
+
+function initPageNumbersModal() {
+  if (!$modalPageNumbers) return;
+
+  $btnClosePageNumbers?.addEventListener('click', closePageNumbersModal);
+  $btnCancelPageNumbers?.addEventListener('click', closePageNumbersModal);
+  $modalPageNumbers?.addEventListener('click', (e) => {
+    if (e.target === $modalPageNumbers) closePageNumbersModal();
+  });
+
+  const posBoxes = document.querySelectorAll('.pos-radio-box');
+  posBoxes.forEach(box => {
+    box.addEventListener('click', () => {
+      posBoxes.forEach(b => b.classList.remove('active'));
+      box.classList.add('active');
+      const radio = box.querySelector('input[type="radio"]');
+      if (radio) radio.checked = true;
+    });
+  });
+
+  $btnChangePageNumbersFile?.addEventListener('click', () => {
+    $pageNumbersFileInput?.click();
+  });
+
+  $pageNumbersFileInput?.addEventListener('change', async (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    try {
+      showLoading('Loading PDF…', 'Reading file bytes…', 40);
+      const buf = await file.arrayBuffer();
+      pageNumbersCustomBuffer = buf;
+      pageNumbersCustomFileName = file.name;
+      if ($pageNumbersDocName) $pageNumbersDocName.textContent = file.name;
+      const { PDFDocument } = PDFLib;
+      const doc = await PDFDocument.load(buf, { ignoreEncryption: true });
+      const count = doc.getPageCount();
+      if ($pageNumbersDocPages) $pageNumbersDocPages.textContent = `(${count} page${count > 1 ? 's' : ''})`;
+      hideLoading();
+      openPageNumbersModal();
+    } catch (err) {
+      hideLoading();
+      showToast('Error reading PDF: ' + err.message, 'error');
+    }
+    $pageNumbersFileInput.value = '';
+  });
+
+  $btnApplyPageNumbers?.addEventListener('click', async () => {
+    const bytes = pageNumbersCustomBuffer || state.pdfData;
+    if (!bytes) {
+      showToast('Please select or open a PDF first.', 'warning');
+      $pageNumbersFileInput?.click();
+      return;
+    }
+
+    const baseName = (pageNumbersCustomFileName || state.fileName || 'document').replace(/\.pdf$/i, '');
+    const format = $pageNumbersFormat?.value || 'Page {n} of {total}';
+    const startNum = parseInt($pageNumStart?.value || '1', 10);
+    const fontSize = parseInt($pageNumSize?.value || '11', 10);
+    const skipFirst = $pageNumSkipFirst?.checked || false;
+
+    const checkedPos = document.querySelector('input[name="page-num-pos"]:checked');
+    const pos = checkedPos?.value || 'bottom-center';
+
+    closePageNumbersModal();
+    showLoading('Adding Page Numbers…', 'Numbering pages…', 40);
+
+    try {
+      const { PDFDocument, rgb, StandardFonts } = PDFLib;
+      const pdfDoc = await PDFDocument.load(bytes, { ignoreEncryption: true });
+      const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+      const total = pdfDoc.getPageCount();
+      const margin = 28;
+
+      for (let i = 0; i < total; i++) {
+        if (skipFirst && i === 0) continue;
+        const page = pdfDoc.getPage(i);
+        const { width, height } = page.getSize();
+
+        const numVal = i + startNum - (skipFirst ? 1 : 0);
+        const totalVal = total - (skipFirst ? 1 : 0);
+        const numStr = format.replace(/\{n\}/g, numVal).replace(/\{total\}/g, totalVal);
+        const textWidth = font.widthOfTextAtSize(numStr, fontSize);
+
+        let x = (width - textWidth) / 2;
+        let y = margin;
+
+        if (pos === 'bottom-left') { x = margin; y = margin; }
+        else if (pos === 'bottom-center') { x = (width - textWidth) / 2; y = margin; }
+        else if (pos === 'bottom-right') { x = width - textWidth - margin; y = margin; }
+        else if (pos === 'top-left') { x = margin; y = height - margin - fontSize; }
+        else if (pos === 'top-center') { x = (width - textWidth) / 2; y = height - margin - fontSize; }
+        else if (pos === 'top-right') { x = width - textWidth - margin; y = height - margin - fontSize; }
+
+        page.drawText(numStr, {
+          x,
+          y,
+          size: fontSize,
+          font,
+          color: rgb(0.2, 0.2, 0.2)
+        });
+      }
+
+      setProgress(90);
+      const numberedBytes = await pdfDoc.save();
+      downloadFileBlob(new Blob([numberedBytes], { type: 'application/pdf' }), `${baseName}_numbered.pdf`);
+      hideLoading();
+      showToast('✓ Page numbers added and downloaded!', 'success', 3500);
+    } catch (err) {
+      hideLoading();
+      showToast('Failed to add page numbers: ' + err.message, 'error', 3500);
+      console.error(err);
+    }
+  });
+}
+
+// ─── 11. PDF TO MARKDOWN MODAL CONTROLLER ──────────────────────────────────
+let mdCustomBuffer = null;
+let mdCustomFileName = null;
+
+async function openMarkdownModal() {
+  const bytes = mdCustomBuffer || state.pdfData;
+  const name = mdCustomFileName || state.fileName || 'document.pdf';
+  if ($mdDocName) $mdDocName.textContent = name;
+  $modalPdfToMarkdown?.classList.remove('hidden');
+
+  if (bytes) {
+    await extractMarkdownFromPdf(bytes);
+  } else {
+    $mdFileInput?.click();
+  }
+}
+
+function closeMarkdownModal() {
+  $modalPdfToMarkdown?.classList.add('hidden');
+}
+
+async function extractMarkdownFromPdf(bytes) {
+  if (!bytes) return;
+  if ($markdownOutput) $markdownOutput.value = 'Extracting document text and formatting markdown...';
+
+  try {
+    const loadingTask = pdfjsLib.getDocument({ data: bytes.slice(0) });
+    const pdf = await loadingTask.promise;
+    const numPages = pdf.numPages;
+
+    let allItems = [];
+    let pageLines = [];
+    let headingCount = 0;
+
+    for (let p = 1; p <= numPages; p++) {
+      const page = await pdf.getPage(p);
+      const textContent = await page.getTextContent();
+      const items = textContent.items.map(it => ({
+        str: it.str,
+        x: it.transform[4],
+        y: it.transform[5],
+        height: it.height || Math.abs(it.transform[0]) || 12,
+        page: p
+      })).filter(it => it.str.trim().length > 0);
+
+      allItems.push(...items);
+
+      const sorted = [...items].sort((a, b) => b.y - a.y || a.x - b.x);
+      const lines = [];
+      let currentLine = null;
+
+      sorted.forEach(item => {
+        if (!currentLine || Math.abs(item.y - currentLine.y) > 6) {
+          if (currentLine) lines.push(currentLine);
+          currentLine = { y: item.y, height: item.height, text: item.str, page: p };
+        } else {
+          currentLine.text += (currentLine.text ? ' ' : '') + item.str;
+          currentLine.height = Math.max(currentLine.height, item.height);
+        }
+      });
+      if (currentLine) lines.push(currentLine);
+      pageLines.push({ pageNum: p, lines });
+    }
+
+    const heights = allItems.map(i => i.height).filter(h => h > 4 && h < 60);
+    heights.sort((a, b) => a - b);
+    const bodySize = heights.length > 0 ? heights[Math.floor(heights.length / 2)] : 12;
+
+    let md = `# ${mdCustomFileName || state.fileName || 'Document'}\n\n`;
+
+    pageLines.forEach(({ pageNum, lines }) => {
+      if (pageNum > 1) {
+        md += `\n---\n*Page ${pageNum}*\n\n`;
+      }
+
+      lines.forEach(line => {
+        const txt = line.text.trim();
+        if (!txt) return;
+
+        if (line.height >= bodySize * 1.5) {
+          md += `\n# ${txt}\n\n`;
+          headingCount++;
+        } else if (line.height >= bodySize * 1.2) {
+          md += `\n## ${txt}\n\n`;
+          headingCount++;
+        } else if (line.height >= bodySize * 1.08 && txt.length < 80) {
+          md += `\n### ${txt}\n\n`;
+          headingCount++;
+        } else if (/^[-*•]/.test(txt)) {
+          md += `- ${txt.replace(/^[-*•]\s*/, '')}\n`;
+        } else if (/^\d+[\.\)]\s/.test(txt)) {
+          md += `${txt}\n`;
+        } else {
+          md += `${txt}\n\n`;
+        }
+      });
+    });
+
+    md = md.replace(/\n{3,}/g, '\n\n').trim() + '\n';
+
+    if ($markdownOutput) $markdownOutput.value = md;
+
+    const wordCount = md.split(/\s+/).filter(Boolean).length;
+    if ($mdWordCount) $mdWordCount.textContent = `${wordCount.toLocaleString()} Words`;
+    if ($mdHeadingCount) $mdHeadingCount.textContent = `${headingCount} Headings`;
+    if ($mdDocStats) $mdDocStats.textContent = `(${numPages} pages, ${wordCount.toLocaleString()} words)`;
+  } catch (err) {
+    if ($markdownOutput) $markdownOutput.value = 'Failed to convert PDF: ' + err.message;
+    console.error(err);
+  }
+}
+
+function initPdfToMarkdownModal() {
+  if (!$modalPdfToMarkdown) return;
+
+  $btnCloseMarkdown?.addEventListener('click', closeMarkdownModal);
+  $btnCancelMarkdown?.addEventListener('click', closeMarkdownModal);
+  $modalPdfToMarkdown?.addEventListener('click', (e) => {
+    if (e.target === $modalPdfToMarkdown) closeMarkdownModal();
+  });
+
+  $btnChangeMdFile?.addEventListener('click', () => {
+    $mdFileInput?.click();
+  });
+
+  $mdFileInput?.addEventListener('change', async (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    try {
+      showLoading('Loading PDF…', 'Reading file bytes…', 40);
+      const buf = await file.arrayBuffer();
+      mdCustomBuffer = buf;
+      mdCustomFileName = file.name;
+      hideLoading();
+      openMarkdownModal();
+    } catch (err) {
+      hideLoading();
+      showToast('Error reading PDF: ' + err.message, 'error');
+    }
+    $mdFileInput.value = '';
+  });
+
+  $btnCopyMarkdown?.addEventListener('click', () => {
+    const text = $markdownOutput?.value || '';
+    if (!text) return;
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text).then(() => {
+        showToast('✓ Markdown copied to clipboard!', 'success', 2500);
+      }).catch(() => {
+        $markdownOutput?.select();
+        document.execCommand('copy');
+        showToast('✓ Markdown copied!', 'success', 2500);
+      });
+    } else {
+      $markdownOutput?.select();
+      document.execCommand('copy');
+      showToast('✓ Markdown copied!', 'success', 2500);
+    }
+  });
+
+  $btnDownloadMarkdown?.addEventListener('click', () => {
+    const text = $markdownOutput?.value || '';
+    if (!text) {
+      showToast('No markdown content to download.', 'warning');
+      return;
+    }
+    const baseName = (mdCustomFileName || state.fileName || 'document').replace(/\.pdf$/i, '');
+    const blob = new Blob([text], { type: 'text/markdown;charset=utf-8' });
+    downloadFileBlob(blob, `${baseName}.md`);
+    showToast('✓ Markdown file downloaded!', 'success', 2500);
+  });
+}
+
+// ─── 12. CROP PDF MODAL CONTROLLER ──────────────────────────────────────────
+let cropCustomBuffer = null;
+let cropCustomFileName = null;
+
+function openCropModal() {
+  const name = cropCustomFileName || state.fileName || 'document.pdf';
+  const pageCount = (state.pages && state.pages.length) || (state.numPages) || 1;
+  if ($cropDocName) $cropDocName.textContent = name;
+  if ($cropDocPages) $cropDocPages.textContent = `(${pageCount} page${pageCount > 1 ? 's' : ''})`;
+  $modalCropPdf?.classList.remove('hidden');
+}
+
+function closeCropModal() {
+  $modalCropPdf?.classList.add('hidden');
+}
+
+function initCropPdfModal() {
+  if (!$modalCropPdf) return;
+
+  $btnCloseCrop?.addEventListener('click', closeCropModal);
+  $btnCancelCrop?.addEventListener('click', closeCropModal);
+  $modalCropPdf?.addEventListener('click', (e) => {
+    if (e.target === $modalCropPdf) closeCropModal();
+  });
+
+  $cropPresetSlight?.addEventListener('click', () => {
+    if ($cropTop) $cropTop.value = 10;
+    if ($cropBottom) $cropBottom.value = 10;
+    if ($cropLeft) $cropLeft.value = 10;
+    if ($cropRight) $cropRight.value = 10;
+  });
+  $cropPresetMedium?.addEventListener('click', () => {
+    if ($cropTop) $cropTop.value = 25;
+    if ($cropBottom) $cropBottom.value = 25;
+    if ($cropLeft) $cropLeft.value = 20;
+    if ($cropRight) $cropRight.value = 20;
+  });
+  $cropPresetLarge?.addEventListener('click', () => {
+    if ($cropTop) $cropTop.value = 50;
+    if ($cropBottom) $cropBottom.value = 50;
+    if ($cropLeft) $cropLeft.value = 40;
+    if ($cropRight) $cropRight.value = 40;
+  });
+
+  $btnChangeCropFile?.addEventListener('click', () => {
+    $cropFileInput?.click();
+  });
+
+  $cropFileInput?.addEventListener('change', async (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    try {
+      showLoading('Loading PDF…', 'Reading file bytes…', 40);
+      const buf = await file.arrayBuffer();
+      cropCustomBuffer = buf;
+      cropCustomFileName = file.name;
+      if ($cropDocName) $cropDocName.textContent = file.name;
+      const { PDFDocument } = PDFLib;
+      const doc = await PDFDocument.load(buf, { ignoreEncryption: true });
+      const count = doc.getPageCount();
+      if ($cropDocPages) $cropDocPages.textContent = `(${count} page${count > 1 ? 's' : ''})`;
+      hideLoading();
+      openCropModal();
+    } catch (err) {
+      hideLoading();
+      showToast('Error reading PDF: ' + err.message, 'error');
+    }
+    $cropFileInput.value = '';
+  });
+
+  $btnApplyCrop?.addEventListener('click', async () => {
+    const bytes = cropCustomBuffer || state.pdfData;
+    if (!bytes) {
+      showToast('Please select or open a PDF first.', 'warning');
+      $cropFileInput?.click();
+      return;
+    }
+
+    const baseName = (cropCustomFileName || state.fileName || 'document').replace(/\.pdf$/i, '');
+    const topTrim = parseFloat($cropTop?.value || 0);
+    const bottomTrim = parseFloat($cropBottom?.value || 0);
+    const leftTrim = parseFloat($cropLeft?.value || 0);
+    const rightTrim = parseFloat($cropRight?.value || 0);
+    const applyScope = $cropPagesSelect?.value || 'all';
+
+    closeCropModal();
+    showLoading('Cropping PDF…', 'Trimming page boundaries…', 45);
+
+    try {
+      const { PDFDocument } = PDFLib;
+      const pdfDoc = await PDFDocument.load(bytes, { ignoreEncryption: true });
+      const total = pdfDoc.getPageCount();
+
+      const targetIndices = (applyScope === 'current')
+        ? [Math.max(0, Math.min(total - 1, (state.currentPage || 1) - 1))]
+        : Array.from({ length: total }, (_, i) => i);
+
+      targetIndices.forEach(idx => {
+        const page = pdfDoc.getPage(idx);
+        const { width, height } = page.getSize();
+        const newX = leftTrim;
+        const newY = bottomTrim;
+        const newWidth = Math.max(50, width - leftTrim - rightTrim);
+        const newHeight = Math.max(50, height - topTrim - bottomTrim);
+
+        page.setCropBox(newX, newY, newWidth, newHeight);
+      });
+
+      setProgress(85);
+      const croppedBytes = await pdfDoc.save();
+      downloadFileBlob(new Blob([croppedBytes], { type: 'application/pdf' }), `${baseName}_cropped.pdf`);
+      hideLoading();
+      showToast('✓ Cropped PDF successfully downloaded!', 'success', 3500);
+    } catch (err) {
+      hideLoading();
+      showToast('Failed to crop PDF: ' + err.message, 'error', 3500);
+      console.error(err);
+    }
+  });
+}
+
+// ─── 13. AI SUMMARIZER MODAL CONTROLLER ─────────────────────────────────────
+let aiCustomBuffer = null;
+let aiCustomFileName = null;
+
+async function openAiSummarizerModal() {
+  const bytes = aiCustomBuffer || state.pdfData;
+  const name = aiCustomFileName || state.fileName || 'document.pdf';
+  if ($aiDocName) $aiDocName.textContent = name;
+  $modalAiSummarizer?.classList.remove('hidden');
+
+  if (bytes) {
+    await runAiDocumentSummary(bytes);
+  } else {
+    $aiFileInput?.click();
+  }
+}
+
+function closeAiSummarizerModal() {
+  $modalAiSummarizer?.classList.add('hidden');
+}
+
+async function runAiDocumentSummary(bytes) {
+  if (!bytes) return;
+  if ($aiExecSummary) $aiExecSummary.textContent = 'Analyzing document text streams, structure and key points...';
+  if ($aiKeyPoints) $aiKeyPoints.innerHTML = '<div class="text-muted small">Generating key takeaways...</div>';
+
+  try {
+    const loadingTask = pdfjsLib.getDocument({ data: bytes.slice(0) });
+    const pdf = await loadingTask.promise;
+    const numPages = pdf.numPages;
+
+    let fullText = '';
+    let headings = [];
+    let paragraphs = [];
+
+    for (let p = 1; p <= numPages; p++) {
+      const page = await pdf.getPage(p);
+      const textContent = await page.getTextContent();
+      const items = textContent.items.map(it => it.str).filter(s => s.trim().length > 0);
+      const pageStr = items.join(' ');
+      fullText += (fullText ? ' ' : '') + pageStr;
+
+      const sentences = pageStr.split(/(?<=[.?!])\s+/).filter(s => s.trim().length > 25);
+      paragraphs.push(...sentences);
+
+      textContent.items.forEach(it => {
+        if (it.height > 14 && it.str.trim().length > 3 && it.str.trim().length < 60) {
+          headings.push(it.str.trim());
+        }
+      });
+    }
+
+    const words = fullText.split(/\s+/).filter(Boolean);
+    const wordCount = words.length;
+    const readMinutes = Math.max(1, Math.ceil(wordCount / 200));
+
+    if ($aiStatPages) $aiStatPages.textContent = numPages;
+    if ($aiStatWords) $aiStatWords.textContent = wordCount.toLocaleString();
+    if ($aiStatReadtime) $aiStatReadtime.textContent = `${readMinutes} min`;
+    if ($aiStatSections) $aiStatSections.textContent = Math.max(1, headings.length);
+    if ($aiDocPages) $aiDocPages.textContent = `(${numPages} page${numPages > 1 ? 's' : ''}, ${wordCount.toLocaleString()} words)`;
+
+    const cleanSentences = paragraphs.filter(s => !/^page\s+\d+/i.test(s) && !/copyright/i.test(s));
+    let execText = cleanSentences.slice(0, 3).join(' ');
+    if (!execText || execText.length < 50) {
+      execText = `This ${numPages}-page document contains ${wordCount.toLocaleString()} words spanning ${headings.length || 1} key topic sections.`;
+    }
+    if ($aiExecSummary) $aiExecSummary.textContent = execText;
+
+    const salienceKeywords = ['important', 'conclude', 'result', 'finding', 'summary', 'key', 'objective', 'require', 'increase', 'decrease', 'analysis', 'total', 'percent', '%', 'recommend'];
+    const scored = cleanSentences.map(s => {
+      let score = 0;
+      const lower = s.toLowerCase();
+      salienceKeywords.forEach(kw => {
+        if (lower.includes(kw)) score += 2;
+      });
+      if (/\d+/.test(s)) score += 1;
+      if (s.length > 50 && s.length < 180) score += 2;
+      return { s, score };
+    });
+
+    scored.sort((a, b) => b.score - a.score);
+    const topTakeaways = scored.slice(0, 5).map(item => item.s);
+
+    if (topTakeaways.length === 0) {
+      topTakeaways.push(`Comprehensive analysis across ${numPages} document page${numPages > 1 ? 's' : ''}.`);
+      topTakeaways.push(`Structured document with ${wordCount.toLocaleString()} words in total.`);
+    }
+
+    if ($aiKeyPoints) {
+      $aiKeyPoints.innerHTML = topTakeaways.map((takeaway, idx) => `
+        <div class="d-flex align-items-start gap-2 p-2 bg-white rounded-2 border shadow-xs">
+          <span class="badge bg-primary rounded-circle p-1" style="width: 20px; height: 20px; display: inline-flex; align-items: center; justify-content: center; font-size: 10px;">${idx + 1}</span>
+          <span class="small text-dark" style="line-height: 1.4;">${escapeHtml(takeaway)}</span>
+        </div>
+      `).join('');
+    }
+  } catch (err) {
+    if ($aiExecSummary) $aiExecSummary.textContent = 'Could not generate summary: ' + err.message;
+    console.error(err);
+  }
+}
+
+function initAiSummarizerModal() {
+  if (!$modalAiSummarizer) return;
+
+  $btnCloseAiSummarizer?.addEventListener('click', closeAiSummarizerModal);
+  $btnCancelAi?.addEventListener('click', closeAiSummarizerModal);
+  $modalAiSummarizer?.addEventListener('click', (e) => {
+    if (e.target === $modalAiSummarizer) closeAiSummarizerModal();
+  });
+
+  $btnChangeAiFile?.addEventListener('click', () => {
+    $aiFileInput?.click();
+  });
+
+  $aiFileInput?.addEventListener('change', async (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    try {
+      showLoading('Loading PDF…', 'Reading file bytes…', 40);
+      const buf = await file.arrayBuffer();
+      aiCustomBuffer = buf;
+      aiCustomFileName = file.name;
+      hideLoading();
+      openAiSummarizerModal();
+    } catch (err) {
+      hideLoading();
+      showToast('Error reading PDF: ' + err.message, 'error');
+    }
+    $aiFileInput.value = '';
+  });
+
+  $btnCopyAiSummary?.addEventListener('click', () => {
+    const exec = $aiExecSummary?.textContent || '';
+    const items = Array.from(document.querySelectorAll('#ai-key-points .small')).map((el, i) => `${i + 1}. ${el.textContent}`);
+    const summaryText = `DOCUMENT SUMMARY: ${aiCustomFileName || state.fileName || 'PDF Document'}\n\nEXECUTIVE SUMMARY:\n${exec}\n\nKEY TAKEAWAYS:\n${items.join('\n')}`;
+
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(summaryText).then(() => {
+        showToast('✓ Summary copied to clipboard!', 'success', 2500);
+      }).catch(() => {
+        showToast('✓ Summary copied!', 'success', 2500);
+      });
+    } else {
+      showToast('✓ Summary copied!', 'success', 2500);
+    }
+  });
+
+  $btnDownloadAiSummary?.addEventListener('click', () => {
+    const exec = $aiExecSummary?.textContent || '';
+    const items = Array.from(document.querySelectorAll('#ai-key-points .small')).map((el, i) => `${i + 1}. ${el.textContent}`);
+    const summaryText = `DOCUMENT SUMMARY: ${aiCustomFileName || state.fileName || 'PDF Document'}\n=======================================================\n\nEXECUTIVE SUMMARY:\n${exec}\n\nKEY TAKEAWAYS & HIGHLIGHTS:\n${items.join('\n')}\n`;
+
+    const baseName = (aiCustomFileName || state.fileName || 'document').replace(/\.pdf$/i, '');
+    const blob = new Blob([summaryText], { type: 'text/plain;charset=utf-8' });
+    downloadFileBlob(blob, `${baseName}_summary.txt`);
+    showToast('✓ Summary exported as text file!', 'success', 2500);
+  });
+}
+
 // ─── EDITOR CONTROLS CONTROLLER ─────────────────────────────────────────────
 function initEditorHeaderAndControls() {
   $btnShare?.addEventListener('click', () => {
@@ -4611,6 +5574,11 @@ function initEditorHeaderAndControls() {
   initShapeTools();
   initDashboard();
   initCompressScreen();
+  initWatermarkModal();
+  initPageNumbersModal();
+  initPdfToMarkdownModal();
+  initCropPdfModal();
+  initAiSummarizerModal();
   initEditorHeaderAndControls();
 
   // Set up page scroll observer after a short delay

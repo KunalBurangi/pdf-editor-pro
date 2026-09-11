@@ -709,6 +709,83 @@ body {
 .card-indigo  { background: #f5f3ff !important; border: 1px solid #ede9fe !important; }
 .card-indigo .tool-card-icon { background: #ede9fe; }
 
+.card-cyan    { background: #ecfeff !important; border: 1px solid #cffafe !important; }
+.card-cyan .tool-card-icon { background: #cffafe; }
+
+.card-teal    { background: #f0fdfa !important; border: 1px solid #ccfbf1 !important; }
+.card-teal .tool-card-icon { background: #ccfbf1; }
+
+.card-amber   { background: #fffbeb !important; border: 1px solid #fef3c7 !important; }
+.card-amber .tool-card-icon { background: #fef3c7; }
+
+.card-rose    { background: #fff1f2 !important; border: 1px solid #ffe4e6 !important; }
+.card-rose .tool-card-icon { background: #ffe4e6; }
+
+.card-violet  { background: #f5f3ff !important; border: 1px solid #ede9fe !important; }
+.card-violet .tool-card-icon { background: #ede9fe; }
+
+.card-sky     { background: #f0f9ff !important; border: 1px solid #e0f2fe !important; }
+.card-sky .tool-card-icon { background: #e0f2fe; }
+
+.card-dark-mode { background: #f8fafc !important; border: 1px solid #e2e8f0 !important; }
+.card-dark-mode .tool-card-icon { background: #e2e8f0; }
+
+.card-fuchsia { background: #fdf4ff !important; border: 1px solid #fae8ff !important; }
+.card-fuchsia .tool-card-icon { background: #fae8ff; }
+
+/* Category Navigation Pills */
+.category-pill {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid transparent;
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+.category-pill:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+.category-pill.active {
+  background: #0f172a !important;
+  color: #ffffff !important;
+}
+.category-pill.active .badge {
+  background: rgba(255, 255, 255, 0.25) !important;
+  color: #ffffff !important;
+}
+[data-theme="dark"] .category-pill {
+  background: #1e293b;
+  color: #94a3b8;
+}
+[data-theme="dark"] .category-pill:hover {
+  background: #334155;
+  color: #f8fafc;
+}
+[data-theme="dark"] .category-pill.active {
+  background: #3b82f6 !important;
+  color: #ffffff !important;
+}
+
+/* Modal sizing & radio styling for new tools */
+.modal-lg-card {
+  max-width: 720px !important;
+  width: 95% !important;
+}
+.pos-radio-box {
+  cursor: pointer;
+  background: #f8fafc;
+  transition: all 0.15s ease;
+}
+.pos-radio-box:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8 !important;
+}
+.pos-radio-box.active {
+  background: #eff6ff;
+  border-color: #2563eb !important;
+  color: #2563eb;
+}
+
 /* Dark mode adjustments for tool cards */
 [data-theme="dark"] .tool-card,
 [data-bs-theme="dark"] .tool-card {
