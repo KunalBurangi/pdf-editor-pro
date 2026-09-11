@@ -485,11 +485,20 @@ body {
 
 /* ─── SCREEN 2: DASHBOARD / TOOLS HUB VIEW ───────────────────────────── */
 .dashboard-screen {
-  min-height: 100vh;
+  position: fixed;
+  inset: 0;
   background: var(--bg-surface);
   display: flex;
   flex-direction: column;
-  position: relative;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  z-index: 20;
+}
+.dashboard-header {
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+  background: var(--bg-surface) !important;
 }
 .user-avatar-circle {
   width: 34px;
@@ -520,8 +529,8 @@ body {
 @media (min-width: 768px) {
   .dashboard-sidebar {
     position: sticky;
-    top: 57px;
-    height: calc(100vh - 57px);
+    top: 64px;
+    height: calc(100vh - 64px);
     overflow-y: auto;
   }
 }
@@ -601,6 +610,8 @@ body {
 /* Dashboard Main */
 .dashboard-main {
   background: var(--bg-base);
+  min-height: calc(100vh - 64px);
+  padding-bottom: 100px !important;
 }
 .dash-main-title {
   font-size: 1.85rem;
