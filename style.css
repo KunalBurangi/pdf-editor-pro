@@ -611,7 +611,7 @@ body {
 .dashboard-main {
   background: var(--bg-base);
   min-height: calc(100vh - 64px);
-  padding-bottom: 100px !important;
+  padding-bottom: 48px;
 }
 .dash-main-title {
   font-size: 1.85rem;
@@ -3190,9 +3190,11 @@ body {
 
 /* ─── PREMIUM APPLICATION FOOTER (iLovePDF Style) ─────────────────────────── */
 .app-footer {
+  width: 100% !important;
   background: #0f172a !important;
   color: #94a3b8 !important;
   border-top: 1px solid #1e293b !important;
+  margin-top: auto;
 }
 
 .app-footer .brand-logo .brand-name {
