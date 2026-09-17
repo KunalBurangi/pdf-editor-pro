@@ -852,8 +852,7 @@ body {
 }
 
 /* ─── COMPRESS PDF TOOL SCREEN ───────────────────────────────────────── */
-.compress-upload-container,
-.compress-result-container {
+.compress-stage {
   width: 100%;
   max-width: 680px;
   margin: 0 auto;
@@ -920,6 +919,175 @@ body {
   font-size: 0.8rem;
   color: var(--text-muted);
   margin-top: 16px;
+}
+
+/* Stage 2: Options Card */
+.compress-options-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 32px 28px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.selected-file-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 14px 18px;
+}
+
+.file-strip-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.file-pdf-badge {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+.file-strip-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.file-strip-name {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.file-strip-size {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.btn-change-file {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 9999px;
+  padding: 6px 14px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.btn-change-file:hover {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  border-color: var(--border-active);
+}
+
+.preset-section-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.compression-presets-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.preset-card {
+  position: relative;
+  background: var(--bg-surface);
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  padding: 16px 20px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: block;
+}
+
+.preset-card:hover {
+  border-color: var(--border-active);
+  background: var(--bg-elevated);
+}
+
+.preset-card.active {
+  border-color: #2563eb;
+  background: rgba(37, 99, 235, 0.04);
+  box-shadow: 0 0 0 1px #2563eb;
+}
+
+.preset-radio {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.preset-card-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.preset-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.preset-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.preset-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.preset-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.recommended-badge {
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: #2563eb;
+  background: rgba(37, 99, 235, 0.12);
+  padding: 2px 8px;
+  border-radius: 100px;
+}
+
+.preset-sub {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
+.btn-start-compress {
+  width: 100%;
+  padding: 14px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-top: 8px;
 }
 
 /* Compress Result Card */

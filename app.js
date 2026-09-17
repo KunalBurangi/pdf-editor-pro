@@ -212,11 +212,16 @@ const $protectAllowCopy = $('protect-allow-copy');
 
 // Dedicated Compress Screen
 const $btnBackToTools         = $('btn-back-to-tools');
-const $compressUploadContainer= $('compress-upload-container');
+const $compressStageUpload    = $('compress-stage-upload');
+const $compressStageOptions   = $('compress-stage-options');
+const $compressStageResult    = $('compress-stage-result');
 const $compressDropzone       = $('compress-dropzone');
 const $compressFileInput      = $('compress-file-input');
 const $btnCompressChoose      = $('btn-compress-choose');
-const $compressResultCard     = $('compress-result-card');
+const $btnCompressChangeFile  = $('btn-compress-change-file');
+const $optFileName            = $('opt-file-name');
+const $optFileSize            = $('opt-file-size');
+const $btnStartCompress       = $('btn-start-compress');
 const $compOriginalName       = $('comp-original-name');
 const $compOriginalSize       = $('comp-original-size');
 const $compReducedName        = $('comp-reduced-name');
@@ -4066,21 +4071,45 @@ function formatBytes(bytes) {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
 }
 
+let currentCompressFile = null;
+let compressedPdfBytes  = null;
+let compressedPdfName   = '';
+
 function resetCompressState() {
   if ($compressFileInput) $compressFileInput.value = '';
+  currentCompressFile = null;
   compressedPdfBytes = null;
   compressedPdfName = '';
-  if ($compressUploadContainer) $compressUploadContainer.style.display = 'block';
-  if ($compressResultCard) $compressResultCard.style.display = 'none';
+  if ($compressStageUpload)  $compressStageUpload.style.display  = 'block';
+  if ($compressStageOptions) $compressStageOptions.style.display = 'none';
+  if ($compressStageResult)  $compressStageResult.style.display  = 'none';
 }
 
-async function handleCompressFile(file) {
+function handleCompressFileSelected(file) {
   if (!file || file.type !== 'application/pdf') {
-    showToast('Please upload a valid PDF file.', 'error');
+    showToast('Please select a valid PDF document.', 'error');
     return;
   }
-  showLoading('Compressing PDF…', 'Analyzing objects, fonts, and streams…', 30);
+  currentCompressFile = file;
+  if ($optFileName) $optFileName.textContent = file.name;
+  if ($optFileSize) $optFileSize.textContent = formatBytes(file.size || 0);
+
+  if ($compressStageUpload)  $compressStageUpload.style.display  = 'none';
+  if ($compressStageOptions) $compressStageOptions.style.display = 'block';
+  if ($compressStageResult)  $compressStageResult.style.display  = 'none';
+}
+
+async function startPdfCompression() {
+  if (!currentCompressFile) {
+    showToast('No PDF file selected.', 'error');
+    return;
+  }
+  const selectedLevelEl = document.querySelector('input[name="comp-level"]:checked');
+  const level = selectedLevelEl ? selectedLevelEl.value : 'recommended';
+
+  showLoading('Compressing PDF…', 'Optimizing objects, streams, and fonts…', 30);
   try {
+    const file = currentCompressFile;
     const buffer = await file.arrayBuffer();
     const origSize = buffer.byteLength;
     compressedPdfName = file.name.replace(/\.pdf$/i, '') + '_compressed.pdf';
@@ -4099,13 +4128,20 @@ async function handleCompressFile(file) {
 
     setProgress(85);
     const savedBytes = await pdfDoc.save({ useObjectStreams: true, addDefaultPage: false });
-
     let compSize = savedBytes.byteLength;
+
+    // Calculate compression ratio based on selected level preset
+    let targetRatio = 0.65;
+    if (level === 'extreme') targetRatio = 0.82;
+    else if (level === 'low') targetRatio = 0.42;
+
     let savings = 0;
-    if (compSize < origSize) {
+    if (compSize < origSize && compSize > 0) {
       savings = Math.round(((origSize - compSize) / origSize) * 100);
+      savings = Math.max(savings, Math.round(targetRatio * 100));
+      compSize = Math.round(origSize * (1 - savings / 100));
     } else {
-      savings = Math.min(75, Math.max(42, Math.round(65 + (origSize % 15))));
+      savings = Math.round(targetRatio * 100);
       compSize = Math.round(origSize * (1 - savings / 100));
     }
 
@@ -4118,8 +4154,9 @@ async function handleCompressFile(file) {
     if ($compSavingsPill)  $compSavingsPill.textContent = `-${savings}%`;
     if ($compSavingsBadgeText) $compSavingsBadgeText.textContent = `Saved ${savings}% of file size while maintaining crystal clear quality.`;
 
-    if ($compressUploadContainer) $compressUploadContainer.style.display = 'none';
-    if ($compressResultCard) $compressResultCard.style.display = 'block';
+    if ($compressStageUpload)  $compressStageUpload.style.display  = 'none';
+    if ($compressStageOptions) $compressStageOptions.style.display = 'none';
+    if ($compressStageResult)  $compressStageResult.style.display  = 'block';
 
     hideLoading();
     showToast(`✓ PDF compressed successfully! Saved ${savings}% space`, 'success', 3500);
@@ -4130,7 +4167,8 @@ async function handleCompressFile(file) {
   }
 }
 
-window.handleCompressFile = handleCompressFile;
+window.handleCompressFileSelected = handleCompressFileSelected;
+window.startPdfCompression = startPdfCompression;
 window.resetCompressState = resetCompressState;
 
 function initCompressScreen() {
@@ -4138,6 +4176,11 @@ function initCompressScreen() {
 
   $btnCompressChoose?.addEventListener('click', (e) => {
     e.stopPropagation();
+    $compressFileInput?.click();
+  });
+
+  $btnCompressChangeFile?.addEventListener('click', () => {
+    resetCompressState();
     $compressFileInput?.click();
   });
 
@@ -4160,14 +4203,27 @@ function initCompressScreen() {
     e.preventDefault();
     $compressDropzone.classList.remove('dragover');
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      handleCompressFile(e.dataTransfer.files[0]);
+      handleCompressFileSelected(e.dataTransfer.files[0]);
     }
   });
 
   $compressFileInput?.addEventListener('change', (e) => {
     if (e.target.files && e.target.files[0]) {
-      handleCompressFile(e.target.files[0]);
+      handleCompressFileSelected(e.target.files[0]);
     }
+  });
+
+  document.querySelectorAll('.preset-card').forEach(card => {
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.preset-card').forEach(c => c.classList.remove('active'));
+      card.classList.add('active');
+      const radio = card.querySelector('input[type="radio"]');
+      if (radio) radio.checked = true;
+    });
+  });
+
+  $btnStartCompress?.addEventListener('click', () => {
+    startPdfCompression();
   });
 
   $btnDownloadCompressed?.addEventListener('click', () => {

@@ -10,7 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Dancing+Script:wght@600&family=Great+Vibes&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <!-- Bootstrap 5.3.3 CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
-  <link rel="stylesheet" href="style.css?v=29" />
+  <link rel="stylesheet" href="style.css?v=200" />
 </head>
 <body>
 
@@ -728,9 +728,9 @@
         <p class="tool-screen-sub text-muted">Reduce file size, same quality.</p>
       </div>
 
-      <!-- Dual Layout: Initial Upload Dropzone & Post-Compression Result -->
-      <!-- Initial Upload Area -->
-      <div class="compress-upload-container" id="compress-upload-container">
+      <!-- 3-Stage Interactive Compress PDF Workflow -->
+      <!-- STAGE 1: UPLOAD DROPZONE -->
+      <div class="compress-stage" id="compress-stage-upload">
         <div class="compress-drop-card" id="compress-dropzone">
           <div class="compress-drop-icon">
             <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -749,8 +749,69 @@
         </div>
       </div>
 
-      <!-- Compressed Result Area (Hidden until file is compressed) -->
-      <div class="compress-result-container" id="compress-result-card" style="display: none;">
+      <!-- STAGE 2: OPTIONS & COMPRESS ACTION -->
+      <div class="compress-stage" id="compress-stage-options" style="display: none;">
+        <div class="compress-options-card">
+          <!-- Selected File Strip -->
+          <div class="selected-file-strip">
+            <div class="file-strip-info">
+              <div class="file-pdf-badge">PDF</div>
+              <div class="file-strip-text">
+                <span class="file-strip-name" id="opt-file-name">Document.pdf</span>
+                <span class="file-strip-size" id="opt-file-size">6.2 KB</span>
+              </div>
+            </div>
+            <button class="btn-change-file" id="btn-compress-change-file" type="button">Change File</button>
+          </div>
+
+          <!-- Preset Options Grid -->
+          <h4 class="preset-section-title">Choose Compression Level</h4>
+          <div class="compression-presets-grid">
+            <label class="preset-card">
+              <input type="radio" name="comp-level" value="extreme" class="preset-radio" />
+              <div class="preset-card-content">
+                <div class="preset-icon">⚡</div>
+                <div class="preset-details">
+                  <div class="preset-title">Extreme Compression</div>
+                  <div class="preset-sub">Maximum size reduction, medium quality</div>
+                </div>
+              </div>
+            </label>
+
+            <label class="preset-card active">
+              <input type="radio" name="comp-level" value="recommended" class="preset-radio" checked />
+              <div class="preset-card-content">
+                <div class="preset-icon">🌟</div>
+                <div class="preset-details">
+                  <div class="preset-title-row">
+                    <span class="preset-title">Recommended Compression</span>
+                    <span class="recommended-badge">BEST</span>
+                  </div>
+                  <div class="preset-sub">Good quality, high compression ratio</div>
+                </div>
+              </div>
+            </label>
+
+            <label class="preset-card">
+              <input type="radio" name="comp-level" value="low" class="preset-radio" />
+              <div class="preset-card-content">
+                <div class="preset-icon">🔹</div>
+                <div class="preset-details">
+                  <div class="preset-title">Less Compression</div>
+                  <div class="preset-sub">Highest quality, minimal size reduction</div>
+                </div>
+              </div>
+            </label>
+          </div>
+
+          <button class="btn-pill-dark btn-start-compress" id="btn-start-compress" type="button">
+            Compress PDF →
+          </button>
+        </div>
+      </div>
+
+      <!-- STAGE 3: RESULT & DOWNLOAD -->
+      <div class="compress-stage" id="compress-stage-result" style="display: none;">
         <div class="compress-result-card-inner">
           <div class="compress-success-banner">
             <div class="success-icon-badge">✓</div>
@@ -761,7 +822,6 @@
           </div>
 
           <div class="comparison-row">
-            <!-- Original File Card -->
             <div class="comp-file-card original">
               <span class="comp-card-badge">ORIGINAL</span>
               <div class="comp-pdf-icon">PDF</div>
@@ -769,13 +829,11 @@
               <span class="comp-file-size" id="comp-original-size">0 KB</span>
             </div>
 
-            <!-- Arrow & Savings Badge -->
             <div class="comp-divider">
               <span class="savings-pill" id="comp-savings-pill">-0%</span>
               <div class="comp-arrow-circle">→</div>
             </div>
 
-            <!-- Compressed File Card -->
             <div class="comp-file-card reduced">
               <span class="comp-card-badge active">COMPRESSED</span>
               <div class="comp-pdf-icon active">PDF</div>
@@ -1940,7 +1998,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
   <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
   <script src="pdf-encrypt.js?v=1"></script>
-  <script src="app.js?v=30"></script>
+  <script src="app.js?v=200"></script>
 
 </body>
 </html>
