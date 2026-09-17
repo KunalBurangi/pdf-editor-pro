@@ -4060,9 +4060,6 @@ function initHelpModal() {
 }
 
 // ─── DEDICATED COMPRESS SCREEN CONTROLLER ──────────────────────────────────
-let compressedPdfBytes = null;
-let compressedPdfName = '';
-
 function formatBytes(bytes) {
   if (bytes === 0) return '0 Bytes';
   const k = 1024;
@@ -4258,23 +4255,38 @@ function initDashboard() {
     }
   }
 
-  // Navigation
-  $logoHomeLanding?.addEventListener('click', () => showScreen('landing'));
-  $logoHomeDash?.addEventListener('click', () => showScreen('landing'));
-  $logoHomeCompress?.addEventListener('click', () => showScreen('landing'));
+  // Navigation Event Handlers
+  const goToLanding = (e) => {
+    if (e) e.preventDefault();
+    showScreen('landing');
+  };
 
-  $navLinkTools?.addEventListener('click', () => showScreen('dashboard'));
-  $navDashToolsTop?.addEventListener('click', () => showScreen('dashboard'));
-  $navCompressTools?.addEventListener('click', () => showScreen('dashboard'));
-  $btnHeroSeeTools?.addEventListener('click', () => showScreen('dashboard'));
+  const goToDashboard = (e) => {
+    if (e) e.preventDefault();
+    showScreen('dashboard');
+  };
+
+  // Logos
+  ['logo-home-landing', 'logo-home-dash', 'logo-home-compress'].forEach(id => {
+    document.getElementById(id)?.addEventListener('click', goToLanding);
+  });
+
+  // Nav links & buttons
+  $navLinkTools?.addEventListener('click', goToDashboard);
+  document.getElementById('nav-link-features')?.addEventListener('click', goToDashboard);
+  $navDashToolsTop?.addEventListener('click', goToDashboard);
+  document.getElementById('nav-dash-features')?.addEventListener('click', goToDashboard);
+  $navCompressTools?.addEventListener('click', goToDashboard);
+
+  $btnHeroSeeTools?.addEventListener('click', goToDashboard);
+  $btnNavGetStarted?.addEventListener('click', goToDashboard);
+  $btnHeroGetStarted?.addEventListener('click', goToDashboard);
+  $hero3dCard?.addEventListener('click', goToDashboard);
+
   $dashNavTools?.addEventListener('click', () => {
     closeDashSidebar();
     showScreen('dashboard');
   });
-
-  $btnNavGetStarted?.addEventListener('click', () => $fileInput.click());
-  $btnHeroGetStarted?.addEventListener('click', () => $fileInput.click());
-  $hero3dCard?.addEventListener('click', () => $fileInput.click());
 
   $dashNavHome?.addEventListener('click', () => {
     closeDashSidebar();
@@ -4282,7 +4294,7 @@ function initDashboard() {
   });
   $('dash-sidebar-open-btn')?.addEventListener('click', () => {
     closeDashSidebar();
-    $fileInput.click();
+    showScreen('dashboard');
   });
   $dashNavRecent?.addEventListener('click', () => {
     closeDashSidebar();
