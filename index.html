@@ -728,61 +728,69 @@
         <p class="tool-screen-sub text-muted">Reduce file size, same quality.</p>
       </div>
 
-      <!-- Dual Cards: Dropzone & Result Preview (Bootstrap Row) -->
-      <div class="row g-4 justify-content-center compress-cards-row">
-        <!-- Left: Upload Card -->
-        <div class="col-12 col-lg-5">
-          <div class="compress-card-left card border-0 p-4 rounded-4 shadow-sm h-100" id="compress-drop-zone">
-            <div class="compress-upload-box d-flex flex-column align-items-center justify-content-center text-center p-4 border border-2 border-dashed rounded-4 h-100">
-              <div class="compress-doc-icon mb-3">
-                <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
-                </svg>
-              </div>
-              <p class="compress-primary-text fw-semibold mb-1">Drop your PDF here</p>
-              <p class="compress-sub-text text-muted small mb-3">or click to upload</p>
-              <button class="btn-pill-dark btn-choose-file btn btn-dark rounded-pill px-4 py-2 fw-semibold mb-3" id="btn-compress-choose" type="button">Choose File</button>
-              <span class="compress-limit-text text-muted" style="font-size: 11px;">Maximum file size: 500 MB</span>
-              <input type="file" id="compress-file-input" accept=".pdf" style="display:none" />
+      <!-- Dual Layout: Initial Upload Dropzone & Post-Compression Result -->
+      <!-- Initial Upload Area -->
+      <div class="compress-upload-container" id="compress-upload-container">
+        <div class="compress-drop-card" id="compress-dropzone">
+          <div class="compress-drop-icon">
+            <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+              <path d="M12 18v-6m-3 3l3 3 3-3"/>
+            </svg>
+          </div>
+          <h3 class="compress-drop-title">Drop your PDF file here</h3>
+          <p class="compress-drop-sub">or click to browse from your computer</p>
+          <button class="btn-pill-dark btn-choose-file" id="btn-compress-choose" type="button">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Select PDF File
+          </button>
+          <span class="compress-limit-info">Up to 500 MB • Secure 100% Client-Side Processing</span>
+          <input type="file" id="compress-file-input" accept=".pdf" style="display:none" />
+        </div>
+      </div>
+
+      <!-- Compressed Result Area (Hidden until file is compressed) -->
+      <div class="compress-result-container" id="compress-result-card" style="display: none;">
+        <div class="compress-result-card-inner">
+          <div class="compress-success-banner">
+            <div class="success-icon-badge">✓</div>
+            <div>
+              <h4 class="success-title">PDF Compressed Successfully!</h4>
+              <p class="success-sub" id="comp-savings-badge-text">Saved 0% of file size while maintaining quality.</p>
             </div>
           </div>
-        </div>
 
-        <!-- Right: Status / Result Card -->
-        <div class="col-12 col-lg-5">
-          <div class="compress-card-right card border-0 p-4 rounded-4 shadow-sm d-flex flex-column justify-content-between h-100" id="compress-result-card">
-            <!-- Comparison Row -->
-            <div class="comparison-row d-flex align-items-center justify-content-between gap-3 mb-4">
-              <!-- Original File -->
-              <div class="comp-file-box flex-fill p-3 border rounded-3 text-center">
-                <div class="comp-pdf-badge badge bg-secondary-subtle text-secondary mb-2">PDF</div>
-                <span class="comp-file-label d-block text-muted small">Original</span>
-                <span class="comp-file-size fw-bold text-dark" id="comp-original-size">12.4 MB</span>
-              </div>
-              <div class="comp-arrow fs-4 text-muted">→</div>
-              <!-- Compressed File -->
-              <div class="comp-file-box active flex-fill p-3 border border-primary-subtle rounded-3 text-center bg-primary-subtle">
-                <div class="comp-pdf-badge badge bg-primary text-white mb-2">PDF</div>
-                <span class="comp-file-label d-block text-primary small">Compressed</span>
-                <span class="comp-file-size active fw-bold text-primary" id="comp-reduced-size">2.1 MB</span>
-              </div>
+          <div class="comparison-row">
+            <!-- Original File Card -->
+            <div class="comp-file-card original">
+              <span class="comp-card-badge">ORIGINAL</span>
+              <div class="comp-pdf-icon">PDF</div>
+              <span class="comp-file-name" id="comp-original-name">Document.pdf</span>
+              <span class="comp-file-size" id="comp-original-size">0 KB</span>
             </div>
 
-            <!-- Green Callout Pill -->
-            <div class="percent-callout d-flex align-items-center gap-3 p-3 bg-success-subtle border border-success-subtle rounded-3 mb-4" id="comp-percent-pill">
-              <span class="check-circle-icon fs-5 text-success">✓</span>
-              <div class="callout-text">
-                <strong id="comp-savings-pct" class="d-block text-success fw-bold">70% smaller</strong>
-                <span class="text-success-emphasis small">Same quality, less space.</span>
-              </div>
+            <!-- Arrow & Savings Badge -->
+            <div class="comp-divider">
+              <span class="savings-pill" id="comp-savings-pill">-0%</span>
+              <div class="comp-arrow-circle">→</div>
             </div>
 
-            <!-- Download Action -->
-            <button class="btn-pill-dark btn-download-comp btn btn-dark rounded-pill w-100 py-3 fw-bold mb-2" id="btn-download-compressed" type="button">
-              Download PDF
+            <!-- Compressed File Card -->
+            <div class="comp-file-card reduced">
+              <span class="comp-card-badge active">COMPRESSED</span>
+              <div class="comp-pdf-icon active">PDF</div>
+              <span class="comp-file-name" id="comp-reduced-name">Document_compressed.pdf</span>
+              <span class="comp-file-size active" id="comp-reduced-size">0 KB</span>
+            </div>
+          </div>
+
+          <div class="compress-actions-row">
+            <button class="btn-pill-dark btn-download-comp" id="btn-download-compressed" type="button">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download Compressed PDF
             </button>
-            <button class="btn-link-retry btn btn-link text-decoration-none text-muted text-center w-100 small" id="btn-compress-retry" type="button">
-              Try another file
+            <button class="btn-link-retry" id="btn-compress-retry" type="button">
+              ↺ Compress another file
             </button>
           </div>
         </div>

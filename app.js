@@ -211,15 +211,20 @@ const $protectAllowPrint = $('protect-allow-print');
 const $protectAllowCopy = $('protect-allow-copy');
 
 // Dedicated Compress Screen
-const $btnBackToTools  = $('btn-back-to-tools');
-const $compressDropzone= $('compress-dropzone');
-const $compressFileInput = $('compress-file-input');
-const $btnCompressChoose = $('btn-compress-choose');
-const $compOriginalSize= $('comp-original-size');
-const $compReducedSize = $('comp-reduced-size');
-const $compSavingsPct  = $('comp-savings-pct');
-const $btnDownloadCompressed = $('btn-download-compressed');
-const $btnCompressRetry= $('btn-compress-retry');
+const $btnBackToTools         = $('btn-back-to-tools');
+const $compressUploadContainer= $('compress-upload-container');
+const $compressDropzone       = $('compress-dropzone');
+const $compressFileInput      = $('compress-file-input');
+const $btnCompressChoose      = $('btn-compress-choose');
+const $compressResultCard     = $('compress-result-card');
+const $compOriginalName       = $('comp-original-name');
+const $compOriginalSize       = $('comp-original-size');
+const $compReducedName        = $('comp-reduced-name');
+const $compReducedSize        = $('comp-reduced-size');
+const $compSavingsPill        = $('comp-savings-pill');
+const $compSavingsBadgeText   = $('comp-savings-badge-text');
+const $btnDownloadCompressed  = $('btn-download-compressed');
+const $btnCompressRetry       = $('btn-compress-retry');
 
 // Editor Elements
 const $thumbnails      = $('thumbnails');
@@ -4061,6 +4066,14 @@ function formatBytes(bytes) {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
 }
 
+function resetCompressState() {
+  if ($compressFileInput) $compressFileInput.value = '';
+  compressedPdfBytes = null;
+  compressedPdfName = '';
+  if ($compressUploadContainer) $compressUploadContainer.style.display = 'block';
+  if ($compressResultCard) $compressResultCard.style.display = 'none';
+}
+
 async function handleCompressFile(file) {
   if (!file || file.type !== 'application/pdf') {
     showToast('Please upload a valid PDF file.', 'error');
@@ -4098,10 +4111,15 @@ async function handleCompressFile(file) {
 
     compressedPdfBytes = savedBytes;
 
+    if ($compOriginalName) $compOriginalName.textContent = file.name;
     if ($compOriginalSize) $compOriginalSize.textContent = formatBytes(origSize);
-    if ($compReducedSize) $compReducedSize.textContent = formatBytes(compSize);
-    if ($compSavingsPct) $compSavingsPct.textContent = `✓ ${savings}% smaller — Same quality, less space.`;
-    if ($btnDownloadCompressed) $btnDownloadCompressed.disabled = false;
+    if ($compReducedName)  $compReducedName.textContent = compressedPdfName;
+    if ($compReducedSize)  $compReducedSize.textContent = formatBytes(compSize);
+    if ($compSavingsPill)  $compSavingsPill.textContent = `-${savings}%`;
+    if ($compSavingsBadgeText) $compSavingsBadgeText.textContent = `Saved ${savings}% of file size while maintaining crystal clear quality.`;
+
+    if ($compressUploadContainer) $compressUploadContainer.style.display = 'none';
+    if ($compressResultCard) $compressResultCard.style.display = 'block';
 
     hideLoading();
     showToast(`✓ PDF compressed successfully! Saved ${savings}% space`, 'success', 3500);
@@ -4111,6 +4129,9 @@ async function handleCompressFile(file) {
     console.error('Compression error:', err);
   }
 }
+
+window.handleCompressFile = handleCompressFile;
+window.resetCompressState = resetCompressState;
 
 function initCompressScreen() {
   $btnBackToTools?.addEventListener('click', () => showScreen('dashboard'));
@@ -4167,13 +4188,7 @@ function initCompressScreen() {
   });
 
   $btnCompressRetry?.addEventListener('click', () => {
-    if ($compressFileInput) $compressFileInput.value = '';
-    compressedPdfBytes = null;
-    if ($btnDownloadCompressed) $btnDownloadCompressed.disabled = true;
-    if ($compOriginalSize) $compOriginalSize.textContent = '12.4 MB';
-    if ($compReducedSize) $compReducedSize.textContent = '2.1 MB';
-    if ($compSavingsPct) $compSavingsPct.textContent = '✓ 70% smaller — Same quality, less space.';
-    $compressFileInput?.click();
+    resetCompressState();
   });
 }
 
@@ -4575,6 +4590,7 @@ body { font-family: Calibri, Arial, sans-serif; font-size: 11pt; color: #0f172a;
 
   // 4. Compress PDF: reduce file size
   $cardCompressPdf?.addEventListener('click', () => {
+    resetCompressState();
     showScreen('compress-screen');
   });
 
